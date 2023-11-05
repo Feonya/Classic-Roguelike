@@ -1,0 +1,33 @@
+[gd_resource type="Resource" load_steps=5 format=3 uid="uid://sk0pcj30s2om"]
+
+[ext_resource type="PackedScene" uid="uid://b0g0332qjff32" path="res://entities/pickable_objects/items/sight_ball/sight_ball.tscn" id="1_ejh2i"]
+[ext_resource type="Script" path="res://resources/character_data/enemy_data/EnemyData.cs" id="1_wi1np"]
+[ext_resource type="PackedScene" uid="uid://bpknxrhuolm4w" path="res://entities/pickable_objects/items/map_scroll/map_scroll.tscn" id="2_mho25"]
+[ext_resource type="PackedScene" uid="uid://b3h2eviqenwtw" path="res://entities/pickable_objects/equipments/armour/armour.tscn" id="3_gy5fn"]
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("1_wi1np")
+DeathDropExperience = 6.0
+DeathDropPickableObjects = {
+ExtResource("1_ejh2i"): 0.5,
+ExtResource("2_mho25"): 0.5,
+ExtResource("3_gy5fn"): 0.5
+}
+Name = "骷髅"
+_sight = 6
+_strength = 5
+_constitution = 5
+_agility = 5
+StrengthIncrementEffects = {
+"attack": 2.0,
+"defend": 1.0
+}
+ConstitutionIncrementEffects = {
+"health": 3.0,
+"max_health": 3.0
+}
+AgilityIncrementEffects = {
+"crit": 0.005,
+"dodge": 0.01
+}

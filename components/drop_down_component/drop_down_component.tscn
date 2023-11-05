@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bubjdgag81bft"]
+
+[ext_resource type="Script" path="res://components/drop_down_component/DropDownComponent.cs" id="1_danrp"]
+
+[node name="DropDownComponent" type="Node"]
+script = ExtResource("1_danrp")

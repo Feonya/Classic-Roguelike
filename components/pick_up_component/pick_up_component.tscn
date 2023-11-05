@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bk2xe06dewdp1"]
+
+[ext_resource type="Script" path="res://components/pick_up_component/PickUpComponent.cs" id="1_xc3mf"]
+
+[node name="PickUpComponent" type="Node"]
+script = ExtResource("1_xc3mf")

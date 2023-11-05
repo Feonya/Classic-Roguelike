@@ -1,0 +1,50 @@
+[gd_scene load_steps=9 format=3 uid="uid://pvxqew6msg5d"]
+
+[ext_resource type="PackedScene" uid="uid://4mdofym5k44p" path="res://scenes/main.tscn" id="1_w37bp"]
+[ext_resource type="Resource" uid="uid://dy8a3mxjl4l63" path="res://resources/map_data/forest_data/forest_data.tres" id="2_etewb"]
+[ext_resource type="PackedScene" uid="uid://bn1dx1fqxt27j" path="res://managers/map_manager/map_generators/forest_generator/forest_generator.tscn" id="2_jw6u7"]
+[ext_resource type="PackedScene" uid="uid://ksmmb1jdqdpa" path="res://entities/characters/enemies/rat/rat.tscn" id="3_ponul"]
+[ext_resource type="PackedScene" uid="uid://canjta674ax20" path="res://entities/characters/enemies/goblin/gobin.tscn" id="4_57qig"]
+[ext_resource type="PackedScene" uid="uid://c4xmgwunqaavp" path="res://entities/characters/enemies/orc/orc.tscn" id="5_nygij"]
+[ext_resource type="Script" path="res://resources/character_data/player_data/PlayerData.cs" id="6_jvi0r"]
+
+[sub_resource type="Resource" id="Resource_qahip"]
+resource_local_to_scene = true
+script = ExtResource("6_jvi0r")
+Name = "玩家"
+_sight = 6
+_strength = 8
+_constitution = 8
+_agility = 8
+StrengthIncrementEffects = {
+"attack": 2.0,
+"defend": 1.0
+}
+ConstitutionIncrementEffects = {
+"health": 3.0,
+"max_health": 3.0
+}
+AgilityIncrementEffects = {
+"crit": 0.005,
+"dodge": 0.01
+}
+
+[node name="Forest" instance=ExtResource("1_w37bp")]
+
+[node name="MapManager" parent="." index="3"]
+_mapData = ExtResource("2_etewb")
+
+[node name="ForestGenerator" parent="MapManager" index="0" instance=ExtResource("2_jw6u7")]
+
+[node name="EnemySpawner" parent="." index="4"]
+_enemyScenes = {
+ExtResource("3_ponul"): 50.0,
+ExtResource("4_57qig"): 40.0,
+ExtResource("5_nygij"): 30.0
+}
+
+[node name="StairManager" parent="." index="8"]
+_nextScenePath = "res://scenes/dungeon_1/dungeon_1.tscn"
+
+[node name="Player" parent="GameViewportContainer/GameViewport" index="3"]
+_characterData = SubResource("Resource_qahip")

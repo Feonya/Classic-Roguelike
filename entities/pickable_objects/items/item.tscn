@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://byngc05jxfjx3"]
+
+[ext_resource type="PackedScene" uid="uid://bo42n4qi1ff34" path="res://entities/pickable_objects/pickable_object.tscn" id="1_h6ktp"]
+[ext_resource type="Script" path="res://entities/pickable_objects/items/Item.cs" id="2_djnog"]
+
+[node name="Item" instance=ExtResource("1_h6ktp")]
+script = ExtResource("2_djnog")

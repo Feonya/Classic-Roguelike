@@ -1,0 +1,31 @@
+[gd_resource type="Resource" load_steps=4 format=3 uid="uid://b13byxp833kdm"]
+
+[ext_resource type="Script" path="res://resources/character_data/enemy_data/EnemyData.cs" id="1_juuis"]
+[ext_resource type="PackedScene" uid="uid://bi4nejcf6ja4b" path="res://entities/pickable_objects/equipments/necklace/necklace.tscn" id="1_y5fy0"]
+[ext_resource type="PackedScene" uid="uid://darsg1hharu1g" path="res://entities/pickable_objects/equipments/ring/ring.tscn" id="2_kw1uy"]
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("1_juuis")
+DeathDropExperience = 8.0
+DeathDropPickableObjects = {
+ExtResource("1_y5fy0"): 0.5,
+ExtResource("2_kw1uy"): 0.5
+}
+Name = "骷髅法师"
+_sight = 6
+_strength = 4
+_constitution = 4
+_agility = 4
+StrengthIncrementEffects = {
+"attack": 2.0,
+"defend": 1.0
+}
+ConstitutionIncrementEffects = {
+"health": 3.0,
+"max_health": 3.0
+}
+AgilityIncrementEffects = {
+"crit": 0.005,
+"dodge": 0.01
+}

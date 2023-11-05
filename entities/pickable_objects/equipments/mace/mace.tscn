@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://ca3r7t0p85oxd"]
+
+[ext_resource type="PackedScene" uid="uid://dcxq12vw0d2ty" path="res://entities/pickable_objects/equipments/equipment.tscn" id="1_mmpje"]
+[ext_resource type="Script" path="res://entities/pickable_objects/equipments/mace/Mace.cs" id="2_ar4qk"]
+
+[node name="Mace" instance=ExtResource("1_mmpje")]
+script = ExtResource("2_ar4qk")
+_minAttackIncrement = 18.0
+_maxAttackIncrement = 18.0
+_name = "战锤"
+
+[node name="Sprite2D" parent="." index="0"]
+region_rect = Rect2(16, 112, 16, 16)

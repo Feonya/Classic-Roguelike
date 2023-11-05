@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://cch2rwoahwlir"]
+
+[ext_resource type="PackedScene" uid="uid://byngc05jxfjx3" path="res://entities/pickable_objects/items/item.tscn" id="1_kxelj"]
+[ext_resource type="Script" path="res://entities/pickable_objects/items/revive_cross/ReviveCross.cs" id="2_4w2ye"]
+
+[node name="ReviveCross" instance=ExtResource("1_kxelj")]
+script = ExtResource("2_4w2ye")
+_name = "复活十字"
+_description = "死亡后自动消耗并在若干秒后复活。"
+
+[node name="Sprite2D" parent="." index="0"]
+region_rect = Rect2(64, 96, 16, 16)

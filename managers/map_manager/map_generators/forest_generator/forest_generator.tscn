@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bn1dx1fqxt27j"]
+
+[ext_resource type="Script" path="res://managers/map_manager/map_generators/forest_generator/ForestGenerator.cs" id="1_mprjv"]
+
+[node name="ForestGenerator" type="Node"]
+script = ExtResource("1_mprjv")

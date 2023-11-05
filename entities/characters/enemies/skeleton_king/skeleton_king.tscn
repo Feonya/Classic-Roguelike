@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=3 uid="uid://cx01w37f1d8kv"]
+
+[ext_resource type="PackedScene" uid="uid://caqc2shvidiaf" path="res://entities/characters/enemies/enemy.tscn" id="1_neqkj"]
+[ext_resource type="Resource" uid="uid://cqnj5sajy5oqr" path="res://resources/character_data/enemy_data/skeleton_king_data/skeleton_king_data.tres" id="2_otuoi"]
+[ext_resource type="PackedScene" uid="uid://c1qaryyyfqaqt" path="res://components/ai_component/ai/melee_ai/melee_ai.tscn" id="3_xh7b1"]
+
+[node name="SkeletonKing" instance=ExtResource("1_neqkj")]
+_characterData = ExtResource("2_otuoi")
+
+[node name="Sprite2D" parent="." index="0"]
+region_rect = Rect2(160, 80, 16, 16)
+
+[node name="MeleeAi" parent="AiComponent" index="0" instance=ExtResource("3_xh7b1")]

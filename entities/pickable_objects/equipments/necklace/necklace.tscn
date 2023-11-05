@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://bi4nejcf6ja4b"]
+
+[ext_resource type="PackedScene" uid="uid://dcxq12vw0d2ty" path="res://entities/pickable_objects/equipments/equipment.tscn" id="1_w0l1j"]
+[ext_resource type="Script" path="res://entities/pickable_objects/equipments/necklace/Necklace.cs" id="2_h2k4w"]
+
+[node name="Necklace" instance=ExtResource("1_w0l1j")]
+script = ExtResource("2_h2k4w")
+_minDodgeIncrement = 0.1
+_maxDodgeIncrement = 0.5
+_name = "项链"
+
+[node name="Sprite2D" parent="." index="0"]
+region_rect = Rect2(80, 112, 16, 16)

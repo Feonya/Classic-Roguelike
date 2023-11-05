@@ -1,0 +1,33 @@
+[gd_resource type="Resource" load_steps=5 format=3 uid="uid://3qmoq43fcngt"]
+
+[ext_resource type="Script" path="res://resources/character_data/enemy_data/EnemyData.cs" id="1_1uphm"]
+[ext_resource type="PackedScene" uid="uid://cch2rwoahwlir" path="res://entities/pickable_objects/items/revive_cross/revive_cross.tscn" id="1_pxum3"]
+[ext_resource type="PackedScene" uid="uid://ca3r7t0p85oxd" path="res://entities/pickable_objects/equipments/mace/mace.tscn" id="2_hyyoo"]
+[ext_resource type="PackedScene" uid="uid://cfo6xngk5lamt" path="res://entities/pickable_objects/equipments/shield/shield.tscn" id="3_7hm5d"]
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("1_1uphm")
+DeathDropExperience = 5.0
+DeathDropPickableObjects = {
+ExtResource("1_pxum3"): 0.5,
+ExtResource("2_hyyoo"): 0.5,
+ExtResource("3_7hm5d"): 0.5
+}
+Name = "兽人"
+_sight = 3
+_strength = 5
+_constitution = 5
+_agility = 5
+StrengthIncrementEffects = {
+"attack": 2.0,
+"defend": 1.0
+}
+ConstitutionIncrementEffects = {
+"health": 3.0,
+"max_health": 3.0
+}
+AgilityIncrementEffects = {
+"crit": 0.005,
+"dodge": 0.01
+}

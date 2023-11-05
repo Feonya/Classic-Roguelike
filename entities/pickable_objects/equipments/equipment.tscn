@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://dcxq12vw0d2ty"]
+
+[ext_resource type="PackedScene" uid="uid://bo42n4qi1ff34" path="res://entities/pickable_objects/pickable_object.tscn" id="1_lsqlw"]
+[ext_resource type="Script" path="res://entities/pickable_objects/equipments/Equipment.cs" id="2_63jtb"]
+
+[node name="Equipment" instance=ExtResource("1_lsqlw")]
+script = ExtResource("2_63jtb")

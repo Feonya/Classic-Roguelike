@@ -1,0 +1,31 @@
+[gd_resource type="Resource" load_steps=4 format=3 uid="uid://cbecr73kidu6m"]
+
+[ext_resource type="PackedScene" uid="uid://btr1pq5stq26g" path="res://entities/pickable_objects/items/small_potion/small_potion.tscn" id="1_3aput"]
+[ext_resource type="Script" path="res://resources/character_data/enemy_data/EnemyData.cs" id="1_66sas"]
+[ext_resource type="PackedScene" uid="uid://d2mx00g3et73v" path="res://entities/pickable_objects/items/big_potion/big_potion.tscn" id="2_cu3vh"]
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("1_66sas")
+DeathDropExperience = 4.0
+DeathDropPickableObjects = {
+ExtResource("1_3aput"): 0.5,
+ExtResource("2_cu3vh"): 0.5
+}
+Name = "哥布林"
+_sight = 6
+_strength = 4
+_constitution = 4
+_agility = 4
+StrengthIncrementEffects = {
+"attack": 2.0,
+"defend": 1.0
+}
+ConstitutionIncrementEffects = {
+"health": 3.0,
+"max_health": 3.0
+}
+AgilityIncrementEffects = {
+"crit": 0.005,
+"dodge": 0.01
+}

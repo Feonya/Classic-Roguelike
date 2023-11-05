@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=3 uid="uid://ksmmb1jdqdpa"]
+
+[ext_resource type="PackedScene" uid="uid://caqc2shvidiaf" path="res://entities/characters/enemies/enemy.tscn" id="1_lm8ea"]
+[ext_resource type="Resource" uid="uid://csn6vct5xilpj" path="res://resources/character_data/enemy_data/rat_data/rat_data.tres" id="2_w02ip"]
+[ext_resource type="PackedScene" uid="uid://c1qaryyyfqaqt" path="res://components/ai_component/ai/melee_ai/melee_ai.tscn" id="3_n5mix"]
+
+[node name="Rat" instance=ExtResource("1_lm8ea")]
+_characterData = ExtResource("2_w02ip")
+
+[node name="Sprite2D" parent="." index="0"]
+region_rect = Rect2(80, 80, 16, 16)
+
+[node name="MeleeAi" parent="AiComponent" index="0" instance=ExtResource("3_n5mix")]
