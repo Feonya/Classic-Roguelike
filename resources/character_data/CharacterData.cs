@@ -1,6 +1,6 @@
-using System;
 using Godot;
 using Godot.Collections;
+using System;
 
 public partial class CharacterData : Resource
 {
@@ -15,8 +15,9 @@ public partial class CharacterData : Resource
     public event Action<float> DodgeChanged;
     public event Action<float> CritChanged;
 
+
     [Export]
-    public string Name = "玩家";
+    public string Name = "未命名";
 
     [Export]
     protected int _sight = 6;
@@ -31,10 +32,10 @@ public partial class CharacterData : Resource
     }
 
     /// <summary>
-    /// 基础属性（Base Attributes）。
+    /// 基础属性 Base Attributes
     /// </summary>
-    [Export]
-    protected int _strength = 8;
+
+    [Export] protected int _strength = 8;           //力量
     public int Strength
     {
         get => _strength;
@@ -43,30 +44,28 @@ public partial class CharacterData : Resource
             var valueDifference = value - _strength;
             Attack += valueDifference * StrengthIncrementEffects["attack"];
             Defend += valueDifference * StrengthIncrementEffects["defend"];
-
+            
             _strength = value;
             StrengthChanged?.Invoke(value);
         }
     }
 
-    [Export]
-    protected int _constitution = 8;
+    [Export] protected int _constitution = 8;       //体质
     public int Constitution
     {
         get => _constitution;
         set
         {
             var valueDifference = value - _constitution;
-            Health += valueDifference * ConstitutionIncrementEffects["health"];
             MaxHealth += valueDifference * ConstitutionIncrementEffects["max_health"];
+            Health += valueDifference * ConstitutionIncrementEffects["health"];
 
             _constitution = value;
             ConstitutionChanged?.Invoke(value);
         }
     }
 
-    [Export]
-    protected int _agility = 8;
+    [Export] protected int _agility = 8;            //敏捷
     public int Agility
     {
         get => _agility;
@@ -81,27 +80,35 @@ public partial class CharacterData : Resource
         }
     }
 
+
     [Export]
     public Dictionary<string, float> StrengthIncrementEffects = new()
     {
-        { "attack", 2f }, { "defend", 1f }
+        { "attack",2f },
+        { "defend" , 1f }
     };
 
     [Export]
     public Dictionary<string, float> ConstitutionIncrementEffects = new()
     {
-        { "max_health", 3f }, { "health", 3f }
+        {"max_health",3f },
+        {"health",3f }
     };
 
     [Export]
     public Dictionary<string, float> AgilityIncrementEffects = new()
     {
-        { "dodge", 0.01f }, { "crit", 0.005f }
+        { "dodge",0.01f},
+        { "crit",0.005f}
+
     };
 
+
+
     /// <summary>
-    /// 战斗属性（Combat Attributes）。
+    /// 战斗属性 Combat Attributes
     /// </summary>
+
     protected float _health;
     public float Health
     {
@@ -134,6 +141,7 @@ public partial class CharacterData : Resource
             AttackChanged?.Invoke(value);
         }
     }
+    //攻击
 
     protected float _defend;
     public float Defend
@@ -144,18 +152,18 @@ public partial class CharacterData : Resource
             _defend = value;
             DefendChanged?.Invoke(value);
         }
-    }
+    }                   //防御
 
     protected float _dodge;
     public float Dodge
     {
         get => _dodge;
-        set
+        set 
         {
             _dodge = value;
             DodgeChanged?.Invoke(value);
         }
-    }
+    }                                    //闪避
 
     protected float _crit;
     public float Crit
@@ -166,5 +174,9 @@ public partial class CharacterData : Resource
             _crit = value;
             CritChanged?.Invoke(value);
         }
-    }
+    }                              //暴击
+
+
+
+
 }

@@ -1,13 +1,11 @@
-using System;
 using Godot;
 using Godot.Collections;
+using System;
 
 public partial class PlayerData : CharacterData
 {
     public event Action<int> LevelChanged;
     public event Action<float> ExperienceChanged;
-
-    public Array<PickableObject> Inventory = new();
 
     protected int _level = 1;
     public int Level
@@ -20,17 +18,18 @@ public partial class PlayerData : CharacterData
         }
     }
 
-    protected float _experience = 0f;
+    protected float _experience = 0;
     public float Experience
     {
         get => _experience;
         set
         {
+            //升级检测
             var currentExperienceThreshold = CurrentLevelUpExperienceThreshold;
             if (value >= currentExperienceThreshold)
             {
                 Level += 1;
-                for (int i = 0; i < BaseAttributePointsGainPerLevelUp; i++)
+                for (int i = 0; i < BaseLevelUpExperienceThreshold; i++)
                 {
                     switch (GD.RandRange(0, 2))
                     {
@@ -62,19 +61,22 @@ public partial class PlayerData : CharacterData
             var currentExperienceThreshold = BaseLevelUpExperienceThreshold;
             for (int i = 0; i < _level; i++)
             {
-                currentExperienceThreshold +=
-                    currentExperienceThreshold * LevelUpExperienceThresholdIncrementRate;
+                currentExperienceThreshold += currentExperienceThreshold * LevelUpExperienceThresholdIncrementRate;
             }
 
             return currentExperienceThreshold;
         }
     }
 
-    public int BaseAttributePointsGainPerLevelUp = 5;
+    public int BaseAttributePointsGainPerLeveUp = 5;
+
+
+    public Array<PickableObject> Inventory = new();
 
     public ILeftHandHoldEquipment LeftHandHoldEquipment;
     public IRightHandHoldEquipment RightHandHoldEquipment;
     public IBodyWearEquipment BodyWearEquipment;
-    public IFingerWearEquipment FingerWearEquipment;
     public INeckWearEquipment NeckWearEquipment;
+    public IFingerWearEquipment FingerWearEquipment;
+
 }

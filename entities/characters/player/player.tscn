@@ -1,28 +1,26 @@
-[gd_scene load_steps=7 format=3 uid="uid://5xcrjsq4n7xu"]
+[gd_scene load_steps=7 format=3 uid="uid://penw470kyki3"]
 
-[ext_resource type="PackedScene" uid="uid://bmolco0ib744m" path="res://entities/characters/character.tscn" id="1_8qgit"]
-[ext_resource type="Script" path="res://entities/characters/player/Player.cs" id="2_buinu"]
-[ext_resource type="Resource" uid="uid://d04n7jm8bhbqs" path="res://resources/character_data/player_data/player_data.tres" id="3_neq2k"]
-[ext_resource type="Script" path="res://entities/characters/player/PlayerDebugger.cs" id="4_od2an"]
-[ext_resource type="Texture2D" uid="uid://d2w3gfb2ettlh" path="res://assets/textures/tile_sheet.png" id="4_vgyqt"]
-[ext_resource type="PackedScene" uid="uid://bk2xe06dewdp1" path="res://components/pick_up_component/pick_up_component.tscn" id="6_22mis"]
+[ext_resource type="PackedScene" uid="uid://dgof1icchqyds" path="res://entities/characters/character.tscn" id="1_wx0n0"]
+[ext_resource type="Script" path="res://entities/characters/player/Player.cs" id="2_gvxuo"]
+[ext_resource type="Resource" uid="uid://dyc4wq2q3hsks" path="res://resources/character_data/player_data/player_data.tres" id="3_q53f2"]
+[ext_resource type="Script" path="res://entities/characters/player/PlayerDebugger.cs" id="4_oxavp"]
+[ext_resource type="Texture2D" uid="uid://dbq2u8bhsesqw" path="res://assets/textures/tile_sheet.png" id="5_fttyb"]
+[ext_resource type="PackedScene" uid="uid://n72edpoqnxup" path="res://components/pick_up_component/pick_up_component.tscn" id="6_1w1tf"]
 
-[node name="Player" instance=ExtResource("1_8qgit")]
-script = ExtResource("2_buinu")
-_characterData = ExtResource("3_neq2k")
+[node name="Player" instance=ExtResource("1_wx0n0")]
+script = ExtResource("2_gvxuo")
+_characterData = ExtResource("3_q53f2")
 
 [node name="PlayerDebugger" type="Node" parent="." index="0"]
-script = ExtResource("4_od2an")
+script = ExtResource("4_oxavp")
 
-[node name="Camera2D" type="Camera2D" parent="." index="1"]
-
-[node name="Sprite2D" parent="." index="2"]
+[node name="Sprite2D" parent="." index="1"]
 region_rect = Rect2(0, 80, 16, 16)
 
-[node name="DeathSprite2D" type="Sprite2D" parent="." index="3"]
+[node name="DeathSprite2D" type="Sprite2D" parent="." index="2"]
 visible = false
-texture = ExtResource("4_vgyqt")
+texture = ExtResource("5_fttyb")
 region_enabled = true
 region_rect = Rect2(16, 80, 16, 16)
 
-[node name="PickUpComponent" parent="." index="6" instance=ExtResource("6_22mis")]
+[node name="PickUpComponent" parent="." index="5" instance=ExtResource("6_1w1tf")]

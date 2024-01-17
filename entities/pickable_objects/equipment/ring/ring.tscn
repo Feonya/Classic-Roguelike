@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://cti8ln0xmff3g"]
+
+[ext_resource type="PackedScene" uid="uid://oot2wvr8imxb" path="res://entities/pickable_objects/equipment/necklace/necklace.tscn" id="1_ueg03"]
+[ext_resource type="Script" path="res://entities/pickable_objects/equipment/ring/Ring.cs" id="2_kud2b"]
+
+[node name="Ring" instance=ExtResource("1_ueg03")]
+script = ExtResource("2_kud2b")
+_name = "戒指"
+
+[node name="Sprite2D" parent="." index="0"]
+region_rect = Rect2(64, 112, 16, 16)

@@ -1,10 +1,26 @@
-[gd_scene load_steps=3 format=3 uid="uid://r5mm5frso7nd"]
+[gd_scene load_steps=5 format=3 uid="uid://1qkomyjfhvui"]
 
-[ext_resource type="Script" path="res://ui/inventory_window/InventoryWindow.cs" id="1_p72wj"]
-[ext_resource type="FontFile" uid="uid://dw4wbg13ngmmw" path="res://assets/fonts/vonwaon_bitmap_16px.ttf" id="1_t8ic7"]
+[ext_resource type="Script" path="res://ui/inventory_window/InventoryWindow.cs" id="1_by0ur"]
+[ext_resource type="FontFile" uid="uid://6t2mmq5w4dfi" path="res://assets/textures/vonwaon_bitmap_16px.ttf" id="2_xln4g"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bjjtm"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 16
+border_width_top = 16
+border_width_right = 8
+border_width_bottom = 16
+border_color = Color(0.8, 0.8, 0.8, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kc5fd"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 8
+border_width_top = 16
+border_width_right = 16
+border_width_bottom = 16
+border_color = Color(0.8, 0.8, 0.8, 0)
 
 [node name="InventoryWindow" type="CanvasLayer"]
-script = ExtResource("1_p72wj")
+script = ExtResource("1_by0ur")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 anchors_preset = 15
@@ -15,88 +31,62 @@ grow_vertical = 2
 
 [node name="ColorRect" type="ColorRect" parent="MarginContainer"]
 layout_mode = 2
-color = Color(0, 0, 0, 0.482353)
+color = Color(0, 0, 0, 0.486275)
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 0
-alignment = 1
 
-[node name="LeftMarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer"]
+[node name="LeftPanel" type="Panel" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 16
+theme_override_styles/panel = SubResource("StyleBoxFlat_bjjtm")
 
-[node name="ColorRect" type="ColorRect" parent="MarginContainer/HBoxContainer/LeftMarginContainer"]
-layout_mode = 2
-color = Color(1, 1, 1, 0.482353)
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/LeftPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 32
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/LeftMarginContainer"]
-layout_mode = 2
-theme_override_constants/margin_left = 1
-theme_override_constants/margin_top = 1
-theme_override_constants/margin_right = 1
-theme_override_constants/margin_bottom = 1
-
-[node name="ColorRect" type="ColorRect" parent="MarginContainer/HBoxContainer/LeftMarginContainer/MarginContainer"]
-layout_mode = 2
-color = Color(0, 0, 0, 0.784314)
-
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/LeftMarginContainer/MarginContainer"]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/HBoxContainer/LeftMarginContainer/MarginContainer/MarginContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/HBoxContainer/LeftPanel/MarginContainer"]
 layout_mode = 2
 mouse_filter = 2
 follow_focus = true
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 3
 
-[node name="InventoryObjectContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/LeftMarginContainer/MarginContainer/MarginContainer/ScrollContainer"]
+[node name="InventoryContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/LeftPanel/MarginContainer/ScrollContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="RightMarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer"]
+[node name="RightPanel" type="Panel" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 16
+theme_override_styles/panel = SubResource("StyleBoxFlat_kc5fd")
 
-[node name="ColorRect" type="ColorRect" parent="MarginContainer/HBoxContainer/RightMarginContainer"]
-layout_mode = 2
-color = Color(1, 1, 1, 0.482353)
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/RightPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/RightMarginContainer"]
-layout_mode = 2
-theme_override_constants/margin_left = 1
-theme_override_constants/margin_top = 1
-theme_override_constants/margin_right = 1
-theme_override_constants/margin_bottom = 1
-
-[node name="ColorRect" type="ColorRect" parent="MarginContainer/HBoxContainer/RightMarginContainer/MarginContainer"]
-layout_mode = 2
-color = Color(0, 0, 0, 0.784314)
-
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/RightMarginContainer/MarginContainer"]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="DescriptionLabel" type="Label" parent="MarginContainer/HBoxContainer/RightMarginContainer/MarginContainer/MarginContainer"]
+[node name="DescriptionLabel" type="Label" parent="MarginContainer/HBoxContainer/RightPanel/MarginContainer"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(1, 1)
 layout_mode = 2
 size_flags_vertical = 1
-theme_override_fonts/font = ExtResource("1_t8ic7")
+theme_override_fonts/font = ExtResource("2_xln4g")
 autowrap_mode = 1

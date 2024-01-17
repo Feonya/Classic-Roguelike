@@ -1,8 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://byosb4gqcfnc3"]
+[gd_scene load_steps=2 format=3 uid="uid://b4i1jepn0plhv"]
 
-[ext_resource type="Script" path="res://managers/a_star_grid_manager/a_star_grid_debugger/AStarGridDebugger.cs" id="1_sbyt6"]
+[ext_resource type="Script" path="res://managers/a_star_grid_manager/a_star_grid_debugger/AStarGridDebuggerr.cs" id="1_ov44o"]
 
-[node name="AStarGridDebugger" type="Node2D"]
-visible = false
-z_index = 100
-script = ExtResource("1_sbyt6")
+[node name="AStarGridDebuggerr" type="Node2D"]
+script = ExtResource("1_ov44o")

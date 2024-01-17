@@ -1,13 +1,18 @@
-[gd_scene load_steps=6 format=3 uid="uid://7fvuw1dq505v"]
+[gd_scene load_steps=11 format=3 uid="uid://bpwfowaftoiip"]
 
-[ext_resource type="PackedScene" uid="uid://4mdofym5k44p" path="res://scenes/main.tscn" id="1_ce5py"]
-[ext_resource type="Resource" uid="uid://c5rgvorilsfoi" path="res://resources/map_data/dungeon_data/dungeon_data.tres" id="2_68jkw"]
-[ext_resource type="PackedScene" uid="uid://mw6k3uuoujrn" path="res://managers/map_manager/map_generators/dungeon_generator/dungeon_generator.tscn" id="2_brejk"]
-[ext_resource type="Script" path="res://resources/character_data/player_data/PlayerData.cs" id="3_n2wgv"]
+[ext_resource type="PackedScene" uid="uid://bh868wawqhqg3" path="res://scenes/main.tscn" id="1_af2r4"]
+[ext_resource type="Resource" uid="uid://dlsw0xm5x56lo" path="res://resources/map_data/dungeon_data/dungeon_data.tres" id="2_ssd00"]
+[ext_resource type="PackedScene" uid="uid://cf58oc7mgut34" path="res://managers/map_manager/map_generators/dungeon_generator/dungeon_generator.tscn" id="3_vd4e2"]
+[ext_resource type="PackedScene" uid="uid://bkdlaqugis54w" path="res://entities/characters/enemy/rat/rat.tscn" id="4_khfe5"]
+[ext_resource type="PackedScene" uid="uid://b8is0x3xv2udo" path="res://entities/characters/enemy/goblin/goblin.tscn" id="5_1h43j"]
+[ext_resource type="PackedScene" uid="uid://csu0wyjxf50up" path="res://entities/characters/enemy/orc/orc.tscn" id="6_x44mw"]
+[ext_resource type="PackedScene" uid="uid://byf4bs4q3s86k" path="res://entities/characters/enemy/skeleton_magician/skeleton_magician.tscn" id="7_ucssa"]
+[ext_resource type="PackedScene" uid="uid://0cpmd48xj8b8" path="res://entities/characters/enemy/skeleton/skeleton.tscn" id="8_faomb"]
+[ext_resource type="Script" path="res://resources/character_data/player_data/PlayerData.cs" id="9_s8gsv"]
 
-[sub_resource type="Resource" id="Resource_fwo5h"]
+[sub_resource type="Resource" id="Resource_tikjy"]
 resource_local_to_scene = true
-script = ExtResource("3_n2wgv")
+script = ExtResource("9_s8gsv")
 Name = "玩家"
 _sight = 6
 _strength = 8
@@ -18,24 +23,35 @@ StrengthIncrementEffects = {
 "defend": 1.0
 }
 ConstitutionIncrementEffects = {
-"health": 3.0,
-"max_health": 3.0
+"health": 1000.0,
+"max_health": 1000.0
 }
 AgilityIncrementEffects = {
 "crit": 0.005,
 "dodge": 0.01
 }
 
-[node name="Dungeon1" instance=ExtResource("1_ce5py")]
+[node name="Dungeon1" instance=ExtResource("1_af2r4")]
 
 [node name="MapManager" parent="." index="2"]
-_mapData = ExtResource("2_68jkw")
+_mapData = ExtResource("2_ssd00")
 
-[node name="DungeonGenerator" parent="MapManager" index="0" instance=ExtResource("2_brejk")]
+[node name="DungeonGenerator" parent="MapManager" index="0" instance=ExtResource("3_vd4e2")]
 
-[node name="StairManager" parent="." index="7"]
+[node name="StairManager" parent="." index="6"]
 _nextScenePath = "res://scenes/dungeon_2/dungeon_2.tscn"
 _previousScenePath = "res://scenes/forest/forest.tscn"
 
+[node name="EnemySpawner" parent="." index="7"]
+_maxEnemies = 15
+_enemyScenes = {
+ExtResource("4_khfe5"): 50.0,
+ExtResource("5_1h43j"): 40.0,
+ExtResource("6_x44mw"): 30.0,
+ExtResource("7_ucssa"): 30.0,
+ExtResource("8_faomb"): 40
+}
+_bossScenes = []
+
 [node name="Player" parent="GameViewportContainer/GameViewport" index="3"]
-_characterData = SubResource("Resource_fwo5h")
+_characterData = SubResource("Resource_tikjy")

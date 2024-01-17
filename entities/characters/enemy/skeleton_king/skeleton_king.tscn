@@ -1,0 +1,19 @@
+[gd_scene load_steps=6 format=3 uid="uid://d28einnr7gkcd"]
+
+[ext_resource type="PackedScene" uid="uid://ii3ers3enrxl" path="res://entities/characters/enemy/enemy.tscn" id="1_gj8g2"]
+[ext_resource type="Resource" uid="uid://cy5oerlg1j3k5" path="res://resources/character_data/enemy_data/skeleton_king_data/skeleton_king_data.tres" id="2_enoak"]
+[ext_resource type="PackedScene" uid="uid://dejcp6s0mo4yt" path="res://components/ai_component/ai/chase_ai/chase_ai.tscn" id="3_4yjxr"]
+[ext_resource type="PackedScene" uid="uid://bkxxopgydfx42" path="res://components/ai_component/ai/melee_ai/melee_ai.tscn" id="3_i5hfy"]
+[ext_resource type="PackedScene" uid="uid://vynigpgwn7g3" path="res://components/ai_component/ai/walk_around_ai/walk_around_ai.tscn" id="3_kvlid"]
+
+[node name="SkeletonKing" instance=ExtResource("1_gj8g2")]
+_characterData = ExtResource("2_enoak")
+
+[node name="Sprite2D" parent="." index="0"]
+region_rect = Rect2(160, 80, 16, 16)
+
+[node name="MeleeAi" parent="AiComponent" index="0" instance=ExtResource("3_i5hfy")]
+
+[node name="ChaseAi" parent="AiComponent" index="1" instance=ExtResource("3_4yjxr")]
+
+[node name="WalkAroundAi" parent="AiComponent" index="2" instance=ExtResource("3_kvlid")]

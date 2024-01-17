@@ -1,7 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://4jjqwjq3ttsk"]
+[gd_scene load_steps=3 format=3 uid="uid://sk2elj2u55a6"]
 
-[ext_resource type="Script" path="res://ui/attribute_panel/AttributePanel.cs" id="1_3nq55"]
-[ext_resource type="FontFile" uid="uid://dw4wbg13ngmmw" path="res://assets/fonts/vonwaon_bitmap_16px.ttf" id="1_oxi8j"]
+[ext_resource type="Script" path="res://ui/attribute_panel/AttributePanel.cs" id="1_280n2"]
+[ext_resource type="FontFile" uid="uid://6t2mmq5w4dfi" path="res://assets/textures/vonwaon_bitmap_16px.ttf" id="1_emktw"]
 
 [node name="AttributePanel" type="MarginContainer"]
 anchors_preset = 15
@@ -13,7 +13,7 @@ theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
-script = ExtResource("1_3nq55")
+script = ExtResource("1_280n2")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -22,83 +22,81 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 6
-theme_override_fonts/font = ExtResource("1_oxi8j")
+theme_override_fonts/font = ExtResource("1_emktw")
 text = "测试文字"
 
 [node name="ExperienceLabel" type="Label" parent="VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 6
-theme_override_fonts/font = ExtResource("1_oxi8j")
+theme_override_fonts/font = ExtResource("1_emktw")
 text = "测试文字"
 
 [node name="SightLabel" type="Label" parent="VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 6
-theme_override_fonts/font = ExtResource("1_oxi8j")
+theme_override_fonts/font = ExtResource("1_emktw")
 text = "测试文字"
 
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 6
 
 [node name="StrengthLabel" type="Label" parent="VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 6
-theme_override_fonts/font = ExtResource("1_oxi8j")
+theme_override_fonts/font = ExtResource("1_emktw")
 text = "测试文字"
 
 [node name="ConstitutionLabel" type="Label" parent="VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 6
-theme_override_fonts/font = ExtResource("1_oxi8j")
+theme_override_fonts/font = ExtResource("1_emktw")
 text = "测试文字"
 
 [node name="AgilityLabel" type="Label" parent="VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 6
-theme_override_fonts/font = ExtResource("1_oxi8j")
+theme_override_fonts/font = ExtResource("1_emktw")
 text = "测试文字"
 
 [node name="HSeparator2" type="HSeparator" parent="VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 6
 
 [node name="HealthLabel" type="Label" parent="VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 6
-theme_override_fonts/font = ExtResource("1_oxi8j")
+theme_override_fonts/font = ExtResource("1_emktw")
 text = "测试文字"
 
 [node name="AttackLabel" type="Label" parent="VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 6
-theme_override_fonts/font = ExtResource("1_oxi8j")
+theme_override_fonts/font = ExtResource("1_emktw")
 text = "测试文字"
 
 [node name="DefendLabel" type="Label" parent="VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 6
-theme_override_fonts/font = ExtResource("1_oxi8j")
+theme_override_fonts/font = ExtResource("1_emktw")
 text = "测试文字"
 
 [node name="DodgeLabel" type="Label" parent="VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 6
-theme_override_fonts/font = ExtResource("1_oxi8j")
+theme_override_fonts/font = ExtResource("1_emktw")
 text = "测试文字"
 
 [node name="CritLabel" type="Label" parent="VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 6
-theme_override_fonts/font = ExtResource("1_oxi8j")
+theme_override_fonts/font = ExtResource("1_emktw")
 text = "测试文字"

@@ -1,12 +1,12 @@
-[gd_scene load_steps=3 format=3 uid="uid://btr1pq5stq26g"]
+[gd_scene load_steps=3 format=3 uid="uid://boa8lylmckdf1"]
 
-[ext_resource type="PackedScene" uid="uid://byngc05jxfjx3" path="res://entities/pickable_objects/items/item.tscn" id="1_r5nth"]
-[ext_resource type="Script" path="res://entities/pickable_objects/items/small_potion/SmallPotion.cs" id="2_wpkgi"]
+[ext_resource type="PackedScene" uid="uid://brsombad1suen" path="res://entities/pickable_objects/items/item.tscn" id="1_5t5pk"]
+[ext_resource type="Script" path="res://entities/pickable_objects/items/small_potion/SmallPotion.cs" id="2_tal1p"]
 
-[node name="SmallPotion" instance=ExtResource("1_r5nth")]
-script = ExtResource("2_wpkgi")
+[node name="SmallPotion" instance=ExtResource("1_5t5pk")]
+script = ExtResource("2_tal1p")
+_healthIncrement = 10.0
 _name = "小血瓶"
-_description = "使用后回复10点生命值。"
 
 [node name="Sprite2D" parent="." index="0"]
 region_rect = Rect2(0, 96, 16, 16)

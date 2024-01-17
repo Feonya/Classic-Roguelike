@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://c1qaryyyfqaqt"]
+[gd_scene load_steps=2 format=3 uid="uid://bkxxopgydfx42"]
 
-[ext_resource type="Script" path="res://components/ai_component/ai/melee_ai/MeleeAi.cs" id="1_5ah08"]
+[ext_resource type="Script" path="res://components/ai_component/ai/melee_ai/MeleeAi.cs" id="1_qmpqc"]
 
 [node name="MeleeAi" type="Node"]
-script = ExtResource("1_5ah08")
+script = ExtResource("1_qmpqc")

@@ -1,30 +1,30 @@
-using System.Collections.Generic;
 using Godot;
+using System;
+using System.Collections.Generic;
 
 public partial class AiComponent : Node, IComponent
 {
-    private List<IAi> _aiList = new();
+    public List<IAi> _aiList = new List<IAi>();
 
     public void Initialize()
     {
         for (int i = 0; i < GetChildCount(); i++)
         {
             var child = GetChild(i);
-
-            if (child is not IAi) { continue; }
-
-            var ai = child as IAi;
-            ai.Initialize();
-
-            _aiList.Add(ai);
+            if(child is IAi ai)
+            {
+                ai.Initialize();
+                _aiList.Add(ai);
+            }
         }
     }
 
-    public void Update(double delta)
+    public void Update()
     {
         foreach (var ai in _aiList)
         {
-            if (ai.Execute()) { break; }
+            if (ai.Execute())
+                break;
         }
     }
 }

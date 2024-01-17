@@ -1,0 +1,20 @@
+[gd_scene load_steps=6 format=3 uid="uid://bkdlaqugis54w"]
+
+[ext_resource type="PackedScene" uid="uid://ii3ers3enrxl" path="res://entities/characters/enemy/enemy.tscn" id="1_kp3oq"]
+[ext_resource type="Resource" uid="uid://c8tamct63m12e" path="res://resources/character_data/enemy_data/rat_data/rat_data.tres" id="2_lhdkl"]
+[ext_resource type="PackedScene" uid="uid://bkxxopgydfx42" path="res://components/ai_component/ai/melee_ai/melee_ai.tscn" id="3_2pntt"]
+[ext_resource type="PackedScene" uid="uid://dejcp6s0mo4yt" path="res://components/ai_component/ai/chase_ai/chase_ai.tscn" id="3_v6kh3"]
+[ext_resource type="PackedScene" uid="uid://vynigpgwn7g3" path="res://components/ai_component/ai/walk_around_ai/walk_around_ai.tscn" id="3_wejtj"]
+
+[node name="Rat" instance=ExtResource("1_kp3oq")]
+position = Vector2(10, 10)
+_characterData = ExtResource("2_lhdkl")
+
+[node name="Sprite2D" parent="." index="0"]
+region_rect = Rect2(80, 80, 16, 16)
+
+[node name="MeleeAi" parent="AiComponent" index="0" instance=ExtResource("3_2pntt")]
+
+[node name="ChaseAi" parent="AiComponent" index="1" instance=ExtResource("3_v6kh3")]
+
+[node name="WalkAroundAi" parent="AiComponent" index="2" instance=ExtResource("3_wejtj")]

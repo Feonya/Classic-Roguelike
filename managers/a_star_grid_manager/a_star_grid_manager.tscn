@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://bvo6wopai38ef"]
+[gd_scene load_steps=2 format=3 uid="uid://du4lhvvrb74ag"]
 
-[ext_resource type="Script" path="res://managers/a_star_grid_manager/AStarGridManager.cs" id="1_8am4h"]
+[ext_resource type="Script" path="res://managers/a_star_grid_manager/AStarGridManager.cs" id="1_3awtm"]
 
 [node name="AStarGridManager" type="Node"]
-script = ExtResource("1_8am4h")
+script = ExtResource("1_3awtm")

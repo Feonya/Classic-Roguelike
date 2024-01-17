@@ -1,152 +1,117 @@
-using System;
-using System.Linq;
 using Godot;
 using Godot.Collections;
+using System;
+using System.Linq;
 
 public partial class Player : Character
 {
-    public event Action Losing;
-
     public override void Initialize()
     {
         base.Initialize();
 
-        _mapManager.Initialized += On_MapManager_Initialized;
-        _combatManager.CharacterDied += On_CombatManager_CharacterDied;
+        _mapManager.Initialized += On_MapManager_initialized;
     }
 
-    public override Dictionary<string, Variant> GetPersistentData()
+    private void On_MapManager_initialized(Vector2I playerStartCell,Func<Vector2I> _)
     {
-        var persistentData = base.GetPersistentData();
+        if (InitializeByLoadedData())
+            return;
 
-        var playerData = _characterData as PlayerData;
-
-        persistentData.Add("level", playerData.Level);
-        persistentData.Add("experience", playerData.Experience);
-
-        var inventoryPersistentData = new Array<string>();
-        var inventoryEquipPersistentData = new Array<bool>();
-        foreach (var pickableObject in playerData.Inventory)
-        {
-            inventoryPersistentData.Add(pickableObject.SceneFilePath);
-            inventoryEquipPersistentData.Add(
-                pickableObject is Equipment &&
-                (pickableObject as Equipment).IsEquipped
-            );
-        }
-        persistentData.Add("inventory", inventoryPersistentData);
-        persistentData.Add("inventory_equip", inventoryEquipPersistentData);
-
-        // persistentData.Add(
-        //     "left_hand_hold_equipment",
-        //     (playerData.LeftHandHoldEquipment as Equipment).SceneFilePath
-        // );
-        // persistentData.Add(
-        //     "right_hand_hold_equipment",
-        //     (playerData.RightHandHoldEquipment as Equipment).SceneFilePath
-        // );
-        // persistentData.Add(
-        //     "body_wear_equipment",
-        //     (playerData.BodyWearEquipment as Equipment).SceneFilePath
-        // );
-        // persistentData.Add(
-        //     "finger_wear_equipment",
-        //     (playerData.FingerWearEquipment as Equipment).SceneFilePath
-        // );
-        // persistentData.Add(
-        //     "neck_wear_equipment",
-        //     (playerData.NeckWearEquipment as Equipment).SceneFilePath
-        // );
-
-        return persistentData;
+        GlobalPosition = playerStartCell * _mapData.CellSize + _mapData.CellSize /2 ;
     }
 
-    private void On_MapManager_Initialized(
-        Vector2I playerStartCell, Callable GetEnemySpawnCell)
+    private new bool InitializeByLoadedData()
     {
-        if (TryInitializePlayerOnMapManagerInititalizedByPersistentData()) { return; }
-
-        GlobalPosition = playerStartCell * _mapData.CellSize + _mapData.CellSize / 2;
-    }
-
-    private bool TryInitializePlayerOnMapManagerInititalizedByPersistentData()
-    {
-        if (_saveLoadManager.PersistentData == null ||
-            _saveLoadManager.PersistentData.Count == 0 ||
-            !_saveLoadManager.PersistentData.ContainsKey("maps") ||
-            !_saveLoadManager.PersistentData.ContainsKey("player"))
-        {
+        if (!_saveLoadManager.IsInitialized("maps","player"))
             return false;
-        }
 
-        var playerPersistentData = _saveLoadManager
-            .PersistentData["player"].AsGodotDictionary<string, Variant>();
-
-        (_characterData as PlayerData).Level = playerPersistentData["level"].AsInt32();
-        (_characterData as PlayerData).Experience = playerPersistentData["experience"].AsSingle();
-
-        var inventoryPersistentData = playerPersistentData["inventory"].AsGodotArray<string>();
-        var inventoryEquipPersistentData = playerPersistentData["inventory_equip"].AsGodotArray<bool>();
-        for (int j = 0; j < inventoryPersistentData.Count; j++)
+        var player = _saveLoadManager.player;
+        if(_characterData is PlayerData playerData)
         {
-            var pickableObjectScenePath = inventoryPersistentData[j];
-            var pickableObjectEquip = inventoryEquipPersistentData[j];
+            playerData.Level = player["level"].AsInt32();
+            playerData.Experience = player["experience"].AsInt32();
+        }
+        var inventoryPickableObjects = player["inventory_pickable_objects"].AsGodotArray<string>();
+        var inventoryEquipStates = player["inventory_equip_states"].AsGodotArray<bool>();
 
-            var pickableObjectInstance =
-                GD.Load<PackedScene>(pickableObjectScenePath).Instantiate<PickableObject>();
+        for (int i = 0; i < inventoryPickableObjects.Count; i++)
+        {
+            var pickableObjectScenePath = inventoryPickableObjects[i];
+            var pickableObjectEquipState = inventoryEquipStates[i];
+
+            var pickableObjectInstance = GD.Load<PackedScene>(pickableObjectScenePath).Instantiate<PickableObject>();
             pickableObjectInstance.Visible = false;
             GetTree().CurrentScene.AddChild(pickableObjectInstance);
             pickableObjectInstance.Initialize();
             GetTree().CurrentScene.RemoveChild(pickableObjectInstance);
 
             (_characterData as PlayerData).Inventory.Add(pickableObjectInstance);
-
-            if (pickableObjectEquip)
+            if(pickableObjectEquipState)
             {
-                (pickableObjectInstance as IEquipableEquipment).EquipWithoutEffects();
+                (pickableObjectInstance as Equipment).EquipWithoutEffect();
             }
         }
 
-        var mapsPersistentData = _saveLoadManager
-            .PersistentData["maps"].AsGodotArray<Dictionary<string, Variant>>();
-        for (int i = 0; i < mapsPersistentData.Count; i++)
+        //恢复玩家位置
+        var maps = _saveLoadManager.maps;
+        foreach (var map in maps)
         {
-            var mapPersistentData = mapsPersistentData[i];
-            if (mapPersistentData["scene_name"].AsString() == GetTree().CurrentScene.Name)
+            if (map["scene_name"].AsString() == GetTree().CurrentScene.Name)
             {
-                GlobalPosition = mapPersistentData["player_last_position"].AsVector2();
-
+                GlobalPosition = map["player_last_position"].AsVector2();
                 return true;
             }
         }
-
         return false;
     }
 
-    private async void On_CombatManager_CharacterDied(Character character)
+
+    public override Dictionary<string, Variant> GetDataForSave()
     {
-        if (character != this || _isDead) { return; }
+        var playerDataForSave = base.GetDataForSave();
+        var playerData = _characterData as PlayerData;
 
-        _isDead = true;
+        playerDataForSave.Add("level", playerData.Level);
+        playerDataForSave.Add("experience", playerData.Experience);
 
+        var inventoryPickableObjects = new Array<string>();
+        var inventoryEquipStates = new Array<bool>();
+        foreach (var pickableObject in playerData.Inventory)
+        {
+            inventoryPickableObjects.Add(pickableObject.SceneFilePath);
+            inventoryEquipStates.Add(
+                pickableObject is Equipment && (pickableObject as Equipment).IsEquipped
+                );
+        }
+        playerDataForSave.Add("inventory_pickable_objects", inventoryPickableObjects);
+        playerDataForSave.Add("inventory_equip_states", inventoryEquipStates);
+        return playerDataForSave;
+
+    }
+
+    protected override async void On_CombatManager_CharacterDied(Character character)
+    {
+        if(character != this || _isDead)
+        {
+            return;
+        }
         GetNode<Sprite2D>("DeathSprite2D").Visible = true;
 
         var firstDeadEffectItem = (_characterData as PlayerData).Inventory.FirstOrDefault(
-            item => item is IDeadEffectItem
+            item =>
+             item is IDeadEffectItem
         );
         if (firstDeadEffectItem != null)
         {
-            GD.Print("玩家被击败！将在若干秒后复活！");
-
+            GD.Print("使用物品 即将复活！！");
             await (firstDeadEffectItem as IDeadEffectItem).DoDeadEffect();
             GetNode<Sprite2D>("DeathSprite2D").Visible = false;
             _isDead = false;
-
             return;
         }
 
-        GD.Print("玩家被击败！");
 
-        Losing.Invoke();
+        GD.Print("玩家被击败");
+        _isDead = true;
     }
 }

@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://bka0wc7cg47qp"]
+[gd_scene load_steps=2 format=3 uid="uid://djotgdpnocmuq"]
 
-[ext_resource type="Script" path="res://managers/combat_manager/CombatManager.cs" id="1_mckkq"]
+[ext_resource type="Script" path="res://managers/combat_manager/CombatManager.cs" id="1_tmvbk"]
 
 [node name="CombatManager" type="Node"]
-script = ExtResource("1_mckkq")
+script = ExtResource("1_tmvbk")

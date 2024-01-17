@@ -1,0 +1,19 @@
+[gd_scene load_steps=6 format=3 uid="uid://byf4bs4q3s86k"]
+
+[ext_resource type="PackedScene" uid="uid://ii3ers3enrxl" path="res://entities/characters/enemy/enemy.tscn" id="1_kxgyi"]
+[ext_resource type="Resource" uid="uid://brc3pj8riolu2" path="res://resources/character_data/enemy_data/skeleton_magician_data/skeleton_magician_data.tres" id="2_1teb0"]
+[ext_resource type="PackedScene" uid="uid://vynigpgwn7g3" path="res://components/ai_component/ai/walk_around_ai/walk_around_ai.tscn" id="3_k4lid"]
+[ext_resource type="PackedScene" uid="uid://dejcp6s0mo4yt" path="res://components/ai_component/ai/chase_ai/chase_ai.tscn" id="3_m3o0p"]
+[ext_resource type="PackedScene" uid="uid://b6sehkuajd2tw" path="res://components/ai_component/ai/range_attack_ai/range_attack_ai.tscn" id="3_owhnu"]
+
+[node name="SkeletonMagician" instance=ExtResource("1_kxgyi")]
+_characterData = ExtResource("2_1teb0")
+
+[node name="Sprite2D" parent="." index="0"]
+region_rect = Rect2(144, 80, 16, 16)
+
+[node name="RangeAttackAi" parent="AiComponent" index="0" instance=ExtResource("3_owhnu")]
+
+[node name="ChaseAi" parent="AiComponent" index="1" instance=ExtResource("3_m3o0p")]
+
+[node name="WalkAroundAi" parent="AiComponent" index="2" instance=ExtResource("3_k4lid")]

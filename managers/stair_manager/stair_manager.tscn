@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://2ki4mgn4dwoj"]
+[gd_scene load_steps=2 format=3 uid="uid://c7c5u55h8hvl2"]
 
-[ext_resource type="Script" path="res://managers/stair_manager/StairManager.cs" id="1_0x83y"]
+[ext_resource type="Script" path="res://managers/stair_manager/StairManager.cs" id="1_hlsjt"]
 
 [node name="StairManager" type="Node"]
-script = ExtResource("1_0x83y")
+script = ExtResource("1_hlsjt")

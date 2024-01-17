@@ -1,54 +1,81 @@
 using Godot;
-using Godot.Collections;
+using System;
 
 public partial class PickUpComponent : Node, IComponent
 {
     private InputHandler _inputHandler;
-
+    private Node _pickableObjectContainer;
     private bool _isDirty;
 
     public void Initialize()
     {
-        _inputHandler = GetTree().CurrentScene.GetNode<InputHandler>("%InputHandler");
+        _inputHandler =  this.GetUnique<InputHandler>();
+        _pickableObjectContainer = this.GetUnique("%PickableObjectContainer");
 
         _inputHandler.PickUpInputHandled += On_InputHandler_PickUpInputHandled;
     }
 
-    public void Update(double delta)
+    public void Update()
     {
-        if (!_isDirty) { return; }
-
-        TryPickUpPickableObjects();
-
-        _isDirty = false;
-    }
-
-    private void TryPickUpPickableObjects()
-    {
-        var owner = GetParent<Node2D>();
-
-        var space = owner.GetWorld2D().DirectSpaceState;
-        var parameters = new PhysicsPointQueryParameters2D
+        if (_isDirty)
         {
-            Exclude = new Array<Rid> { owner.GetNode<Area2D>("Area2D").GetRid() },
-            CollideWithAreas = true,
-            CollideWithBodies = false,
-            CollisionMask = (int)PhysicsLayer.PickableObject,
-            Position = owner.GlobalPosition
-        };
-        var results = space.IntersectPoint(parameters);
-
-        if (results.Count == 0) { return; }
-
-        foreach (var result in results)
-        {
-            var pickableObject = result["collider"].As<Area2D>().Owner as PickableObject;
-            pickableObject.BePickedUp(owner as Character);
+            TryPickUpPickableObjects();
+            _isDirty = false;
         }
     }
+
 
     private void On_InputHandler_PickUpInputHandled()
     {
         _isDirty = true;
+    }
+
+    private void TryPickUpPickableObjects()
+    {
+        var owner = GetOwner<Character>();
+        if(owner is not Player)
+        {
+            return;
+        }
+
+        var space = owner.GetWorld2D().DirectSpaceState;
+        var parameters = new PhysicsPointQueryParameters2D
+        {
+            Position = owner.GlobalPosition,
+            CollideWithAreas = true,
+            CollideWithBodies = false,
+            CollisionMask = (int)PhysicsLayer.PickableObject,
+            Exclude = new Godot.Collections.Array<Rid> 
+            {
+                owner.GetNode<Area2D>("Area2D").GetRid() 
+            }
+        };
+
+        var results = space.IntersectPoint(parameters);
+        if (results.Count == 0)
+            return;
+
+        foreach(var result in results )
+        {
+            var piickableObject = result["collider"].As<Area2D>().Owner as PickableObject;
+            PickUp(owner,piickableObject);
+        }
+    }
+
+    private void PickUp(Character owner, PickableObject pickableObject)
+    {
+        if (owner is Player player)
+        {
+            if(pickableObject is IImmediateEffectItem immediate)
+            {
+                immediate.DoImmediateEffect();
+            }
+
+            var playerData = player.CharacterData as PlayerData;
+            playerData.Inventory.Add(pickableObject);
+
+            pickableObject.Visible = false;
+            _pickableObjectContainer.RemoveChild(pickableObject);
+        }
     }
 }

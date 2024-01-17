@@ -1,24 +1,39 @@
-[gd_resource type="Resource" load_steps=5 format=3 uid="uid://3qmoq43fcngt"]
+[gd_resource type="Resource" load_steps=13 format=3 uid="uid://cjxys1p4hdf5d"]
 
-[ext_resource type="Script" path="res://resources/character_data/enemy_data/EnemyData.cs" id="1_1uphm"]
-[ext_resource type="PackedScene" uid="uid://cch2rwoahwlir" path="res://entities/pickable_objects/items/revive_cross/revive_cross.tscn" id="1_pxum3"]
-[ext_resource type="PackedScene" uid="uid://ca3r7t0p85oxd" path="res://entities/pickable_objects/equipments/mace/mace.tscn" id="2_hyyoo"]
-[ext_resource type="PackedScene" uid="uid://cfo6xngk5lamt" path="res://entities/pickable_objects/equipments/shield/shield.tscn" id="3_7hm5d"]
+[ext_resource type="PackedScene" uid="uid://cxigfkedwkq2c" path="res://entities/pickable_objects/equipment/armour/armour.tscn" id="1_hb5qh"]
+[ext_resource type="Script" path="res://resources/character_data/enemy_data/EnemyData.cs" id="1_idq2w"]
+[ext_resource type="PackedScene" uid="uid://bs2l642kalo86" path="res://entities/pickable_objects/equipment/mace/mace.tscn" id="2_ip28e"]
+[ext_resource type="PackedScene" uid="uid://oot2wvr8imxb" path="res://entities/pickable_objects/equipment/necklace/necklace.tscn" id="3_gas74"]
+[ext_resource type="PackedScene" uid="uid://cti8ln0xmff3g" path="res://entities/pickable_objects/equipment/ring/ring.tscn" id="4_j6jlg"]
+[ext_resource type="PackedScene" uid="uid://ckmbtgkbhw40h" path="res://entities/pickable_objects/equipment/shield/shield.tscn" id="5_osg11"]
+[ext_resource type="PackedScene" uid="uid://dqwbcme84sngs" path="res://entities/pickable_objects/equipment/sword/sword.tscn" id="6_xb0s0"]
+[ext_resource type="PackedScene" uid="uid://c6t4j8uyftd1q" path="res://entities/pickable_objects/items/big_potion/big_potion.tscn" id="7_2wioj"]
+[ext_resource type="PackedScene" uid="uid://dxvvog2yo0v64" path="res://entities/pickable_objects/items/map_scroll/map_scroll.tscn" id="8_24acq"]
+[ext_resource type="PackedScene" uid="uid://rkjw6xjb0b6h" path="res://entities/pickable_objects/items/revive_cross/revive_cross.tscn" id="9_0qfj4"]
+[ext_resource type="PackedScene" uid="uid://c23iixtmql3qe" path="res://entities/pickable_objects/items/sight_ball/sight_ball.tscn" id="10_apnnp"]
+[ext_resource type="PackedScene" uid="uid://boa8lylmckdf1" path="res://entities/pickable_objects/items/small_potion/small_potion.tscn" id="11_l3e75"]
 
 [resource]
-resource_local_to_scene = true
-script = ExtResource("1_1uphm")
-DeathDropExperience = 5.0
+script = ExtResource("1_idq2w")
+DeathDropExperience = 2.0
 DeathDropPickableObjects = {
-ExtResource("1_pxum3"): 0.5,
-ExtResource("2_hyyoo"): 0.5,
-ExtResource("3_7hm5d"): 0.5
+ExtResource("1_hb5qh"): 0.05,
+ExtResource("2_ip28e"): 0.05,
+ExtResource("3_gas74"): 0.05,
+ExtResource("4_j6jlg"): 0.05,
+ExtResource("5_osg11"): 0.05,
+ExtResource("6_xb0s0"): 0.05,
+ExtResource("7_2wioj"): 0.05,
+ExtResource("8_24acq"): 0.05,
+ExtResource("9_0qfj4"): 0.05,
+ExtResource("10_apnnp"): 0.05,
+ExtResource("11_l3e75"): 0.05
 }
 Name = "兽人"
-_sight = 3
-_strength = 5
-_constitution = 5
-_agility = 5
+_sight = 6
+_strength = 8
+_constitution = 8
+_agility = 8
 StrengthIncrementEffects = {
 "attack": 2.0,
 "defend": 1.0

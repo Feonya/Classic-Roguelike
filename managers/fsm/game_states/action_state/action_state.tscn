@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://bji7uk8rid6s3"]
+[gd_scene load_steps=2 format=3 uid="uid://dk3uyl7crrnmr"]
 
-[ext_resource type="Script" path="res://managers/fsm/game_states/action_state/ActionState.cs" id="1_41mi4"]
+[ext_resource type="Script" path="res://managers/fsm/game_states/action_state/ActionState.cs" id="1_0acxh"]
 
 [node name="ActionState" type="Node"]
-script = ExtResource("1_41mi4")
+script = ExtResource("1_0acxh")

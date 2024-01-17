@@ -1,22 +1,39 @@
-[gd_resource type="Resource" load_steps=4 format=3 uid="uid://b13byxp833kdm"]
+[gd_resource type="Resource" load_steps=13 format=3 uid="uid://brc3pj8riolu2"]
 
-[ext_resource type="Script" path="res://resources/character_data/enemy_data/EnemyData.cs" id="1_juuis"]
-[ext_resource type="PackedScene" uid="uid://bi4nejcf6ja4b" path="res://entities/pickable_objects/equipments/necklace/necklace.tscn" id="1_y5fy0"]
-[ext_resource type="PackedScene" uid="uid://darsg1hharu1g" path="res://entities/pickable_objects/equipments/ring/ring.tscn" id="2_kw1uy"]
+[ext_resource type="Script" path="res://resources/character_data/enemy_data/EnemyData.cs" id="1_5uskc"]
+[ext_resource type="PackedScene" uid="uid://cxigfkedwkq2c" path="res://entities/pickable_objects/equipment/armour/armour.tscn" id="1_ithij"]
+[ext_resource type="PackedScene" uid="uid://bs2l642kalo86" path="res://entities/pickable_objects/equipment/mace/mace.tscn" id="2_qnvw8"]
+[ext_resource type="PackedScene" uid="uid://oot2wvr8imxb" path="res://entities/pickable_objects/equipment/necklace/necklace.tscn" id="3_221fu"]
+[ext_resource type="PackedScene" uid="uid://cti8ln0xmff3g" path="res://entities/pickable_objects/equipment/ring/ring.tscn" id="4_fkmme"]
+[ext_resource type="PackedScene" uid="uid://ckmbtgkbhw40h" path="res://entities/pickable_objects/equipment/shield/shield.tscn" id="5_unl08"]
+[ext_resource type="PackedScene" uid="uid://dqwbcme84sngs" path="res://entities/pickable_objects/equipment/sword/sword.tscn" id="6_nyml6"]
+[ext_resource type="PackedScene" uid="uid://c6t4j8uyftd1q" path="res://entities/pickable_objects/items/big_potion/big_potion.tscn" id="7_4g7de"]
+[ext_resource type="PackedScene" uid="uid://dxvvog2yo0v64" path="res://entities/pickable_objects/items/map_scroll/map_scroll.tscn" id="8_t3s5s"]
+[ext_resource type="PackedScene" uid="uid://rkjw6xjb0b6h" path="res://entities/pickable_objects/items/revive_cross/revive_cross.tscn" id="9_g0dix"]
+[ext_resource type="PackedScene" uid="uid://c23iixtmql3qe" path="res://entities/pickable_objects/items/sight_ball/sight_ball.tscn" id="10_55scu"]
+[ext_resource type="PackedScene" uid="uid://boa8lylmckdf1" path="res://entities/pickable_objects/items/small_potion/small_potion.tscn" id="11_bcjih"]
 
 [resource]
-resource_local_to_scene = true
-script = ExtResource("1_juuis")
-DeathDropExperience = 8.0
+script = ExtResource("1_5uskc")
+DeathDropExperience = 2.0
 DeathDropPickableObjects = {
-ExtResource("1_y5fy0"): 0.5,
-ExtResource("2_kw1uy"): 0.5
+ExtResource("1_ithij"): 0.05,
+ExtResource("2_qnvw8"): 0.05,
+ExtResource("3_221fu"): 0.05,
+ExtResource("4_fkmme"): 0.05,
+ExtResource("5_unl08"): 0.05,
+ExtResource("6_nyml6"): 0.05,
+ExtResource("7_4g7de"): 0.05,
+ExtResource("8_t3s5s"): 0.05,
+ExtResource("9_g0dix"): 0.05,
+ExtResource("10_55scu"): 0.05,
+ExtResource("11_bcjih"): 0.05
 }
 Name = "骷髅法师"
 _sight = 6
-_strength = 4
-_constitution = 4
-_agility = 4
+_strength = 8
+_constitution = 8
+_agility = 8
 StrengthIncrementEffects = {
 "attack": 2.0,
 "defend": 1.0

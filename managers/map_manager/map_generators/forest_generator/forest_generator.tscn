@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://bn1dx1fqxt27j"]
+[gd_scene load_steps=2 format=3 uid="uid://tweubnvgdlmu"]
 
-[ext_resource type="Script" path="res://managers/map_manager/map_generators/forest_generator/ForestGenerator.cs" id="1_mprjv"]
+[ext_resource type="Script" path="res://managers/map_manager/map_generators/forest_generator/ForestGenerator.cs" id="1_6ocnb"]
 
 [node name="ForestGenerator" type="Node"]
-script = ExtResource("1_mprjv")
+script = ExtResource("1_6ocnb")

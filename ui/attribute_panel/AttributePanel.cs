@@ -1,4 +1,5 @@
 using Godot;
+using System;
 
 public partial class AttributePanel : MarginContainer, IUi
 {
@@ -18,31 +19,33 @@ public partial class AttributePanel : MarginContainer, IUi
     private Label _dodgeLabel;
     private Label _critLabel;
 
+
     public void Initialize()
     {
-        _playerData = GetTree().CurrentScene
-            .GetNode<Player>("%Player").CharacterData as PlayerData;
+        _playerData = this.GetUnique<Player>().CharacterData as PlayerData;
 
-        _levelLabel = GetNode<Label>("%LevelLabel");
-        _experienceLabel = GetNode<Label>("%ExperienceLabel");
-        _sightLabel = GetNode<Label>("%SightLabel");
+        _levelLabel = GetLabel("Level");
+        _experienceLabel = GetLabel("Experience");
+        _sightLabel = GetLabel("Sight");
 
-        _strengthLabel = GetNode<Label>("%StrengthLabel");
-        _constitutionLabel = GetNode<Label>("%ConstitutionLabel");
-        _agilityLabel = GetNode<Label>("%AgilityLabel");
+        _strengthLabel = GetLabel("Strength");
+        _constitutionLabel = GetLabel("Constitution");
+        _agilityLabel = GetLabel("Agility");
 
-        _healthLabel = GetNode<Label>("%HealthLabel");
-        _attackLabel = GetNode<Label>("%AttackLabel");
-        _defendLabel = GetNode<Label>("%DefendLabel");
-        _dodgeLabel = GetNode<Label>("%DodgeLabel");
-        _critLabel = GetNode<Label>("%CritLabel");
+        _healthLabel = GetLabel("Health");
+        _attackLabel = GetLabel("Attack");
+        _defendLabel = GetLabel("Defend");
+        _dodgeLabel = GetLabel("Dodge");
+        _critLabel = GetLabel("Crit");
 
         InitializePlayerDataEvents();
-
         InitializeAttributeLabels();
     }
-
-    public void Update(double delta)
+    private Label GetLabel(string name)
+    {
+        return GetNode<Label>($"%{name}Label");
+    }
+    public void Update()
     {
     }
 
@@ -55,17 +58,15 @@ public partial class AttributePanel : MarginContainer, IUi
 
         _playerData.ExperienceChanged += (float value) =>
         {
-            _experienceLabel.Text =
-                "经验：" +
-                value.ToString("0.0") +
-                "/" +
-                _playerData.CurrentLevelUpExperienceThreshold.ToString("0.0");
+            _experienceLabel.Text = $"经验：{value.ToString("0.0")}/{_playerData.CurrentLevelUpExperienceThreshold.ToString("0.0")}";
         };
 
         _playerData.SightChanged += (int value) =>
         {
             _sightLabel.Text = "视野：" + value;
         };
+
+        //---------------------------------------------
 
         _playerData.StrengthChanged += (int value) =>
         {
@@ -81,23 +82,11 @@ public partial class AttributePanel : MarginContainer, IUi
         {
             _agilityLabel.Text = "敏捷：" + value;
         };
+        //---------------------------------------------
 
         _playerData.HealthChanged += (float value) =>
         {
-            _healthLabel.Text =
-                "血量：" +
-                value.ToString("0.0") +
-                "/" +
-                _playerData.MaxHealth.ToString("0.0");
-        };
-
-        _playerData.MaxHealthChanged += (float value) =>
-        {
-            _healthLabel.Text =
-                "血量：" +
-                _playerData.Health.ToString("0.0") +
-                "/" +
-                value.ToString("0.0");
+            _healthLabel.Text = $"血量：{value.ToString("0.0")}/{_playerData.MaxHealth.ToString("0.0")}";
         };
 
         _playerData.AttackChanged += (float value) =>
@@ -109,12 +98,10 @@ public partial class AttributePanel : MarginContainer, IUi
         {
             _defendLabel.Text = "防御：" + value.ToString("0.0");
         };
-
         _playerData.DodgeChanged += (float value) =>
         {
             _dodgeLabel.Text = "闪避：" + (value * 100f).ToString("0.0") + "%";
         };
-
         _playerData.CritChanged += (float value) =>
         {
             _critLabel.Text = "暴击：" + (value * 100f).ToString("0.0") + "%";
@@ -123,34 +110,21 @@ public partial class AttributePanel : MarginContainer, IUi
 
     private void InitializeAttributeLabels()
     {
-        _levelLabel.Text = "等级：" + _playerData.Level;
+        _levelLabel.Text = $"等级：{_playerData.Level}";
+        _experienceLabel.Text = $"经验：{_playerData.Experience.ToString("0.0")}/{_playerData.CurrentLevelUpExperienceThreshold.ToString("0.0")}";
+        _sightLabel.Text = $"视野：{_playerData.Sight}";
 
-        _experienceLabel.Text =
-            "经验：" +
-            _playerData.Experience.ToString("0.0") +
-            "/" +
-            _playerData.CurrentLevelUpExperienceThreshold.ToString("0.0");
+        _strengthLabel.Text = $"力量：{_playerData.Strength}";
+        _constitutionLabel.Text = $"体质：{_playerData.Constitution}";
+        _agilityLabel.Text = $"敏捷：{_playerData.Agility}";
 
-        _sightLabel.Text = "视野：" + _playerData.Sight;
+        _healthLabel.Text = $"血量：{_playerData.Health.ToString("0.0")}/{_playerData.MaxHealth.ToString("0.0")}";
+        _attackLabel.Text = $"攻击：{_playerData.Attack.ToString("0.0")}";
+        _defendLabel.Text = $"防御：{_playerData.Defend.ToString("0.0")}";
+        _dodgeLabel.Text = $"闪避：{(_playerData.Dodge * 100f).ToString("0.0")}%";
+        _critLabel.Text = $"暴击：{(_playerData.Crit * 100f).ToString("0.0")}%";
 
-        _strengthLabel.Text = "力量：" + _playerData.Strength;
 
-        _constitutionLabel.Text = "体质：" + _playerData.Constitution;
-
-        _agilityLabel.Text = "敏捷：" + _playerData.Agility;
-
-        _healthLabel.Text =
-            "血量：" +
-            _playerData.Health.ToString("0.0") +
-            "/" +
-            _playerData.MaxHealth.ToString("0.0");
-
-        _attackLabel.Text = "攻击：" + _playerData.Attack.ToString("0.0");
-
-        _defendLabel.Text = "防御：" + _playerData.Defend.ToString("0.0");
-
-        _dodgeLabel.Text = "闪避：" + (_playerData.Dodge * 100f).ToString("0.0") + "%";
-
-        _critLabel.Text = "暴击：" + (_playerData.Crit * 100f).ToString("0.0") + "%";
     }
+
 }

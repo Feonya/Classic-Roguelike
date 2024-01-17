@@ -1,0 +1,13 @@
+[gd_scene load_steps=5 format=3 uid="uid://ii3ers3enrxl"]
+
+[ext_resource type="PackedScene" uid="uid://dgof1icchqyds" path="res://entities/characters/character.tscn" id="1_4afck"]
+[ext_resource type="Script" path="res://entities/characters/enemy/Enemy.cs" id="2_447x0"]
+[ext_resource type="PackedScene" uid="uid://c0hvbdnfmufq1" path="res://components/ai_component/ai_component.tscn" id="3_qdc3b"]
+[ext_resource type="PackedScene" uid="uid://c8kav2fcpo4nl" path="res://components/drop_down_component/drop_down_component.tscn" id="4_nbcrj"]
+
+[node name="Enemy" instance=ExtResource("1_4afck")]
+script = ExtResource("2_447x0")
+
+[node name="AiComponent" parent="." index="2" instance=ExtResource("3_qdc3b")]
+
+[node name="DropDownComponent" parent="." index="4" instance=ExtResource("4_nbcrj")]

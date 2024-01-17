@@ -1,16 +1,16 @@
-[gd_scene load_steps=4 format=3 uid="uid://bo42n4qi1ff34"]
+[gd_scene load_steps=4 format=3 uid="uid://yx7pl1wcwxqt"]
 
-[ext_resource type="Script" path="res://entities/pickable_objects/PickableObject.cs" id="1_d17co"]
-[ext_resource type="Texture2D" uid="uid://d2w3gfb2ettlh" path="res://assets/textures/tile_sheet.png" id="2_al1hp"]
+[ext_resource type="Texture2D" uid="uid://dbq2u8bhsesqw" path="res://assets/textures/tile_sheet.png" id="1_1s7m8"]
+[ext_resource type="Script" path="res://entities/pickable_objects/PickableObject.cs" id="1_jensy"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ws0ik"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ofced"]
 size = Vector2(16, 16)
 
 [node name="PickableObject" type="Node2D"]
-script = ExtResource("1_d17co")
+script = ExtResource("1_jensy")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_al1hp")
+texture = ExtResource("1_1s7m8")
 region_enabled = true
 region_rect = Rect2(32, 80, 16, 16)
 
@@ -19,4 +19,5 @@ collision_layer = 4
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-shape = SubResource("RectangleShape2D_ws0ik")
+shape = SubResource("RectangleShape2D_ofced")
+debug_color = Color(0, 0.6, 0.701961, 0.419608)

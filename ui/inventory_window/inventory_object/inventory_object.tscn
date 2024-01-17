@@ -1,27 +1,19 @@
-[gd_scene load_steps=5 format=3 uid="uid://behco026ol1ny"]
+[gd_scene load_steps=5 format=3 uid="uid://citvvkjuaei5t"]
 
-[ext_resource type="FontFile" uid="uid://dw4wbg13ngmmw" path="res://assets/fonts/vonwaon_bitmap_16px.ttf" id="1_8qw6x"]
-[ext_resource type="Script" path="res://ui/inventory_window/inventory_object/InventoryObject.cs" id="2_rncba"]
+[ext_resource type="FontFile" uid="uid://6t2mmq5w4dfi" path="res://assets/textures/vonwaon_bitmap_16px.ttf" id="1_gd505"]
+[ext_resource type="Script" path="res://ui/inventory_window/inventory_object/InventoryObject.cs" id="2_4a6d5"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ooeg2"]
-bg_color = Color(0.6, 0.6, 0.6, 0)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(1, 1, 1, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bwyfr"]
+bg_color = Color(0.6, 0.6, 0.6, 0.498039)
 
-[sub_resource type="ButtonGroup" id="ButtonGroup_h53du"]
-resource_name = "inventory_object"
+[sub_resource type="ButtonGroup" id="ButtonGroup_fcwv4"]
 
 [node name="InventoryObject" type="Button"]
-custom_minimum_size = Vector2(2.08165e-12, 24)
-mouse_filter = 2
-theme_override_fonts/font = ExtResource("1_8qw6x")
-theme_override_styles/focus = SubResource("StyleBoxFlat_ooeg2")
+theme_override_fonts/font = ExtResource("1_gd505")
+theme_override_styles/focus = SubResource("StyleBoxFlat_bwyfr")
 toggle_mode = true
-button_group = SubResource("ButtonGroup_h53du")
-text = "1. 测试物品"
+button_group = SubResource("ButtonGroup_fcwv4")
+text = "1.测试物品"
 flat = true
 alignment = 0
-script = ExtResource("2_rncba")
+script = ExtResource("2_4a6d5")

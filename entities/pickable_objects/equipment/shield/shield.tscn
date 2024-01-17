@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://ckmbtgkbhw40h"]
+
+[ext_resource type="PackedScene" uid="uid://cti8ln0xmff3g" path="res://entities/pickable_objects/equipment/ring/ring.tscn" id="1_oq5n2"]
+[ext_resource type="Script" path="res://entities/pickable_objects/equipment/shield/Shield.cs" id="2_jdha7"]
+
+[node name="Shield" instance=ExtResource("1_oq5n2")]
+script = ExtResource("2_jdha7")
+_minDefendIncrement = 5.0
+_maxDefendIncrement = 8.0
+_name = "盾牌"
+
+[node name="Sprite2D" parent="." index="0"]
+region_rect = Rect2(32, 112, 16, 16)

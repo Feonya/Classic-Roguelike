@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://jvxybuyfsrw2"]
+[gd_scene load_steps=2 format=3 uid="uid://dejcp6s0mo4yt"]
 
-[ext_resource type="Script" path="res://components/ai_component/ai/chase_ai/ChaseAi.cs" id="1_aln1g"]
+[ext_resource type="Script" path="res://components/ai_component/ai/chase_ai/ChaseAi.cs" id="1_mbkr2"]
 
 [node name="ChaseAi" type="Node"]
-script = ExtResource("1_aln1g")
+script = ExtResource("1_mbkr2")

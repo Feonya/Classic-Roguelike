@@ -1,58 +1,50 @@
 using Godot;
 using Godot.Collections;
+using System;
 
-public partial class PickableObjectSpawner : Node, IManager
+public partial class PickableObjectSpawner : Node, IManager, ILoadable
 {
     private SaveLoadManager _saveLoadManager;
-
     private Node _pickableObjectContainer;
 
     public void Initialize()
     {
-        _saveLoadManager = GetTree().CurrentScene.GetNode<SaveLoadManager>("%SaveLoadManager");
-
-        _pickableObjectContainer = GetTree().CurrentScene.GetNode<Node>("%PickableObjectContainer");
-
-        TrySpawnPickableObjectsByPersistentData();
+        _saveLoadManager = this.GetUnique<SaveLoadManager>();
+        _pickableObjectContainer = this.GetUnique("%PickableObjectContainer");
+        InitializeByLoadedData();
     }
 
-    public void Update(double delta)
+
+
+    public void Update()
     {
+
     }
 
-    private void TrySpawnPickableObjectsByPersistentData()
+    public bool InitializeByLoadedData()
     {
-        if (_saveLoadManager.PersistentData == null ||
-            _saveLoadManager.PersistentData.Count == 0 ||
-            !_saveLoadManager.PersistentData.ContainsKey("maps"))
-        {
-            return;
-        }
+        if (!_saveLoadManager.IsInitialized("maps"))
+            return false;
 
-        var mapsPersistentData = _saveLoadManager
-            .PersistentData["maps"].AsGodotArray<Dictionary<string, Variant>>();
-        for (int i = 0; i < mapsPersistentData.Count; i++)
+        var maps = _saveLoadManager.maps;
+        foreach(var map in maps)
         {
-            var mapPersistentData = mapsPersistentData[i];
-            if (mapPersistentData["scene_name"].AsString() == GetTree().CurrentScene.Name)
+            if (map["scene_name"].AsString() == this.GetCurrentSceneName())
             {
-                var pickableObjectsPersistentData =
-                    mapPersistentData["pickable_objects"].AsGodotArray<Dictionary<string, Variant>>();
-                for (int j = 0; j < pickableObjectsPersistentData.Count; j++)
+                var pickableObjects = map["pickable_objects"].AsGodotArray<Dictionary<string, Variant>>();
+                for (int j = 0; j < pickableObjects.Count; j++)
                 {
-                    var pickableObjectPersistentData = pickableObjectsPersistentData[j];
-
+                    var pickableObject = pickableObjects[j];
                     var pickableObjectInstance = GD.Load<PackedScene>(
-                        pickableObjectPersistentData["scene_path"].AsString()
-                    ).Instantiate<PickableObject>();
+                        pickableObject["scene_path"].AsString()
+                        ).Instantiate<PickableObject>();
                     _pickableObjectContainer.AddChild(pickableObjectInstance);
-
-                    pickableObjectInstance.GlobalPosition =
-                        pickableObjectPersistentData["position"].AsVector2();
-
+                    pickableObjectInstance.GlobalPosition = pickableObject["position"].AsVector2();
                     pickableObjectInstance.Initialize();
                 }
+                return true;
             }
         }
+        return false;
     }
 }

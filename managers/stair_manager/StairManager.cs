@@ -1,90 +1,91 @@
 using Godot;
 using Godot.Collections;
+using System;
 
-public partial class StairManager : Node, IManager
+public partial class StairManager : Node, IManager, ILoadable
 {
     private MapData _mapData;
+    private InputHandler _inputHandler;
+    private TileMap _tileMap;
+    private Player _player;
+    private SaveLoadManager _saveLoadManager;
 
     [Export]
     private string _nextScenePath;
     [Export]
     private string _previousScenePath;
 
-    private SaveLoadManager _saveLoadManager;
-    private InputHandler _inputHandler;
-
-    private TileMap _tileMap;
-
-    private Player _player;
-
-    private int _upStairTerrainEnumNumber;
-    private int _downStairTerrainEnumNumber;
-
     private Vector2 _upStairPosition;
     private Vector2 _downStairPosition;
 
     public void Initialize()
     {
-        _mapData = GetTree().CurrentScene.GetNode<MapManager>("%MapManager").MapData;
+        _mapData = this.GetUnique<MapManager>().MapData;
+        _inputHandler = this.GetUnique<InputHandler>();
+        _tileMap = this.GetUnique<TileMap>();
+        _player = this.GetUnique<Player>();
+        _saveLoadManager = this.GetUnique<SaveLoadManager>();
 
-        _saveLoadManager = GetTree().CurrentScene.GetNode<SaveLoadManager>("%SaveLoadManager");
-        _tileMap = GetTree().CurrentScene.GetNode<TileMap>("%TileMap");
-
-        _inputHandler = GetTree().CurrentScene.GetNode<InputHandler>("%InputHandler");
-
-        _player = GetTree().CurrentScene.GetNode<Player>("%Player");
-
-        var mapGenerator = GetTree().CurrentScene
-            .GetNode<MapManager>("%MapManager").GetChild(0);
-        if (mapGenerator is ForestGenerator)
+        if (!InitializeByLoadedData())
         {
-            _upStairTerrainEnumNumber = (int)ForestTerrain.UpStair;
-            _downStairTerrainEnumNumber = (int)ForestTerrain.DownStair;
+            GenerateUpStair();
+            GenerateDownStair();
         }
-        else if (mapGenerator is DungeonGenerator)
-        {
-            _upStairTerrainEnumNumber = (int)DungeonTerrain.UpStair;
-            _downStairTerrainEnumNumber = (int)DungeonTerrain.DownStair;
-        }
-
-        _inputHandler.GoDownStairInputHandled += On_Inputhandler_GoDownStairInputHandled;
-        _inputHandler.GoUpStairInputHandled += On_Inputhandler_GoUpStairInputHandled;
-
-        GenerateUpStair();
-        GenerateDownStair();
     }
 
-    public void Update(double delta)
+    public void Update()
     {
     }
+
+    public void TryGoToPreviourScene()
+    {
+        if (string.IsNullOrEmpty(_previousScenePath))
+            return;
+
+        if (MathfExpand.IsEqualApprox(_player.GlobalPosition, _upStairPosition))
+        {
+            _saveLoadManager.Save();
+            GetTree().ChangeSceneToFile(_previousScenePath);
+        }
+    }
+
+    public void TryGoToNextScene()
+    {
+        if (string.IsNullOrEmpty(_nextScenePath))
+            return;
+
+        GD.Print("Go Next" + _player.GlobalPosition+ "/ "+_downStairPosition);
+        if (MathfExpand.IsEqualApprox(_player.GlobalPosition, _downStairPosition))
+        {
+            _saveLoadManager.Save();
+            GetTree().ChangeSceneToFile(_nextScenePath);
+        }
+    }
+
 
     private void GenerateUpStair()
     {
-        if (_previousScenePath == null || _previousScenePath == "") { return; }
-
-        if (TryGenerateUpStairByPersistentData()) { return; }
+        if (string.IsNullOrEmpty(_previousScenePath))
+            return;
 
         _upStairPosition = _player.GlobalPosition;
-
-        var playerCell = (Vector2I)
-            (_player.GlobalPosition - _mapData.CellSize / 2) / _mapData.CellSize;
-
+        var upStairCell = (Vector2I)((_upStairPosition - _mapData.CellSize / 2) / _mapData.CellSize);
         _tileMap.SetCellsTerrainConnect(
             (int)TileMapLayer.Default,
-            new Array<Vector2I> { playerCell },
-            (int)TerrainSet.Default,
-            _upStairTerrainEnumNumber,
+            new Godot.Collections.Array<Vector2I> { upStairCell },
+            (int)TerrainSet.Stair,
+            (int)StairTerrain.UpStair,
             false
-        );
+            );
+
     }
 
     private void GenerateDownStair()
     {
-        if (_nextScenePath == null || _nextScenePath == "") { return; }
+        if (string.IsNullOrEmpty(_nextScenePath))
+            return;
 
-        if (TryGenerateDownStairByPersistentData()) { return; }
-
-        var space = _tileMap.GetWorld2D().DirectSpaceState;
+        var space = _player.GetWorld2D().DirectSpaceState;
 
         while (true)
         {
@@ -97,129 +98,71 @@ public partial class StairManager : Node, IManager
             {
                 CollisionMask = (int)PhysicsLayer.BlockMovement,
                 Position = randomCellPosition,
-                Exclude = new Array<Rid> { _player.GetNode<Area2D>("Area2D").GetRid() }
+                Exclude = new Godot.Collections.Array<Rid>
+                {
+                    _player.GetNode<Area2D>("Area2D").GetRid()
+                }
             };
-            var results = space.IntersectPoint(parameters);
 
-            if (results.Count > 0) { continue; }
+            var results = space.IntersectPoint(parameters);
+            if (results.Count > 0)
+                continue;
 
             _downStairPosition = randomCellPosition;
 
             _tileMap.SetCellsTerrainConnect(
-                (int)TileMapLayer.Default,
-                new Array<Vector2I> { randomCell },
-                (int)TerrainSet.Default,
-                _downStairTerrainEnumNumber,
-                false
-            );
-
+         (int)TileMapLayer.Default,
+         new Godot.Collections.Array<Vector2I> { randomCell },
+         (int)TerrainSet.Stair,
+         (int)StairTerrain.DownStair,
+         false
+         );
             return;
         }
+
     }
 
-    private bool TryGenerateUpStairByPersistentData()
+    public bool InitializeByLoadedData()
     {
-        if (_saveLoadManager.PersistentData == null ||
-            _saveLoadManager.PersistentData.Count == 0 ||
-            !_saveLoadManager.PersistentData.ContainsKey("maps"))
-        {
+        if (!_saveLoadManager.IsInitialized("maps"))
             return false;
-        }
 
-        var mapsPersistentData = _saveLoadManager
-            .PersistentData["maps"].AsGodotArray<Dictionary<string, Variant>>();
-        for (int i = 0; i < mapsPersistentData.Count; i++)
+        var maps = _saveLoadManager.maps;
+        for (int i = 0; i < maps.Count; i++)
         {
-            var mapPersistentData = mapsPersistentData[i];
-            if (mapPersistentData["scene_name"].AsString() == GetTree().CurrentScene.Name)
+            var map = maps[i];
+            if (map["scene_name"].AsString() == GetTree().CurrentScene.Name)
             {
-                var upStairCell = mapPersistentData["up_stair_cell"].AsVector2I();
+                var upStairCell = map["up_stair_cell"].AsVector2I();
+                var downStairCell = map["down_stair_cell"].AsVector2I();
 
                 _upStairPosition = upStairCell * _mapData.CellSize + _mapData.CellSize / 2;
-
-                _tileMap.SetCellsTerrainConnect(
-                    (int)TileMapLayer.Default,
-                    new Array<Vector2I> { upStairCell },
-                    (int)TerrainSet.Default,
-                    _upStairTerrainEnumNumber,
-                    false
-                );
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private bool TryGenerateDownStairByPersistentData()
-    {
-        if (_saveLoadManager.PersistentData == null ||
-            _saveLoadManager.PersistentData.Count == 0 ||
-            !_saveLoadManager.PersistentData.ContainsKey("maps"))
-        {
-            return false;
-        }
-
-        var mapsPersistentData = _saveLoadManager
-            .PersistentData["maps"].AsGodotArray<Dictionary<string, Variant>>();
-        for (int i = 0; i < mapsPersistentData.Count; i++)
-        {
-            var mapPersistentData = mapsPersistentData[i];
-            if (mapPersistentData["scene_name"].AsString() == GetTree().CurrentScene.Name)
-            {
-                var downStairCell = mapPersistentData["down_stair_cell"].AsVector2I();
-
                 _downStairPosition = downStairCell * _mapData.CellSize + _mapData.CellSize / 2;
-
-                _tileMap.SetCellsTerrainConnect(
-                    (int)TileMapLayer.Default,
-                    new Array<Vector2I> { downStairCell },
-                    (int)TerrainSet.Default,
-                    _downStairTerrainEnumNumber,
-                    false
-                );
+            
+                if(upStairCell != Vector2I.Zero)
+                {
+                    _tileMap.SetCellsTerrainConnect(
+                        (int)TileMapLayer.Default,
+                        new Array<Vector2I> { upStairCell },
+                        (int)TerrainSet.Stair,
+                        (int)StairTerrain.UpStair,
+                        false
+                        );
+                }
+                if (downStairCell != Vector2I.Zero)
+                {
+                    _tileMap.SetCellsTerrainConnect(
+                        (int)TileMapLayer.Default,
+                        new Array<Vector2I> { downStairCell },
+                        (int)TerrainSet.Stair,
+                        (int)StairTerrain.DownStair,
+                        false
+                        );
+                }
 
                 return true;
             }
         }
-
         return false;
-    }
-
-    private void TryGoToNextScene()
-    {
-        if (_nextScenePath == null || _nextScenePath == "") { return; }
-
-        if (Mathf.IsEqualApprox(_player.GlobalPosition.X, _downStairPosition.X) &&
-            Mathf.IsEqualApprox(_player.GlobalPosition.Y, _downStairPosition.Y))
-        {
-            _saveLoadManager.Save();
-
-            GetTree().ChangeSceneToFile(_nextScenePath);
-        }
-    }
-
-    private void TryGoToPreivousScene()
-    {
-        if (_previousScenePath == null || _previousScenePath == "") { return; }
-
-        if (Mathf.IsEqualApprox(_player.GlobalPosition.X, _upStairPosition.X) &&
-            Mathf.IsEqualApprox(_player.GlobalPosition.Y, _upStairPosition.Y))
-        {
-            _saveLoadManager.Save();
-
-            GetTree().ChangeSceneToFile(_previousScenePath);
-        }
-    }
-
-    private void On_Inputhandler_GoDownStairInputHandled()
-    {
-        TryGoToNextScene();
-    }
-
-    private void On_Inputhandler_GoUpStairInputHandled()
-    {
-        TryGoToPreivousScene();
     }
 }

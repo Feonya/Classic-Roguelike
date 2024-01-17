@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://bs2l642kalo86"]
+
+[ext_resource type="PackedScene" uid="uid://cxigfkedwkq2c" path="res://entities/pickable_objects/equipment/armour/armour.tscn" id="1_w3wmv"]
+[ext_resource type="Script" path="res://entities/pickable_objects/equipment/mace/Mace.cs" id="2_uatwk"]
+
+[node name="Mace" instance=ExtResource("1_w3wmv")]
+script = ExtResource("2_uatwk")
+_name = "战锤"
+
+[node name="Sprite2D" parent="." index="0"]
+region_rect = Rect2(16, 112, 16, 16)

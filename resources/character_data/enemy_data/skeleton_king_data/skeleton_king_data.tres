@@ -1,17 +1,16 @@
-[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cqnj5sajy5oqr"]
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cy5oerlg1j3k5"]
 
-[ext_resource type="Script" path="res://resources/character_data/enemy_data/EnemyData.cs" id="1_ebm1t"]
+[ext_resource type="Script" path="res://resources/character_data/enemy_data/EnemyData.cs" id="1_j545u"]
 
 [resource]
-resource_local_to_scene = true
-script = ExtResource("1_ebm1t")
-DeathDropExperience = 10.0
+script = ExtResource("1_j545u")
+DeathDropExperience = 2.0
 DeathDropPickableObjects = {}
 Name = "骷髅王"
-_sight = 5
-_strength = 18
-_constitution = 18
-_agility = 18
+_sight = 6
+_strength = 8
+_constitution = 8
+_agility = 8
 StrengthIncrementEffects = {
 "attack": 2.0,
 "defend": 1.0

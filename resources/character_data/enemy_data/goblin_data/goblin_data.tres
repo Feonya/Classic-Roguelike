@@ -1,0 +1,48 @@
+[gd_resource type="Resource" load_steps=13 format=3 uid="uid://bgcosk6ib06eo"]
+
+[ext_resource type="Script" path="res://resources/character_data/enemy_data/EnemyData.cs" id="1_1cbgk"]
+[ext_resource type="PackedScene" uid="uid://cxigfkedwkq2c" path="res://entities/pickable_objects/equipment/armour/armour.tscn" id="1_026co"]
+[ext_resource type="PackedScene" uid="uid://bs2l642kalo86" path="res://entities/pickable_objects/equipment/mace/mace.tscn" id="2_ws4fo"]
+[ext_resource type="PackedScene" uid="uid://oot2wvr8imxb" path="res://entities/pickable_objects/equipment/necklace/necklace.tscn" id="3_4l6o7"]
+[ext_resource type="PackedScene" uid="uid://cti8ln0xmff3g" path="res://entities/pickable_objects/equipment/ring/ring.tscn" id="4_i1bit"]
+[ext_resource type="PackedScene" uid="uid://ckmbtgkbhw40h" path="res://entities/pickable_objects/equipment/shield/shield.tscn" id="5_kj0mv"]
+[ext_resource type="PackedScene" uid="uid://dqwbcme84sngs" path="res://entities/pickable_objects/equipment/sword/sword.tscn" id="6_x2y6s"]
+[ext_resource type="PackedScene" uid="uid://c6t4j8uyftd1q" path="res://entities/pickable_objects/items/big_potion/big_potion.tscn" id="7_nyxbt"]
+[ext_resource type="PackedScene" uid="uid://dxvvog2yo0v64" path="res://entities/pickable_objects/items/map_scroll/map_scroll.tscn" id="8_whs4l"]
+[ext_resource type="PackedScene" uid="uid://rkjw6xjb0b6h" path="res://entities/pickable_objects/items/revive_cross/revive_cross.tscn" id="9_rs5j8"]
+[ext_resource type="PackedScene" uid="uid://c23iixtmql3qe" path="res://entities/pickable_objects/items/sight_ball/sight_ball.tscn" id="10_kc5e2"]
+[ext_resource type="PackedScene" uid="uid://boa8lylmckdf1" path="res://entities/pickable_objects/items/small_potion/small_potion.tscn" id="11_4kduu"]
+
+[resource]
+script = ExtResource("1_1cbgk")
+DeathDropExperience = 4.0
+DeathDropPickableObjects = {
+ExtResource("1_026co"): 0.05,
+ExtResource("2_ws4fo"): 0.05,
+ExtResource("3_4l6o7"): 0.05,
+ExtResource("4_i1bit"): 0.05,
+ExtResource("5_kj0mv"): 0.05,
+ExtResource("6_x2y6s"): 0.05,
+ExtResource("7_nyxbt"): 0.05,
+ExtResource("8_whs4l"): 0.05,
+ExtResource("9_rs5j8"): 0.05,
+ExtResource("10_kc5e2"): 0.05,
+ExtResource("11_4kduu"): 0.05
+}
+Name = "哥布林"
+_sight = 6
+_strength = 8
+_constitution = 8
+_agility = 8
+StrengthIncrementEffects = {
+"attack": 2.0,
+"defend": 1.0
+}
+ConstitutionIncrementEffects = {
+"health": 3.0,
+"max_health": 3.0
+}
+AgilityIncrementEffects = {
+"crit": 0.01,
+"dodge": 0.005
+}

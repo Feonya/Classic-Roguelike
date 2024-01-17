@@ -1,12 +1,12 @@
-[gd_scene load_steps=3 format=3 uid="uid://d2mx00g3et73v"]
+[gd_scene load_steps=3 format=3 uid="uid://c6t4j8uyftd1q"]
 
-[ext_resource type="PackedScene" uid="uid://byngc05jxfjx3" path="res://entities/pickable_objects/items/item.tscn" id="1_7w5h0"]
-[ext_resource type="Script" path="res://entities/pickable_objects/items/big_potion/BigPotion.cs" id="2_wc72e"]
+[ext_resource type="PackedScene" uid="uid://brsombad1suen" path="res://entities/pickable_objects/items/item.tscn" id="1_gsptu"]
+[ext_resource type="Script" path="res://entities/pickable_objects/items/big_potion/BigPotion.cs" id="2_kspcq"]
 
-[node name="BigPotion" instance=ExtResource("1_7w5h0")]
-script = ExtResource("2_wc72e")
+[node name="BigPotion" instance=ExtResource("1_gsptu")]
+script = ExtResource("2_kspcq")
+_healthIncrement = 20.0
 _name = "大血瓶"
-_description = "使用后回复20点生命值。"
 
 [node name="Sprite2D" parent="." index="0"]
 region_rect = Rect2(16, 96, 16, 16)

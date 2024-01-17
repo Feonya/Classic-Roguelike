@@ -1,5 +1,6 @@
-public interface IManager
-{
-    public void Initialize();
-    public void Update(double delta);
-}
+﻿
+    public interface  IManager
+    {
+        public void Initialize();
+        public void Update();
+    }

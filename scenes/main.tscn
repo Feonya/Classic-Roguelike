@@ -1,34 +1,37 @@
-[gd_scene load_steps=25 format=3 uid="uid://4mdofym5k44p"]
+[gd_scene load_steps=25 format=3 uid="uid://bh868wawqhqg3"]
 
-[ext_resource type="Script" path="res://scenes/Main.cs" id="1_4t8f1"]
-[ext_resource type="PackedScene" uid="uid://dr1r3sk4j2mlq" path="res://managers/fsm/fsm.tscn" id="2_u1a00"]
-[ext_resource type="PackedScene" uid="uid://bd31ck4xkt5ot" path="res://managers/save_load_manager/save_load_manager.tscn" id="3_jn30s"]
-[ext_resource type="PackedScene" uid="uid://dfrk4calyh8dd" path="res://managers/input_handler/input_handler.tscn" id="3_w1wyy"]
-[ext_resource type="PackedScene" uid="uid://5xcrjsq4n7xu" path="res://entities/characters/player/player.tscn" id="4_lk824"]
-[ext_resource type="PackedScene" uid="uid://brb06afr77e1c" path="res://managers/map_manager/map_manager.tscn" id="4_m4fp6"]
-[ext_resource type="PackedScene" uid="uid://cmo8tvbclrpub" path="res://managers/enemy_spawner/enemy_spawner.tscn" id="6_a45so"]
-[ext_resource type="PackedScene" uid="uid://ksmmb1jdqdpa" path="res://entities/characters/enemies/rat/rat.tscn" id="7_jhy41"]
-[ext_resource type="PackedScene" uid="uid://canjta674ax20" path="res://entities/characters/enemies/goblin/gobin.tscn" id="8_jbgbi"]
-[ext_resource type="PackedScene" uid="uid://c4xmgwunqaavp" path="res://entities/characters/enemies/orc/orc.tscn" id="9_6qh65"]
-[ext_resource type="PackedScene" uid="uid://dgy2kd5nv5384" path="res://entities/characters/enemies/skeleton/skeleton.tscn" id="10_5degx"]
-[ext_resource type="PackedScene" uid="uid://eisgevile1lp" path="res://entities/characters/enemies/skeleton_magician/skeleton_magician.tscn" id="11_kc5yk"]
-[ext_resource type="PackedScene" uid="uid://7kr61w1ddyp2" path="res://managers/pickable_object_spawner/pickable_object_spawner.tscn" id="12_dpnr5"]
-[ext_resource type="PackedScene" uid="uid://bvo6wopai38ef" path="res://managers/a_star_grid_manager/a_star_grid_manager.tscn" id="13_2ricq"]
-[ext_resource type="PackedScene" uid="uid://2ki4mgn4dwoj" path="res://managers/stair_manager/stair_manager.tscn" id="14_1lulu"]
-[ext_resource type="PackedScene" uid="uid://bka0wc7cg47qp" path="res://managers/combat_manager/combat_manager.tscn" id="14_hsfel"]
-[ext_resource type="PackedScene" uid="uid://b35vqowmvjnxo" path="res://managers/fog_painter/fog_painter.tscn" id="15_l2kan"]
-[ext_resource type="PackedScene" uid="uid://byosb4gqcfnc3" path="res://managers/a_star_grid_manager/a_star_grid_debugger/a_star_grid_debugger.tscn" id="16_1mes4"]
-[ext_resource type="Script" path="res://resources/character_data/player_data/PlayerData.cs" id="16_csqn5"]
-[ext_resource type="PackedScene" uid="uid://r5mm5frso7nd" path="res://ui/inventory_window/inventory_window.tscn" id="17_uj7at"]
-[ext_resource type="PackedScene" uid="uid://4jjqwjq3ttsk" path="res://ui/attribute_panel/attribute_panel.tscn" id="18_k1oig"]
-[ext_resource type="PackedScene" uid="uid://47cs35owbo5x" path="res://ui/victory_window/victory_window.tscn" id="18_tr2ll"]
-[ext_resource type="PackedScene" uid="uid://dyvelmjohlagw" path="res://ui/defeat_window/defeat_window.tscn" id="19_e24og"]
+[ext_resource type="PackedScene" uid="uid://b3cwkcb0vsdvs" path="res://managers/fsm/fsm.tscn" id="1_k5n0a"]
+[ext_resource type="Script" path="res://scenes/Main.cs" id="1_vj8hp"]
+[ext_resource type="PackedScene" uid="uid://dgjohidlqrewr" path="res://managers/input_handler/input_handler.tscn" id="3_yr5dp"]
+[ext_resource type="PackedScene" uid="uid://penw470kyki3" path="res://entities/characters/player/player.tscn" id="4_e72st"]
+[ext_resource type="PackedScene" uid="uid://cfr0clcsh0tjy" path="res://managers/map_manager/map_manager.tscn" id="4_udxl8"]
+[ext_resource type="Script" path="res://resources/map_data/forest_data/ForestData.cs" id="5_cnhv3"]
+[ext_resource type="PackedScene" uid="uid://bkdlaqugis54w" path="res://entities/characters/enemy/rat/rat.tscn" id="8_2hi21"]
+[ext_resource type="PackedScene" uid="uid://capsg2p0t7dr" path="res://managers/enemy_spawner/enemy_spawner.tscn" id="8_25c4t"]
+[ext_resource type="PackedScene" uid="uid://csu0wyjxf50up" path="res://entities/characters/enemy/orc/orc.tscn" id="9_jc7tn"]
+[ext_resource type="PackedScene" uid="uid://b8is0x3xv2udo" path="res://entities/characters/enemy/goblin/goblin.tscn" id="10_jsdty"]
+[ext_resource type="PackedScene" uid="uid://c7c5u55h8hvl2" path="res://managers/stair_manager/stair_manager.tscn" id="10_miubh"]
+[ext_resource type="PackedScene" uid="uid://byf4bs4q3s86k" path="res://entities/characters/enemy/skeleton_magician/skeleton_magician.tscn" id="11_erqgk"]
+[ext_resource type="PackedScene" uid="uid://d28einnr7gkcd" path="res://entities/characters/enemy/skeleton_king/skeleton_king.tscn" id="11_otb5c"]
+[ext_resource type="PackedScene" uid="uid://du4lhvvrb74ag" path="res://managers/a_star_grid_manager/a_star_grid_manager.tscn" id="12_s0jy3"]
+[ext_resource type="PackedScene" uid="uid://b4i1jepn0plhv" path="res://managers/a_star_grid_manager/a_star_grid_debugger/a_star_grid_debugger.tscn" id="13_t4p3h"]
+[ext_resource type="PackedScene" uid="uid://djotgdpnocmuq" path="res://managers/combat_manager/combat_manager.tscn" id="14_tf4y2"]
+[ext_resource type="PackedScene" uid="uid://dmvfqmt017iov" path="res://managers/fog_painter/fog_painter.tscn" id="16_6tdk0"]
+[ext_resource type="PackedScene" uid="uid://bl8ouj5v1gdx" path="res://managers/save_load_manager/save_load_manager.tscn" id="16_ue6ay"]
+[ext_resource type="PackedScene" uid="uid://bmvvio0bgkl87" path="res://managers/pickable_object_spawner/pickable_object_spawner.tscn" id="17_2pr2j"]
+[ext_resource type="Script" path="res://resources/character_data/player_data/PlayerData.cs" id="17_7dw1k"]
+[ext_resource type="PackedScene" uid="uid://1qkomyjfhvui" path="res://ui/inventory_window/inventory_window.tscn" id="18_g7qwv"]
+[ext_resource type="PackedScene" uid="uid://sk2elj2u55a6" path="res://ui/attribute_panel/attribute_panel.tscn" id="19_bvbht"]
 
-[sub_resource type="Resource" id="Resource_map3v"]
+[sub_resource type="Resource" id="Resource_4esa2"]
 resource_local_to_scene = true
-script = ExtResource("16_csqn5")
+script = ExtResource("5_cnhv3")
+
+[sub_resource type="Resource" id="Resource_tikjy"]
+resource_local_to_scene = true
+script = ExtResource("17_7dw1k")
 Name = "玩家"
-_sight = 6
+_sight = 12
 _strength = 8
 _constitution = 8
 _agility = 8
@@ -37,8 +40,8 @@ StrengthIncrementEffects = {
 "defend": 1.0
 }
 ConstitutionIncrementEffects = {
-"health": 3.0,
-"max_health": 3.0
+"health": 1000.0,
+"max_health": 1000.0
 }
 AgilityIncrementEffects = {
 "crit": 0.005,
@@ -46,76 +49,65 @@ AgilityIncrementEffects = {
 }
 
 [node name="Main" type="Node"]
-script = ExtResource("1_4t8f1")
+script = ExtResource("1_vj8hp")
 
-[node name="Fsm" parent="." instance=ExtResource("2_u1a00")]
+[node name="Fsm" parent="." instance=ExtResource("1_k5n0a")]
 unique_name_in_owner = true
 
-[node name="SaveLoadManager" parent="." instance=ExtResource("3_jn30s")]
+[node name="InputHandler" parent="." instance=ExtResource("3_yr5dp")]
 unique_name_in_owner = true
 
-[node name="InputHandler" parent="." instance=ExtResource("3_w1wyy")]
+[node name="MapManager" parent="." instance=ExtResource("4_udxl8")]
+unique_name_in_owner = true
+_mapData = SubResource("Resource_4esa2")
+
+[node name="PickableObjectSpawner" parent="." instance=ExtResource("17_2pr2j")]
 unique_name_in_owner = true
 
-[node name="MapManager" parent="." instance=ExtResource("4_m4fp6")]
+[node name="AStarGridManager" parent="." instance=ExtResource("12_s0jy3")]
 unique_name_in_owner = true
 
-[node name="EnemySpawner" parent="." instance=ExtResource("6_a45so")]
+[node name="CombatManager" parent="." instance=ExtResource("14_tf4y2")]
+unique_name_in_owner = true
+
+[node name="FogPainter" parent="." instance=ExtResource("16_6tdk0")]
+unique_name_in_owner = true
+
+[node name="StairManager" parent="." instance=ExtResource("10_miubh")]
+unique_name_in_owner = true
+
+[node name="EnemySpawner" parent="." instance=ExtResource("8_25c4t")]
 unique_name_in_owner = true
 _enemyScenes = {
-ExtResource("7_jhy41"): 50.0,
-ExtResource("8_jbgbi"): 40.0,
-ExtResource("9_6qh65"): 30.0,
-ExtResource("10_5degx"): 20.0,
-ExtResource("11_kc5yk"): 20.0
+ExtResource("8_2hi21"): 100.0,
+ExtResource("10_jsdty"): 1.0,
+ExtResource("9_jc7tn"): 1.0,
+ExtResource("11_erqgk"): 1.0
 }
+_bossScenes = [ExtResource("11_otb5c")]
 
-[node name="PickableObjectSpawner" parent="." instance=ExtResource("12_dpnr5")]
-unique_name_in_owner = true
-
-[node name="AStarGridManager" parent="." instance=ExtResource("13_2ricq")]
-unique_name_in_owner = true
-
-[node name="CombatManager" parent="." instance=ExtResource("14_hsfel")]
-unique_name_in_owner = true
-
-[node name="FogPainter" parent="." instance=ExtResource("15_l2kan")]
-unique_name_in_owner = true
-
-[node name="StairManager" parent="." instance=ExtResource("14_1lulu")]
+[node name="SaveLoadManager" parent="." instance=ExtResource("16_ue6ay")]
 unique_name_in_owner = true
 
 [node name="GameViewportContainer" type="SubViewportContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -190.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="GameViewport" type="SubViewport" parent="GameViewportContainer"]
 handle_input_locally = false
 size = Vector2i(450, 360)
 render_target_update_mode = 4
 
-[node name="AStarGridDebugger" parent="GameViewportContainer/GameViewport" instance=ExtResource("16_1mes4")]
-
-[node name="InventoryWindow" parent="GameViewportContainer/GameViewport" instance=ExtResource("17_uj7at")]
-unique_name_in_owner = true
-visible = false
-
-[node name="VictoryWindow" parent="GameViewportContainer/GameViewport" instance=ExtResource("18_tr2ll")]
-unique_name_in_owner = true
-visible = false
-
-[node name="DefeatWindow" parent="GameViewportContainer/GameViewport" instance=ExtResource("19_e24og")]
-unique_name_in_owner = true
-visible = false
-
 [node name="TileMap" type="TileMap" parent="GameViewportContainer/GameViewport"]
 unique_name_in_owner = true
 format = 2
 layer_0/name = "default"
 layer_1/name = "fog"
-layer_1/enabled = true
-layer_1/modulate = Color(1, 1, 1, 1)
-layer_1/y_sort_enabled = false
-layer_1/y_sort_origin = 0
-layer_1/z_index = 20
+layer_1/z_index = 100
 layer_1/tile_data = PackedInt32Array()
 
 [node name="PickableObjectContainer" type="Node" parent="GameViewportContainer/GameViewport"]
@@ -124,9 +116,19 @@ unique_name_in_owner = true
 [node name="EnemyContainer" type="Node" parent="GameViewportContainer/GameViewport"]
 unique_name_in_owner = true
 
-[node name="Player" parent="GameViewportContainer/GameViewport" instance=ExtResource("4_lk824")]
+[node name="Player" parent="GameViewportContainer/GameViewport" instance=ExtResource("4_e72st")]
 unique_name_in_owner = true
-_characterData = SubResource("Resource_map3v")
+_characterData = SubResource("Resource_tikjy")
+
+[node name="Camera2D" type="Camera2D" parent="GameViewportContainer/GameViewport/Player"]
+
+[node name="InventoryWindow" parent="GameViewportContainer/GameViewport" instance=ExtResource("18_g7qwv")]
+unique_name_in_owner = true
+visible = false
+
+[node name="AStarGridDebuggerr" parent="GameViewportContainer/GameViewport" instance=ExtResource("13_t4p3h")]
+visible = false
+z_index = 100
 
 [node name="HudViewportContainer" type="SubViewportContainer" parent="."]
 offset_left = 450.0
@@ -138,7 +140,7 @@ handle_input_locally = false
 size = Vector2i(190, 360)
 render_target_update_mode = 4
 
-[node name="HudCamera2D" type="Camera2D" parent="HudViewportContainer/HudViewport"]
+[node name="Camera2D" type="Camera2D" parent="HudViewportContainer/HudViewport"]
 anchor_mode = 0
 
 [node name="VSeparator" type="VSeparator" parent="HudViewportContainer/HudViewport"]
@@ -147,5 +149,5 @@ anchor_bottom = 1.0
 offset_right = 4.0
 grow_vertical = 2
 
-[node name="AttributePanel" parent="HudViewportContainer/HudViewport" instance=ExtResource("18_k1oig")]
+[node name="AttributePanel" parent="HudViewportContainer/HudViewport" instance=ExtResource("19_bvbht")]
 unique_name_in_owner = true

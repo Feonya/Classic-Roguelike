@@ -1,7 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://byngc05jxfjx3"]
+[gd_scene load_steps=3 format=3 uid="uid://brsombad1suen"]
 
-[ext_resource type="PackedScene" uid="uid://bo42n4qi1ff34" path="res://entities/pickable_objects/pickable_object.tscn" id="1_h6ktp"]
-[ext_resource type="Script" path="res://entities/pickable_objects/items/Item.cs" id="2_djnog"]
+[ext_resource type="PackedScene" uid="uid://yx7pl1wcwxqt" path="res://entities/pickable_objects/pickable_object.tscn" id="1_ukqvb"]
+[ext_resource type="Script" path="res://entities/pickable_objects/items/Item.cs" id="2_jgagb"]
 
-[node name="Item" instance=ExtResource("1_h6ktp")]
-script = ExtResource("2_djnog")
+[node name="Item" instance=ExtResource("1_ukqvb")]
+script = ExtResource("2_jgagb")

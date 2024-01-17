@@ -1,5 +1,5 @@
-using System;
 using Godot;
+using System;
 
 public partial class InventoryObject : Button, IUi
 {
@@ -7,10 +7,13 @@ public partial class InventoryObject : Button, IUi
 
     public void Initialize()
     {
-        FocusEntered += () => Selected.Invoke(this);
+        FocusEntered += () =>
+        {
+            Selected?.Invoke(this);
+        };
     }
 
-    public void Update(double delta)
+    public void Update()
     {
     }
 }

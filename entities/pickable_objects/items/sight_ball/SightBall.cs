@@ -1,16 +1,27 @@
-public partial class SightBall : Item, IImmediateEffectItem, IUniquePickableObject
+using Godot;
+using System;
+
+public partial class SightBall : Item, IImmediateEffectItem
 {
-    private static bool _isAppeared;
+	[Export]
+	private int _sightIncrement = 3;
 
-    public bool IsAppeared { get => _isAppeared; set => _isAppeared = value; }
 
-    public void DoImmediateEffect()
+    public override void Initialize()
     {
-        _player.CharacterData.Sight += 3;
+        base.Initialize();
+
+        _description = $"拾取后立即增加{_sightIncrement}点视野";
     }
 
-    public void UndoImmediateEffect()
+  
+    public void DoImmediateEffect()
     {
-        _player.CharacterData.Sight -= 3;
+        _player.CharacterData.Sight += _sightIncrement;
+    }
+
+    public void UnImmediateEffect()
+    {
+        _player.CharacterData.Sight -= _sightIncrement;
     }
 }

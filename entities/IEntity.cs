@@ -1,5 +1,5 @@
-public interface IEntity
+﻿public interface IEntity
 {
     public void Initialize();
-    public void Update(double delta);
+    public void Update();
 }

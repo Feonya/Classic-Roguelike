@@ -1,44 +1,37 @@
-using System;
 using Godot;
+using System;
 
 public partial class WalkAroundAi : Node, IAi
 {
     public event Action<Vector2I> Executed;
-
     private MapData _mapData;
-
     private AStarGridManager _aStarGridManager;
-
-    private Enemy _enemy;
     private Player _player;
+    private Enemy _enemy;
 
     public void Initialize()
     {
-        _mapData = GetTree().CurrentScene.GetNode<MapManager>("%MapManager").MapData;
+        _mapData = this.GetUnique<MapManager>().MapData;
+        _aStarGridManager = this.GetUnique<AStarGridManager>();
 
-        _aStarGridManager = GetTree().CurrentScene.GetNode<AStarGridManager>("%AStarGridManager");
-
+        _player = this.GetUnique<Player>();
         _enemy = GetParent().GetParent<Enemy>();
-        _player = GetTree().CurrentScene.GetNode<Player>("%Player");
     }
 
     public bool Execute()
     {
-        var distanceToPlayer = _enemy.GetDistanceTo(
-            (Vector2I)(_player.GlobalPosition - _mapData.CellSize / 2) / _mapData.CellSize
-        );
+        var distancePlayer = _enemy.GetDistanceTo(_player.GetCell());
+        if(distancePlayer <= _enemy.CharacterData.Sight) 
+        {
+            return false;
+        }
 
-        if (distanceToPlayer <= _enemy.CharacterData.Sight) { return false; }
-
-        _aStarGridManager.AStarGrid.SetPointSolid(
-            (Vector2I)(_enemy.GlobalPosition - _mapData.CellSize / 2) / _mapData.CellSize,
-            false
-        );
-
+        _aStarGridManager.AStarGrid.SetPointSolid(_enemy.GetCell(),false);
         var direction = new Vector2I(GD.RandRange(-1, 1), GD.RandRange(-1, 1));
-
         Executed?.Invoke(direction);
-
         return true;
+
     }
+
+   
 }
