@@ -15,16 +15,16 @@ public partial class Main : Node
 
     public override void _Process(double delta)
     {
-        _fsm.Update(delta);
+        _fsm.Update();
     }
 }
 
 public enum PhysicsLayer
 {
-    BlockMovement = 1,
-    BlockSight = 2,
-    PickableObject = 4,
-    Fog = 8
+    BlockMovement = 1 << 0, // 1
+    BlockSight = 1 << 1, // 2
+    PickableObject = 1 << 2, // 4
+    Fog = 1 << 3 // 8
 }
 
 public enum TileMapLayer
@@ -36,7 +36,14 @@ public enum TileMapLayer
 public enum TerrainSet
 {
     Default,
-    Fog
+    Fog,
+    Stair
+}
+
+public enum DungeonTerrain
+{
+    Floor,
+    Wall
 }
 
 public enum ForestTerrain
@@ -44,17 +51,7 @@ public enum ForestTerrain
     Ground,
     Grass,
     Tree,
-    DeadTree,
-    UpStair,
-    DownStair
-}
-
-public enum DungeonTerrain
-{
-    Floor,
-    Wall,
-    UpStair,
-    DownStair
+    DeadTree
 }
 
 public enum FogTerrain
@@ -62,4 +59,10 @@ public enum FogTerrain
     Unexplored,
     OutOfSight,
     InSight
+}
+
+public enum StairTerrain
+{
+    UpStair,
+    DownStair
 }

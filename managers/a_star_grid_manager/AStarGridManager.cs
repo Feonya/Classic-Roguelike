@@ -34,10 +34,6 @@ public partial class AStarGridManager : Node, IManager
         }
     }
 
-    public void Update(double delta)
-    {
-    }
-
     private bool IsCellShouldSetSolid(Vector2I cell)
     {
         var targetPosition = cell * _mapData.CellSize + _mapData.CellSize / 2;
@@ -47,8 +43,8 @@ public partial class AStarGridManager : Node, IManager
         var parameters = new PhysicsPointQueryParameters2D
         {
             Position = targetPosition,
-            CollisionMask = (int)PhysicsLayer.BlockMovement,
             CollideWithAreas = true,
+            CollisionMask = (int)PhysicsLayer.BlockMovement,
             Exclude = new Array<Rid>
             {
                 GetTree().CurrentScene.GetNode<Area2D>("%Player/Area2D").GetRid()
@@ -59,5 +55,9 @@ public partial class AStarGridManager : Node, IManager
         if (results.Count > 0) { return true; }
 
         return false;
+    }
+
+    public void Update()
+    {
     }
 }

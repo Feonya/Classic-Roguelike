@@ -1,13 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://dt151a1d1ifvg"]
+[gd_scene load_steps=3 format=3 uid="uid://5t65fjr5fq6q"]
 
-[ext_resource type="PackedScene" uid="uid://dcxq12vw0d2ty" path="res://entities/pickable_objects/equipments/equipment.tscn" id="1_5wd2e"]
-[ext_resource type="Script" path="res://entities/pickable_objects/equipments/sword/Sword.cs" id="2_sh76w"]
+[ext_resource type="PackedScene" uid="uid://qu28fexwjaq3" path="res://entities/pickable_objects/equipments/equipment.tscn" id="1_unm64"]
+[ext_resource type="Script" path="res://entities/pickable_objects/equipments/sword/Sword.cs" id="2_yclmc"]
 
-[node name="Sword" instance=ExtResource("1_5wd2e")]
-script = ExtResource("2_sh76w")
-_minAttackIncrement = 3.0
-_maxAttackIncrement = 20.0
-_name = "铁剑"
+[node name="Sword" instance=ExtResource("1_unm64")]
+script = ExtResource("2_yclmc")
+_name = "长剑"
 
 [node name="Sprite2D" parent="." index="0"]
 region_rect = Rect2(0, 112, 16, 16)

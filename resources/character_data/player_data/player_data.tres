@@ -1,10 +1,10 @@
-[gd_resource type="Resource" load_steps=2 format=3 uid="uid://d04n7jm8bhbqs"]
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://exyk2esg8gjm"]
 
-[ext_resource type="Script" path="res://resources/character_data/player_data/PlayerData.cs" id="1_qf7ka"]
+[ext_resource type="Script" path="res://resources/character_data/player_data/PlayerData.cs" id="1_re6c0"]
 
 [resource]
 resource_local_to_scene = true
-script = ExtResource("1_qf7ka")
+script = ExtResource("1_re6c0")
 Name = "玩家"
 _sight = 6
 _strength = 8

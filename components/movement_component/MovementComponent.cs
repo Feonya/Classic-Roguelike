@@ -16,29 +16,29 @@ public partial class MovementComponent : Node, IComponent
         _inputHandler = GetTree().CurrentScene.GetNode<InputHandler>("%InputHandler");
         _aStarGridManager = GetTree().CurrentScene.GetNode<AStarGridManager>("%AStarGridManager");
 
-        var parent = GetParent();
-        if (parent is Player)
+        var owner = GetOwner<Node>();
+        if (owner is Enemy && owner.HasNode("AiComponent"))
         {
-            _inputHandler.IdleInputHandled += On_InputHandler_IdleInputHandled;
-            _inputHandler.MovementInputHandled += On_InputHandler_MovementInputHandled;
+            if (owner.HasNode("AiComponent/WalkAroundAi"))
+            {
+                owner.GetNode<WalkAroundAi>(
+                    "AiComponent/WalkAroundAi").Executed += On_WalkAroundAi_Executed;
+            }
+            if (owner.HasNode("AiComponent/ChaseAi"))
+            {
+                owner.GetNode<ChaseAi>(
+                    "AiComponent/ChaseAi").Executed += On_ChaseAi_Executed;
+            }
         }
-        else if (parent is Enemy)
+        else if (owner is Player)
         {
-            parent
-                .GetNode<AiComponent>("AiComponent")
-                .GetNode<WalkAroundAi>("WalkAroundAi")
-                .Executed += On_WalkAroundAi_Executed;
-
-            parent
-                .GetNode<AiComponent>("AiComponent")
-                .GetNode<ChaseAi>("ChaseAi")
-                .Executed += On_ChaseAi_Executed;
+            _inputHandler.MovementInputHandled += On_InputHandler_MovementInputHandled;
         }
     }
 
-    public void Update(double delta)
+    public void Update()
     {
-        var owner = Owner as Node2D;
+        var owner = GetOwner<Node2D>();
 
         if (_currentDirection == Vector2I.Zero)
         {
@@ -63,17 +63,18 @@ public partial class MovementComponent : Node, IComponent
         _currentDirection = Vector2I.Zero;
     }
 
+
     private bool IsMovementBlocked()
     {
-        var ownerNode2D = Owner as Node2D;
-        var targetPosition = ownerNode2D.GlobalPosition + _currentDirection * _mapData.CellSize;
+        var owner = GetOwner<Node2D>();
+        var targetPosition = owner.GlobalPosition + _currentDirection * _mapData.CellSize;
 
-        var space = ownerNode2D.GetWorld2D().DirectSpaceState;
+        var space = owner.GetWorld2D().DirectSpaceState;
         var parameters = new PhysicsPointQueryParameters2D
         {
             Position = targetPosition,
-            CollisionMask = (int)PhysicsLayer.BlockMovement,
-            CollideWithAreas = true
+            CollideWithAreas = true,
+            CollisionMask = (int)PhysicsLayer.BlockMovement
         };
         var results = space.IntersectPoint(parameters);
 
@@ -91,11 +92,6 @@ public partial class MovementComponent : Node, IComponent
                 true
             );
         }
-    }
-
-    private void On_InputHandler_IdleInputHandled()
-    {
-        _currentDirection = Vector2I.Zero;
     }
 
     private void On_InputHandler_MovementInputHandled(Vector2I direction)

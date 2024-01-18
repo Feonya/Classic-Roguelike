@@ -1,7 +1,7 @@
-[gd_resource type="Resource" load_steps=2 format=3 uid="uid://dy8a3mxjl4l63"]
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cvylfk0tqdvbs"]
 
-[ext_resource type="Script" path="res://resources/map_data/forest_data/ForestData.cs" id="1_qa8oe"]
+[ext_resource type="Script" path="res://resources/map_data/forest_data/ForestData.cs" id="1_jdufl"]
 
 [resource]
 resource_local_to_scene = true
-script = ExtResource("1_qa8oe")
+script = ExtResource("1_jdufl")

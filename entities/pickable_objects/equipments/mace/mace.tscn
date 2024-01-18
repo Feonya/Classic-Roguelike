@@ -1,12 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://ca3r7t0p85oxd"]
+[gd_scene load_steps=3 format=3 uid="uid://1x8pnmeq7tuk"]
 
-[ext_resource type="PackedScene" uid="uid://dcxq12vw0d2ty" path="res://entities/pickable_objects/equipments/equipment.tscn" id="1_mmpje"]
-[ext_resource type="Script" path="res://entities/pickable_objects/equipments/mace/Mace.cs" id="2_ar4qk"]
+[ext_resource type="PackedScene" uid="uid://qu28fexwjaq3" path="res://entities/pickable_objects/equipments/equipment.tscn" id="1_1yceg"]
+[ext_resource type="Script" path="res://entities/pickable_objects/equipments/mace/Mace.cs" id="2_miby0"]
 
-[node name="Mace" instance=ExtResource("1_mmpje")]
-script = ExtResource("2_ar4qk")
-_minAttackIncrement = 18.0
-_maxAttackIncrement = 18.0
+[node name="Mace" instance=ExtResource("1_1yceg")]
+script = ExtResource("2_miby0")
 _name = "战锤"
 
 [node name="Sprite2D" parent="." index="0"]

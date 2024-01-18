@@ -7,8 +7,6 @@ public partial class PlayerData : CharacterData
     public event Action<int> LevelChanged;
     public event Action<float> ExperienceChanged;
 
-    public Array<PickableObject> Inventory = new();
-
     protected int _level = 1;
     public int Level
     {
@@ -19,13 +17,13 @@ public partial class PlayerData : CharacterData
             LevelChanged?.Invoke(value);
         }
     }
-
     protected float _experience = 0f;
     public float Experience
     {
         get => _experience;
         set
         {
+            // 升级检测。
             var currentExperienceThreshold = CurrentLevelUpExperienceThreshold;
             if (value >= currentExperienceThreshold)
             {
@@ -72,9 +70,11 @@ public partial class PlayerData : CharacterData
 
     public int BaseAttributePointsGainPerLevelUp = 5;
 
+    public Array<PickableObject> Inventory = new();
+
     public ILeftHandHoldEquipment LeftHandHoldEquipment;
-    public IRightHandHoldEquipment RightHandHoldEquipment;
+    public IRightHandHoldEqiupment RightHandHoldEquipment;
     public IBodyWearEquipment BodyWearEquipment;
-    public IFingerWearEquipment FingerWearEquipment;
     public INeckWearEquipment NeckWearEquipment;
+    public IFingerWearEquipment FingerWearEquipment;
 }

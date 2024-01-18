@@ -3,6 +3,13 @@ using Godot.Collections;
 
 public partial class MapScroll : Item, IConsumableItem
 {
+    public override void Initialize()
+    {
+        base.Initialize();
+
+        _description = "使用后消除本地图战争迷雾。";
+    }
+
     public void Consume()
     {
         var unexploredFogCells = new Array<Vector2I>();
@@ -27,5 +34,7 @@ public partial class MapScroll : Item, IConsumableItem
             (int)TerrainSet.Fog,
             (int)FogTerrain.OutOfSight
         );
+
+        (_player.CharacterData as PlayerData).Inventory.Remove(this);
     }
 }

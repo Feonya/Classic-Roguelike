@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://b4o80qphjstkw"]
+[gd_scene load_steps=2 format=3 uid="uid://bk46df81qogx7"]
 
-[ext_resource type="Script" path="res://managers/fsm/game_states/combat_state/CombatState.cs" id="1_3l3y6"]
+[ext_resource type="Script" path="res://managers/fsm/game_states/combat_state/CombatState.cs" id="1_k5tpu"]
 
 [node name="CombatState" type="Node"]
-script = ExtResource("1_3l3y6")
+script = ExtResource("1_k5tpu")

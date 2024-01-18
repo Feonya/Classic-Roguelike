@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://bsh87plgj5sdf"]
+[gd_scene load_steps=2 format=3 uid="uid://bmt21mc0sr6pw"]
 
-[ext_resource type="Script" path="res://components/movement_component/MovementComponent.cs" id="1_xn0hs"]
+[ext_resource type="Script" path="res://components/movement_component/MovementComponent.cs" id="1_syx4b"]
 
 [node name="MovementComponent" type="Node"]
-script = ExtResource("1_xn0hs")
+script = ExtResource("1_syx4b")

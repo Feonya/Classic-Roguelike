@@ -1,18 +1,18 @@
-[gd_scene load_steps=6 format=3 uid="uid://dr1r3sk4j2mlq"]
+[gd_scene load_steps=6 format=3 uid="uid://eef5fvev3b4f"]
 
-[ext_resource type="Script" path="res://managers/fsm/Fsm.cs" id="1_qled4"]
-[ext_resource type="PackedScene" uid="uid://dbbijacxkxbky" path="res://managers/fsm/game_states/start_state/start_state.tscn" id="2_5t15k"]
-[ext_resource type="PackedScene" uid="uid://ct8bp8q7bv0u6" path="res://managers/fsm/game_states/wait_for_input_state/wait_for_input_state.tscn" id="3_a4l2q"]
-[ext_resource type="PackedScene" uid="uid://bji7uk8rid6s3" path="res://managers/fsm/game_states/action_state/action_state.tscn" id="4_h35vj"]
-[ext_resource type="PackedScene" uid="uid://b4o80qphjstkw" path="res://managers/fsm/game_states/combat_state/combat_state.tscn" id="6_wodlv"]
+[ext_resource type="Script" path="res://managers/fsm/Fsm.cs" id="1_1gysb"]
+[ext_resource type="PackedScene" uid="uid://dx63dsud8v5o" path="res://managers/fsm/game_states/start_state/start_state.tscn" id="2_i3iyb"]
+[ext_resource type="PackedScene" uid="uid://clflh38bqj8lj" path="res://managers/fsm/game_states/wait_for_input_state/wait_for_input_state.tscn" id="3_45044"]
+[ext_resource type="PackedScene" uid="uid://bn580im1ui4j0" path="res://managers/fsm/game_states/action_state/action_state.tscn" id="4_h81a1"]
+[ext_resource type="PackedScene" uid="uid://bk46df81qogx7" path="res://managers/fsm/game_states/combat_state/combat_state.tscn" id="5_17y0o"]
 
 [node name="Fsm" type="Node"]
-script = ExtResource("1_qled4")
+script = ExtResource("1_1gysb")
 
-[node name="StartState" parent="." instance=ExtResource("2_5t15k")]
+[node name="StartState" parent="." instance=ExtResource("2_i3iyb")]
 
-[node name="WaitForInputState" parent="." instance=ExtResource("3_a4l2q")]
+[node name="WaitForInputState" parent="." instance=ExtResource("3_45044")]
 
-[node name="ActionState" parent="." instance=ExtResource("4_h35vj")]
+[node name="ActionState" parent="." instance=ExtResource("4_h81a1")]
 
-[node name="CombatState" parent="." instance=ExtResource("6_wodlv")]
+[node name="CombatState" parent="." instance=ExtResource("5_17y0o")]

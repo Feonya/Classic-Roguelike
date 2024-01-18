@@ -6,8 +6,8 @@ public partial class MeleeAi : Node, IAi
 
     private CombatManager _combatManager;
 
-    private Enemy _enemy;
     private Player _player;
+    private Enemy _enemy;
 
     public void Initialize()
     {
@@ -15,8 +15,8 @@ public partial class MeleeAi : Node, IAi
 
         _combatManager = GetTree().CurrentScene.GetNode<CombatManager>("%CombatManager");
 
-        _enemy = GetParent().GetParent<Enemy>();
         _player = GetTree().CurrentScene.GetNode<Player>("%Player");
+        _enemy = GetParent().GetParent<Enemy>();
     }
 
     public bool Execute()
@@ -28,7 +28,6 @@ public partial class MeleeAi : Node, IAi
         if (distanceToPlayer > 1) { return false; }
 
         _combatManager.AddToCombatList(_enemy, _player);
-
         GD.Print(_enemy.CharacterData.Name + "攻击玩家！");
 
         return true;

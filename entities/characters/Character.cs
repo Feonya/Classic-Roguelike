@@ -1,16 +1,17 @@
+using System;
 using Godot;
 using Godot.Collections;
 
-public partial class Character : Node2D, IEntity, IPersistence
+public partial class Character : Node2D, IEntity, ISavable, ILoadable
 {
     [Export]
     protected CharacterData _characterData;
 
     protected MapData _mapData;
 
-    protected SaveLoadManager _saveLoadManager;
     protected MapManager _mapManager;
     protected CombatManager _combatManager;
+    protected SaveLoadManager _saveLoadManager;
 
     protected System.Collections.Generic.List<IComponent> _components = new();
 
@@ -22,11 +23,11 @@ public partial class Character : Node2D, IEntity, IPersistence
 
     public virtual void Initialize()
     {
-        _mapData = GetTree().CurrentScene.GetNode<MapManager>("%MapManager").MapData;
-
-        _saveLoadManager = GetTree().CurrentScene.GetNode<SaveLoadManager>("%SaveLoadManager");
         _mapManager = GetTree().CurrentScene.GetNode<MapManager>("%MapManager");
         _combatManager = GetTree().CurrentScene.GetNode<CombatManager>("%CombatManager");
+        _saveLoadManager = GetTree().CurrentScene.GetNode<SaveLoadManager>("%SaveLoadManager");
+
+        _mapData = _mapManager.MapData;
 
         for (int i = 0; i < GetChildCount(); i++)
         {
@@ -40,18 +41,23 @@ public partial class Character : Node2D, IEntity, IPersistence
             _components.Add(component);
         }
 
-        InitializeCombatAttributes();
+        if (!InitializeByLoadedData())
+        {
+            InitializeCombatAttributes();
+        }
+
+        _combatManager.CharacterDied += On_CombatManager_CharacterDied;
     }
 
-    public virtual void Update(double delta)
+    public virtual void Update()
     {
         foreach (var component in _components)
         {
-            component.Update(delta);
+            component.Update();
         }
     }
 
-    public virtual Dictionary<string, Variant> GetPersistentData()
+    public virtual Dictionary<string, Variant> GetDataForSave()
     {
         return new Dictionary<string, Variant>
         {
@@ -68,14 +74,61 @@ public partial class Character : Node2D, IEntity, IPersistence
             { "attack", _characterData.Attack },
             { "defend", _characterData.Defend },
             { "dodge", _characterData.Dodge },
-            { "crit", _characterData.Crit }
+            { "crit", _characterData.Crit },
         };
+    }
+
+    public bool InitializeByLoadedData()
+    {
+        if (_saveLoadManager.LoadedData == null ||
+            _saveLoadManager.LoadedData.Count == 0)
+        {
+            return false;
+        }
+
+        if (this is Enemy)
+        {
+            if (!_saveLoadManager.LoadedData.ContainsKey("maps")) { return false; }
+
+            var maps = _saveLoadManager
+                .LoadedData["maps"].AsGodotArray<Dictionary<string, Variant>>();
+            for (int i = 0; i < maps.Count; i++)
+            {
+                var map = maps[i];
+                if (map["scene_name"].AsString() == GetTree().CurrentScene.Name)
+                {
+                    var enemies = map["enemies"].AsGodotArray<Dictionary<string, Variant>>();
+                    for (int j = 0; j < enemies.Count; j++)
+                    {
+                        var enemy = enemies[j];
+                        if (enemy["index"].AsInt32() == GetIndex())
+                        {
+                            InitializeByCharacterLoadedData(enemy);
+
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        else if (this is Player)
+        {
+            if (!_saveLoadManager.LoadedData.ContainsKey("player")) { return false; }
+
+            var player = _saveLoadManager
+                .LoadedData["player"].AsGodotDictionary<string, Variant>();
+
+            InitializeByCharacterLoadedData(player);
+
+            return true;
+        }
+
+        return false;
     }
 
     public int GetDistanceTo(Vector2I targetCell)
     {
-        var startCell = (Vector2I)
-            (GlobalPosition - _mapData.CellSize / 2) / _mapData.CellSize;
+        var startCell = (Vector2I)(GlobalPosition - _mapData.CellSize / 2) / _mapData.CellSize;
 
         var distanceX = Mathf.Abs(startCell.X - targetCell.X);
         var distanceY = Mathf.Abs(startCell.Y - targetCell.Y);
@@ -85,8 +138,6 @@ public partial class Character : Node2D, IEntity, IPersistence
 
     protected void InitializeCombatAttributes()
     {
-        if (TryInitializeCombatAttributesByPersistentData()) { return; }
-
         _characterData.Health =
             _characterData.Constitution *
             _characterData.ConstitutionIncrementEffects["health"];
@@ -112,90 +163,32 @@ public partial class Character : Node2D, IEntity, IPersistence
             _characterData.AgilityIncrementEffects["crit"];
     }
 
-    protected bool TryInitializeCombatAttributesByPersistentData()
+    protected void InitializeByCharacterLoadedData(Dictionary<string, Variant> characterLoadedData)
     {
-        if (this is Enemy)
-        {
-            if (_saveLoadManager.PersistentData == null ||
-                _saveLoadManager.PersistentData.Count == 0 ||
-                !_saveLoadManager.PersistentData.ContainsKey("maps"))
-            {
-                return false;
-            }
+        _characterData.Name = characterLoadedData["name"].AsString();
+        _characterData.Sight = characterLoadedData["sight"].AsInt32();
 
-            var mapsPersistentData = _saveLoadManager
-                .PersistentData["maps"].AsGodotArray<Dictionary<string, Variant>>();
-            for (int i = 0; i < mapsPersistentData.Count; i++)
-            {
-                var mapPersistentData = mapsPersistentData[i];
-                if (mapPersistentData["scene_name"].AsString() == GetTree().CurrentScene.Name)
-                {
-                    var enemiesPersistentData = mapPersistentData["enemies"]
-                        .AsGodotArray<Dictionary<string, Variant>>();
-                    for (int j = 0; j < enemiesPersistentData.Count; j++)
-                    {
-                        var enemyPersistentData = enemiesPersistentData[j];
-                        if (GetIndex() == enemyPersistentData["index"].AsInt32())
-                        {
-                            _characterData.Name = enemyPersistentData["name"].AsString();
-                            _characterData.Sight = enemyPersistentData["sight"].AsInt32();
-                            _characterData.Strength = enemyPersistentData["strength"].AsInt32();
-                            _characterData.Constitution = enemyPersistentData["constitution"].AsInt32();
-                            _characterData.Agility = enemyPersistentData["agility"].AsInt32();
-                            _characterData.StrengthIncrementEffects =
-                                enemyPersistentData["strength_increment_effects"].AsGodotDictionary<string, float>();
-                            _characterData.ConstitutionIncrementEffects =
-                                enemyPersistentData["constitution_increment_effects"].AsGodotDictionary<string, float>();
-                            _characterData.AgilityIncrementEffects =
-                                enemyPersistentData["agility_increment_effects"].AsGodotDictionary<string, float>();
-                            _characterData.Health = enemyPersistentData["health"].AsSingle();
-                            _characterData.MaxHealth = enemyPersistentData["max_health"].AsSingle();
-                            _characterData.Attack = enemyPersistentData["attack"].AsSingle();
-                            _characterData.Defend = enemyPersistentData["defend"].AsSingle();
-                            _characterData.Dodge = enemyPersistentData["dodge"].AsSingle();
-                            _characterData.Crit = enemyPersistentData["crit"].AsSingle();
+        _characterData.Strength = characterLoadedData["strength"].AsInt32();
+        _characterData.Constitution = characterLoadedData["constitution"].AsInt32();
+        _characterData.Agility = characterLoadedData["agility"].AsInt32();
 
-                            return true;
-                        }
-                    }
-                }
-            }
+        _characterData.StrengthIncrementEffects =
+            characterLoadedData["strength_increment_effects"].AsGodotDictionary<string, float>();
+        _characterData.ConstitutionIncrementEffects =
+            characterLoadedData["constitution_increment_effects"].AsGodotDictionary<string, float>();
+        _characterData.AgilityIncrementEffects =
+            characterLoadedData["agility_increment_effects"].AsGodotDictionary<string, float>();
 
-            return false;
-        }
-        else if (this is Player)
-        {
-            if (_saveLoadManager.PersistentData == null ||
-                _saveLoadManager.PersistentData.Count == 0 ||
-                !_saveLoadManager.PersistentData.ContainsKey("player"))
-            {
-                return false;
-            }
+        _characterData.Health = characterLoadedData["health"].AsSingle();
+        _characterData.MaxHealth = characterLoadedData["max_health"].AsSingle();
+        _characterData.Attack = characterLoadedData["attack"].AsSingle();
+        _characterData.Defend = characterLoadedData["defend"].AsSingle();
+        _characterData.Dodge = characterLoadedData["dodge"].AsSingle();
+        _characterData.Crit = characterLoadedData["crit"].AsSingle();
+    }
 
-            var playerPersistentData = _saveLoadManager
-                .PersistentData["player"].AsGodotDictionary<string, Variant>();
-
-            _characterData.Name = playerPersistentData["name"].AsString();
-            _characterData.Sight = playerPersistentData["sight"].AsInt32();
-            _characterData.Strength = playerPersistentData["strength"].AsInt32();
-            _characterData.Constitution = playerPersistentData["constitution"].AsInt32();
-            _characterData.Agility = playerPersistentData["agility"].AsInt32();
-            _characterData.StrengthIncrementEffects =
-                playerPersistentData["strength_increment_effects"].AsGodotDictionary<string, float>();
-            _characterData.ConstitutionIncrementEffects =
-                playerPersistentData["constitution_increment_effects"].AsGodotDictionary<string, float>();
-            _characterData.AgilityIncrementEffects =
-                playerPersistentData["agility_increment_effects"].AsGodotDictionary<string, float>();
-            _characterData.Health = playerPersistentData["health"].AsSingle();
-            _characterData.MaxHealth = playerPersistentData["max_health"].AsSingle();
-            _characterData.Attack = playerPersistentData["attack"].AsSingle();
-            _characterData.Defend = playerPersistentData["defend"].AsSingle();
-            _characterData.Dodge = playerPersistentData["dodge"].AsSingle();
-            _characterData.Crit = playerPersistentData["crit"].AsSingle();
-
-            return true;
-        }
-
-        return false;
+    protected virtual void On_CombatManager_CharacterDied(Character character)
+    {
+        throw new Exception("不可直接调用本基类方法！");
     }
 }

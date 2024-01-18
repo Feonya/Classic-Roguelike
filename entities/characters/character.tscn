@@ -1,17 +1,17 @@
-[gd_scene load_steps=5 format=3 uid="uid://bmolco0ib744m"]
+[gd_scene load_steps=5 format=3 uid="uid://dgvojmdldh3yy"]
 
-[ext_resource type="Script" path="res://entities/characters/Character.cs" id="1_8c01l"]
-[ext_resource type="Texture2D" uid="uid://d2w3gfb2ettlh" path="res://assets/textures/tile_sheet.png" id="2_grkb4"]
-[ext_resource type="PackedScene" uid="uid://bsh87plgj5sdf" path="res://components/movement_component/movement_component.tscn" id="3_c10q2"]
+[ext_resource type="Script" path="res://entities/characters/Character.cs" id="1_m2p7m"]
+[ext_resource type="Texture2D" uid="uid://bkejh7hlq8wxn" path="res://assets/textures/tile_sheet.png" id="2_bb5hx"]
+[ext_resource type="PackedScene" uid="uid://bmt21mc0sr6pw" path="res://components/movement_component/movement_component.tscn" id="3_8xpw8"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_j172l"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5xyod"]
 size = Vector2(16, 16)
 
 [node name="Character" type="Node2D"]
-script = ExtResource("1_8c01l")
+script = ExtResource("1_m2p7m")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_grkb4")
+texture = ExtResource("2_bb5hx")
 region_enabled = true
 region_rect = Rect2(32, 80, 16, 16)
 
@@ -19,6 +19,6 @@ region_rect = Rect2(32, 80, 16, 16)
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-shape = SubResource("RectangleShape2D_j172l")
+shape = SubResource("RectangleShape2D_5xyod")
 
-[node name="MovementComponent" parent="." instance=ExtResource("3_c10q2")]
+[node name="MovementComponent" parent="." instance=ExtResource("3_8xpw8")]

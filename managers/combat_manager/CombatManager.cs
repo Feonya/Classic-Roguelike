@@ -14,7 +14,7 @@ public partial class CombatManager : Node, IManager
     {
     }
 
-    public void Update(double delta)
+    public void Update()
     {
         HandleCombats();
     }
@@ -38,16 +38,22 @@ public partial class CombatManager : Node, IManager
 
     private void HandleCombat(Character attacker, Character victim)
     {
+        // 1. 检测被攻击者是否成功闪避
         if (IsVictimDodged(victim)) { return; }
 
+        // 2. 检测攻击着是否成功施展暴击
         var isAttackerCrited = IsAttackerCrited(attacker);
 
+        // 3. 获得攻击者的攻击力
         var attackerAttack = GetAttackerAttack(attacker, isAttackerCrited);
 
+        // 4. 获得被攻击者的防御力
         var victimDefend = GetVictimDefend(victim);
 
+        // 5. 计算被攻击者受到的伤害
         var victimDamage = GetVictimDamage(attackerAttack, victimDefend);
 
+        // 6. 扣除被攻击者的血量
         HandleVictimDamage(victim, victimDamage);
 
         GD.Print(

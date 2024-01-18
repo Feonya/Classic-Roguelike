@@ -1,12 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://b0g0332qjff32"]
+[gd_scene load_steps=3 format=3 uid="uid://chr1go7imnvai"]
 
-[ext_resource type="PackedScene" uid="uid://byngc05jxfjx3" path="res://entities/pickable_objects/items/item.tscn" id="1_bivej"]
-[ext_resource type="Script" path="res://entities/pickable_objects/items/sight_ball/SightBall.cs" id="2_yxli6"]
+[ext_resource type="PackedScene" uid="uid://bcxddxspvnrii" path="res://entities/pickable_objects/items/item.tscn" id="1_ku7ly"]
+[ext_resource type="Script" path="res://entities/pickable_objects/items/sight_ball/SightBall.cs" id="2_ibke4"]
 
-[node name="SightBall" instance=ExtResource("1_bivej")]
-script = ExtResource("2_yxli6")
+[node name="SightBall" instance=ExtResource("1_ku7ly")]
+script = ExtResource("2_ibke4")
 _name = "视力球"
-_description = "拾起后立即增加5点视野。"
 
 [node name="Sprite2D" parent="." index="0"]
 region_rect = Rect2(32, 96, 16, 16)

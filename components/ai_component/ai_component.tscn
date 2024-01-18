@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://00c02xgx521g"]
+[gd_scene load_steps=2 format=3 uid="uid://bfbk4jg15pljl"]
 
-[ext_resource type="Script" path="res://components/ai_component/AiComponent.cs" id="1_jjwi4"]
+[ext_resource type="Script" path="res://components/ai_component/AiComponent.cs" id="1_nnk15"]
 
 [node name="AiComponent" type="Node"]
-script = ExtResource("1_jjwi4")
+script = ExtResource("1_nnk15")

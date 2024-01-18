@@ -15,11 +15,6 @@ public partial class AStarGridDebugger : Node2D
 
     public override void _Process(double delta)
     {
-        if (Input.IsActionJustPressed("toggle_a_star_debug_info"))
-        {
-            Visible = !Visible;
-        }
-
         QueueRedraw();
     }
 

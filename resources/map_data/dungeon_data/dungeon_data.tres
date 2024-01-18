@@ -1,7 +1,7 @@
-[gd_resource type="Resource" load_steps=2 format=3 uid="uid://c5rgvorilsfoi"]
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://ci7hrlcnb8cj6"]
 
-[ext_resource type="Script" path="res://resources/map_data/dungeon_data/DungeonData.cs" id="1_wh0o0"]
+[ext_resource type="Script" path="res://resources/map_data/dungeon_data/DungeonData.cs" id="1_v2lil"]
 
 [resource]
 resource_local_to_scene = true
-script = ExtResource("1_wh0o0")
+script = ExtResource("1_v2lil")

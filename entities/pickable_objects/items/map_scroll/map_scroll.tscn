@@ -1,12 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://bpknxrhuolm4w"]
+[gd_scene load_steps=3 format=3 uid="uid://c1tx6dg4ao7q8"]
 
-[ext_resource type="PackedScene" uid="uid://byngc05jxfjx3" path="res://entities/pickable_objects/items/item.tscn" id="1_1iw07"]
-[ext_resource type="Script" path="res://entities/pickable_objects/items/map_scroll/MapScroll.cs" id="2_si7qc"]
+[ext_resource type="PackedScene" uid="uid://bcxddxspvnrii" path="res://entities/pickable_objects/items/item.tscn" id="1_lvqox"]
+[ext_resource type="Script" path="res://entities/pickable_objects/items/map_scroll/MapScroll.cs" id="2_byd24"]
 
-[node name="MapScroll" instance=ExtResource("1_1iw07")]
-script = ExtResource("2_si7qc")
+[node name="MapScroll" instance=ExtResource("1_lvqox")]
+script = ExtResource("2_byd24")
 _name = "地图卷轴"
-_description = "使用后立即去除地图迷雾。"
 
 [node name="Sprite2D" parent="." index="0"]
 region_rect = Rect2(48, 96, 16, 16)

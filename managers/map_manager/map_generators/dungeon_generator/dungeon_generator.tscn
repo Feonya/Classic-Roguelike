@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://mw6k3uuoujrn"]
+[gd_scene load_steps=2 format=3 uid="uid://dfv2wlpv587mg"]
 
-[ext_resource type="Script" path="res://managers/map_manager/map_generators/dungeon_generator/DungeonGenerator.cs" id="1_qrg2k"]
+[ext_resource type="Script" path="res://managers/map_manager/map_generators/dungeon_generator/DungeonGenerator.cs" id="1_87ta1"]
 
 [node name="DungeonGenerator" type="Node"]
-script = ExtResource("1_qrg2k")
+script = ExtResource("1_87ta1")

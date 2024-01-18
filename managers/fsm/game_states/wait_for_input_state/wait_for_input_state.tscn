@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://ct8bp8q7bv0u6"]
+[gd_scene load_steps=2 format=3 uid="uid://clflh38bqj8lj"]
 
-[ext_resource type="Script" path="res://managers/fsm/game_states/wait_for_input_state/WaitForInputState.cs" id="1_50831"]
+[ext_resource type="Script" path="res://managers/fsm/game_states/wait_for_input_state/WaitForInputState.cs" id="1_kanxt"]
 
 [node name="WaitForInputState" type="Node"]
-script = ExtResource("1_50831")
+script = ExtResource("1_kanxt")

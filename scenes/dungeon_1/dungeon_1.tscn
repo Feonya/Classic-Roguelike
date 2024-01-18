@@ -1,17 +1,17 @@
-[gd_scene load_steps=6 format=3 uid="uid://7fvuw1dq505v"]
+[gd_scene load_steps=6 format=3 uid="uid://4sy7t4e2gx03"]
 
-[ext_resource type="PackedScene" uid="uid://4mdofym5k44p" path="res://scenes/main.tscn" id="1_ce5py"]
-[ext_resource type="Resource" uid="uid://c5rgvorilsfoi" path="res://resources/map_data/dungeon_data/dungeon_data.tres" id="2_68jkw"]
-[ext_resource type="PackedScene" uid="uid://mw6k3uuoujrn" path="res://managers/map_manager/map_generators/dungeon_generator/dungeon_generator.tscn" id="2_brejk"]
-[ext_resource type="Script" path="res://resources/character_data/player_data/PlayerData.cs" id="3_n2wgv"]
+[ext_resource type="PackedScene" uid="uid://bj6yym4eet6oh" path="res://scenes/main.tscn" id="1_g8ide"]
+[ext_resource type="Resource" uid="uid://ci7hrlcnb8cj6" path="res://resources/map_data/dungeon_data/dungeon_data.tres" id="2_3ghpo"]
+[ext_resource type="PackedScene" uid="uid://dfv2wlpv587mg" path="res://managers/map_manager/map_generators/dungeon_generator/dungeon_generator.tscn" id="3_1mme2"]
+[ext_resource type="Script" path="res://resources/character_data/player_data/PlayerData.cs" id="4_kmpvp"]
 
-[sub_resource type="Resource" id="Resource_fwo5h"]
+[sub_resource type="Resource" id="Resource_gc4ik"]
 resource_local_to_scene = true
-script = ExtResource("3_n2wgv")
+script = ExtResource("4_kmpvp")
 Name = "玩家"
 _sight = 6
 _strength = 8
-_constitution = 8
+_constitution = 18
 _agility = 8
 StrengthIncrementEffects = {
 "attack": 2.0,
@@ -26,16 +26,20 @@ AgilityIncrementEffects = {
 "dodge": 0.01
 }
 
-[node name="Dungeon1" instance=ExtResource("1_ce5py")]
+[node name="Dungeon1" instance=ExtResource("1_g8ide")]
 
 [node name="MapManager" parent="." index="2"]
-_mapData = ExtResource("2_68jkw")
+_mapData = ExtResource("2_3ghpo")
 
-[node name="DungeonGenerator" parent="MapManager" index="0" instance=ExtResource("2_brejk")]
+[node name="DungeonGenerator" parent="MapManager" index="0" instance=ExtResource("3_1mme2")]
+
+[node name="EnemySpawner" parent="." index="3"]
+_maxEnemies = 10
+_bossScenes = []
 
 [node name="StairManager" parent="." index="7"]
 _nextScenePath = "res://scenes/dungeon_2/dungeon_2.tscn"
 _previousScenePath = "res://scenes/forest/forest.tscn"
 
 [node name="Player" parent="GameViewportContainer/GameViewport" index="3"]
-_characterData = SubResource("Resource_fwo5h")
+_characterData = SubResource("Resource_gc4ik")

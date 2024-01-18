@@ -1,13 +1,19 @@
-[gd_scene load_steps=4 format=3 uid="uid://c4xmgwunqaavp"]
+[gd_scene load_steps=6 format=3 uid="uid://46vqrnuy01p8"]
 
-[ext_resource type="PackedScene" uid="uid://caqc2shvidiaf" path="res://entities/characters/enemies/enemy.tscn" id="1_gerhc"]
-[ext_resource type="Resource" uid="uid://3qmoq43fcngt" path="res://resources/character_data/enemy_data/orc_data/orc_data.tres" id="2_mn6bm"]
-[ext_resource type="PackedScene" uid="uid://c1qaryyyfqaqt" path="res://components/ai_component/ai/melee_ai/melee_ai.tscn" id="3_63ule"]
+[ext_resource type="PackedScene" uid="uid://cbhkdg8w4doso" path="res://entities/characters/enemies/enemy.tscn" id="1_qd8gi"]
+[ext_resource type="Resource" uid="uid://cp6m8qadem85p" path="res://resources/character_data/enemy_data/orc_data/orc_data.tres" id="2_6r4ne"]
+[ext_resource type="PackedScene" uid="uid://ikp1afuqovm3" path="res://components/ai_component/ai/melee_ai/melee_ai.tscn" id="3_682eu"]
+[ext_resource type="PackedScene" uid="uid://nk18cj2yiyb" path="res://components/ai_component/ai/chase_ai/chase_ai.tscn" id="3_m34o7"]
+[ext_resource type="PackedScene" uid="uid://bh6ktp33grlne" path="res://components/ai_component/ai/walk_around_ai/walk_around_ai.tscn" id="3_rhqv2"]
 
-[node name="Orc" instance=ExtResource("1_gerhc")]
-_characterData = ExtResource("2_mn6bm")
+[node name="Orc" instance=ExtResource("1_qd8gi")]
+_characterData = ExtResource("2_6r4ne")
 
 [node name="Sprite2D" parent="." index="0"]
 region_rect = Rect2(112, 80, 16, 16)
 
-[node name="MeleeAi" parent="AiComponent" index="0" instance=ExtResource("3_63ule")]
+[node name="MeleeAi" parent="AiComponent" index="0" instance=ExtResource("3_682eu")]
+
+[node name="ChaseAi" parent="AiComponent" index="1" instance=ExtResource("3_m34o7")]
+
+[node name="WalkAroundAi" parent="AiComponent" index="2" instance=ExtResource("3_rhqv2")]

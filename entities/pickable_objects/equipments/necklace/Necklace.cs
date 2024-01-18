@@ -1,11 +1,11 @@
 using Godot;
 
-public partial class Necklace : Equipment, IEquipableEquipment, INeckWearEquipment
+public partial class Necklace : Equipment, INeckWearEquipment
 {
     [Export]
-    private float _minDodgeIncrement;
+    private float _minDodgeIncrement = 0.1f;
     [Export]
-    private float _maxDodgeIncrement;
+    private float _maxDodgeIncrement = 0.5f;
 
     private float _actualDodgeIncrement;
 
@@ -18,13 +18,13 @@ public partial class Necklace : Equipment, IEquipableEquipment, INeckWearEquipme
         _description = "装备后增加" + (_actualDodgeIncrement * 100f).ToString("0.00") + "%闪避。";
     }
 
-    public void Equip()
+    public override void Equip()
     {
         var playerData = _player.CharacterData as PlayerData;
 
         if (playerData.NeckWearEquipment != null)
         {
-            (playerData.NeckWearEquipment as IEquipableEquipment).Unequip();
+            (playerData.NeckWearEquipment as Equipment).Unequip();
         }
 
         playerData.Dodge += _actualDodgeIncrement;
@@ -32,19 +32,19 @@ public partial class Necklace : Equipment, IEquipableEquipment, INeckWearEquipme
         playerData.NeckWearEquipment = this;
     }
 
-    public void EquipWithoutEffects()
+    public override void EquipWithoutEffect()
     {
         var playerData = _player.CharacterData as PlayerData;
 
         if (playerData.NeckWearEquipment != null)
         {
-            (playerData.NeckWearEquipment as IEquipableEquipment).Unequip();
+            (playerData.NeckWearEquipment as Equipment).Unequip();
         }
 
         playerData.NeckWearEquipment = this;
     }
 
-    public void Unequip()
+    public override void Unequip()
     {
         var playerData = _player.CharacterData as PlayerData;
 

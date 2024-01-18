@@ -16,7 +16,7 @@ public partial class CharacterData : Resource
     public event Action<float> CritChanged;
 
     [Export]
-    public string Name = "玩家";
+    public string Name = "未命名";
 
     [Export]
     protected int _sight = 6;
@@ -31,8 +31,9 @@ public partial class CharacterData : Resource
     }
 
     /// <summary>
-    /// 基础属性（Base Attributes）。
+    /// 基础属性 Base Attributes
     /// </summary>
+
     [Export]
     protected int _strength = 8;
     public int Strength
@@ -48,7 +49,6 @@ public partial class CharacterData : Resource
             StrengthChanged?.Invoke(value);
         }
     }
-
     [Export]
     protected int _constitution = 8;
     public int Constitution
@@ -57,14 +57,13 @@ public partial class CharacterData : Resource
         set
         {
             var valueDifference = value - _constitution;
-            Health += valueDifference * ConstitutionIncrementEffects["health"];
             MaxHealth += valueDifference * ConstitutionIncrementEffects["max_health"];
+            Health += valueDifference * ConstitutionIncrementEffects["health"];
 
             _constitution = value;
             ConstitutionChanged?.Invoke(value);
         }
     }
-
     [Export]
     protected int _agility = 8;
     public int Agility
@@ -86,13 +85,11 @@ public partial class CharacterData : Resource
     {
         { "attack", 2f }, { "defend", 1f }
     };
-
     [Export]
     public Dictionary<string, float> ConstitutionIncrementEffects = new()
     {
         { "max_health", 3f }, { "health", 3f }
     };
-
     [Export]
     public Dictionary<string, float> AgilityIncrementEffects = new()
     {
@@ -100,8 +97,9 @@ public partial class CharacterData : Resource
     };
 
     /// <summary>
-    /// 战斗属性（Combat Attributes）。
+    /// 战斗属性 Combat Attributes
     /// </summary>
+
     protected float _health;
     public float Health
     {
@@ -112,7 +110,6 @@ public partial class CharacterData : Resource
             HealthChanged?.Invoke(value);
         }
     }
-
     protected float _maxHealth;
     public float MaxHealth
     {
@@ -123,7 +120,6 @@ public partial class CharacterData : Resource
             MaxHealthChanged?.Invoke(value);
         }
     }
-
     protected float _attack;
     public float Attack
     {
@@ -134,7 +130,6 @@ public partial class CharacterData : Resource
             AttackChanged?.Invoke(value);
         }
     }
-
     protected float _defend;
     public float Defend
     {
@@ -145,7 +140,6 @@ public partial class CharacterData : Resource
             DefendChanged?.Invoke(value);
         }
     }
-
     protected float _dodge;
     public float Dodge
     {
@@ -156,7 +150,6 @@ public partial class CharacterData : Resource
             DodgeChanged?.Invoke(value);
         }
     }
-
     protected float _crit;
     public float Crit
     {

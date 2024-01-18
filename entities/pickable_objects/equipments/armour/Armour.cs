@@ -1,11 +1,11 @@
 using Godot;
 
-public partial class Armour : Equipment, IEquipableEquipment, IBodyWearEquipment
+public partial class Armour : Equipment, IBodyWearEquipment
 {
     [Export]
-    private float _minDefendIncrement;
+    private float _minDefendIncrement = 3f;
     [Export]
-    private float _maxDefendIncrement;
+    private float _maxDefendIncrement = 10f;
 
     private float _actualDefendIncrement;
 
@@ -18,13 +18,13 @@ public partial class Armour : Equipment, IEquipableEquipment, IBodyWearEquipment
         _description = "装备后增加" + _actualDefendIncrement.ToString("0.0") + "防御。";
     }
 
-    public void Equip()
+    public override void Equip()
     {
         var playerData = _player.CharacterData as PlayerData;
 
         if (playerData.BodyWearEquipment != null)
         {
-            (playerData.BodyWearEquipment as IEquipableEquipment).Unequip();
+            (playerData.BodyWearEquipment as Equipment).Unequip();
         }
 
         playerData.Defend += _actualDefendIncrement;
@@ -32,19 +32,19 @@ public partial class Armour : Equipment, IEquipableEquipment, IBodyWearEquipment
         playerData.BodyWearEquipment = this;
     }
 
-    public void EquipWithoutEffects()
+    public override void EquipWithoutEffect()
     {
         var playerData = _player.CharacterData as PlayerData;
 
         if (playerData.BodyWearEquipment != null)
         {
-            (playerData.BodyWearEquipment as IEquipableEquipment).Unequip();
+            (playerData.BodyWearEquipment as Equipment).Unequip();
         }
 
         playerData.BodyWearEquipment = this;
     }
 
-    public void Unequip()
+    public override void Unequip()
     {
         var playerData = _player.CharacterData as PlayerData;
 

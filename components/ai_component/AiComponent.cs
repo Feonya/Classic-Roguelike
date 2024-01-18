@@ -1,9 +1,8 @@
-using System.Collections.Generic;
 using Godot;
 
 public partial class AiComponent : Node, IComponent
 {
-    private List<IAi> _aiList = new();
+    private System.Collections.Generic.List<IAi> _aiList = new();
 
     public void Initialize()
     {
@@ -20,7 +19,7 @@ public partial class AiComponent : Node, IComponent
         }
     }
 
-    public void Update(double delta)
+    public void Update()
     {
         foreach (var ai in _aiList)
         {

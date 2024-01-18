@@ -1,4 +1,3 @@
-using System;
 using Godot;
 
 public partial class Fsm : Node, IManager
@@ -17,7 +16,7 @@ public partial class Fsm : Node, IManager
         _actionState = GetNode<ActionState>("ActionState");
         _combatState = GetNode<CombatState>("CombatState");
 
-        _startState.Updated += On_InitializeState_Updated;
+        _startState.Updated += On_StartState_Updated;
         _waitForInputState.Updated += On_WaitForInputState_Updated;
         _actionState.Updated += On_ActionState_Updated;
         _combatState.Updated += On_CombatState_Updated;
@@ -30,32 +29,36 @@ public partial class Fsm : Node, IManager
         _currentGameState = _startState;
     }
 
-    public void Update(double delta)
+    public void Update()
     {
-        _currentGameState.Update(delta);
+        _currentGameState.Update();
     }
 
-    private void On_InitializeState_Updated()
+    private void On_StartState_Updated()
     {
         _currentGameState = _waitForInputState;
-        // GD.Print("进入WaitForInputState");
+
+        // GD.Print("切换至WaitForInputState");
     }
 
     private void On_WaitForInputState_Updated()
     {
         _currentGameState = _actionState;
-        // GD.Print("进入ActionState");
+
+        // GD.Print("切换至ActionState");
     }
 
     private void On_ActionState_Updated()
     {
         _currentGameState = _combatState;
-        // GD.Print("进入CombatState");
+
+        // GD.Print("切换至CombatState");
     }
 
     private void On_CombatState_Updated()
     {
         _currentGameState = _waitForInputState;
-        // GD.Print("进入WaitForInputState");
+
+        // GD.Print("切换至WaitForInputState");
     }
 }

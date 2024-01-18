@@ -9,8 +9,8 @@ public partial class WalkAroundAi : Node, IAi
 
     private AStarGridManager _aStarGridManager;
 
-    private Enemy _enemy;
     private Player _player;
+    private Enemy _enemy;
 
     public void Initialize()
     {
@@ -18,8 +18,8 @@ public partial class WalkAroundAi : Node, IAi
 
         _aStarGridManager = GetTree().CurrentScene.GetNode<AStarGridManager>("%AStarGridManager");
 
-        _enemy = GetParent().GetParent<Enemy>();
         _player = GetTree().CurrentScene.GetNode<Player>("%Player");
+        _enemy = GetParent().GetParent<Enemy>();
     }
 
     public bool Execute()
@@ -37,7 +37,7 @@ public partial class WalkAroundAi : Node, IAi
 
         var direction = new Vector2I(GD.RandRange(-1, 1), GD.RandRange(-1, 1));
 
-        Executed?.Invoke(direction);
+        Executed.Invoke(direction);
 
         return true;
     }

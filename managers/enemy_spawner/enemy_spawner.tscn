@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://cmo8tvbclrpub"]
+[gd_scene load_steps=2 format=3 uid="uid://du6ptu46vam7s"]
 
-[ext_resource type="Script" path="res://managers/enemy_spawner/EnemySpawner.cs" id="1_6irii"]
+[ext_resource type="Script" path="res://managers/enemy_spawner/EnemySpawner.cs" id="1_4wfuj"]
 
 [node name="EnemySpawner" type="Node"]
-script = ExtResource("1_6irii")
+script = ExtResource("1_4wfuj")

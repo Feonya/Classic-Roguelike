@@ -1,7 +1,7 @@
 using Godot;
 using Godot.Collections;
 
-public partial class DungeonGenerator : Node, IMapGenerator
+public partial class DungeonGenerator : Node, IMapGenerator, ISavable, ILoadable
 {
     private DungeonData _dungeonData;
     private TileSet _tileSet;
@@ -9,7 +9,7 @@ public partial class DungeonGenerator : Node, IMapGenerator
 
     private SaveLoadManager _saveLoadManager;
 
-    public MapData MapData { get => _dungeonData; }
+    private System.Collections.Generic.List<Rect2I> _rooms = new();
 
     public void Initialize()
     {
@@ -17,25 +17,27 @@ public partial class DungeonGenerator : Node, IMapGenerator
         _tileSet = GD.Load<TileSet>("res://resources/tile_sets/dungeon_tile_set.tres");
         _tileMap = GetTree().CurrentScene.GetNode<TileMap>("%TileMap");
 
-        _tileMap.TileSet = _tileSet;
-
         _saveLoadManager = GetTree().CurrentScene.GetNode<SaveLoadManager>("%SaveLoadManager");
 
-        GenerateMap();
+        _tileMap.TileSet = _tileSet;
+
+        if (!InitializeByLoadedData())
+        {
+            GenerateMap();
+        }
     }
 
-    public void Update(double delta)
+    public void Update()
     {
     }
 
     public Vector2I GetPlayerStartCell()
     {
-        var randomNumber = GD.RandRange(0, _dungeonData.Rooms.Count - 1);
+        var randomNumber = GD.RandRange(0, _rooms.Count - 1);
 
-        var playerStartCell = _dungeonData.Rooms[randomNumber].GetCenter();
+        var playerStartCell = _rooms[randomNumber].GetCenter();
 
-        var mapManager = GetParent<MapManager>();
-        mapManager.TryAddCharacterCellAtSpawn(playerStartCell);
+        GetParent<MapManager>().TryAddCharacterCellAtSpawn(playerStartCell);
 
         return playerStartCell;
     }
@@ -44,8 +46,8 @@ public partial class DungeonGenerator : Node, IMapGenerator
     {
         while (true)
         {
-            var randomNumber = GD.RandRange(0, _dungeonData.Rooms.Count - 1);
-            var randomRoom = _dungeonData.Rooms[randomNumber];
+            var randomNumber = GD.RandRange(0, _rooms.Count - 1);
+            var randomRoom = _rooms[randomNumber];
 
             var randomX = GD.RandRange(
                 randomRoom.Position.X,
@@ -58,40 +60,68 @@ public partial class DungeonGenerator : Node, IMapGenerator
 
             var spawnCell = new Vector2I(randomX, randomY);
 
-            var mapManager = GetParent<MapManager>();
-            if (!mapManager.TryAddCharacterCellAtSpawn(spawnCell)) { continue; }
+            if (!GetParent<MapManager>().TryAddCharacterCellAtSpawn(spawnCell))
+            {
+                continue;
+            }
 
             return spawnCell;
         }
     }
 
-    private void GenerateMap()
+    public Dictionary<string, Variant> GetDataForSave()
     {
-        if (TryGenerateMapByPersistentData()) { return; }
+        var floorCells = new Array<Vector2I>();
+        var wallCells = new Array<Vector2I>();
 
-        FullFillWithWalls();
-        RandomDigRooms();
-        RandomDigCorridors();
+        var dungeonData = GetParent<MapManager>().MapData as DungeonData;
+
+        for (int y = 0; y < dungeonData.MapSize.Y; y++)
+        {
+            for (int x = 0; x < dungeonData.MapSize.X; x++)
+            {
+                var cell = new Vector2I(x, y);
+
+                var tileData = _tileMap.GetCellTileData((int)TileMapLayer.Default, cell);
+                if (tileData.TerrainSet == (int)TerrainSet.Default)
+                {
+                    if (tileData.Terrain == (int)DungeonTerrain.Floor)
+                    {
+                        floorCells.Add(cell);
+                    }
+                    else if (tileData.Terrain == (int)DungeonTerrain.Wall)
+                    {
+                        wallCells.Add(cell);
+                    }
+                }
+            }
+        }
+
+        return new Dictionary<string, Variant>
+        {
+            { "floor_cells", floorCells },
+            { "wall_cells", wallCells }
+        };
     }
 
-    private bool TryGenerateMapByPersistentData()
+    public bool InitializeByLoadedData()
     {
-        if (_saveLoadManager.PersistentData == null ||
-            _saveLoadManager.PersistentData.Count == 0 ||
-            !_saveLoadManager.PersistentData.ContainsKey("maps"))
+        if (_saveLoadManager.LoadedData == null ||
+            _saveLoadManager.LoadedData.Count == 0 ||
+            !_saveLoadManager.LoadedData.ContainsKey("maps"))
         {
             return false;
         }
 
-        var mapsPersistentData = _saveLoadManager
-            .PersistentData["maps"].AsGodotArray<Dictionary<string, Variant>>();
-        for (int i = 0; i < mapsPersistentData.Count; i++)
+        var maps = _saveLoadManager
+            .LoadedData["maps"].AsGodotArray<Dictionary<string, Variant>>();
+        for (int i = 0; i < maps.Count; i++)
         {
-            var mapPersistentData = mapsPersistentData[i];
-            if (mapPersistentData["scene_name"].AsString() == GetTree().CurrentScene.Name)
+            var map = maps[i];
+            if (map["scene_name"].AsString() == GetTree().CurrentScene.Name)
             {
-                var floorCells = mapPersistentData["floor_cells"].AsGodotArray<Vector2I>();
-                var wallCells = mapPersistentData["wall_cells"].AsGodotArray<Vector2I>();
+                var floorCells = map["floor_cells"].AsGodotArray<Vector2I>();
+                var wallCells = map["wall_cells"].AsGodotArray<Vector2I>();
 
                 _tileMap.SetCellsTerrainConnect(
                     (int)TileMapLayer.Default,
@@ -100,7 +130,6 @@ public partial class DungeonGenerator : Node, IMapGenerator
                     (int)DungeonTerrain.Floor,
                     false
                 );
-
                 _tileMap.SetCellsTerrainConnect(
                     (int)TileMapLayer.Default,
                     wallCells,
@@ -116,21 +145,28 @@ public partial class DungeonGenerator : Node, IMapGenerator
         return false;
     }
 
+    private void GenerateMap()
+    {
+        FullFillWithWalls();
+        RandomDigRooms();
+        RandomDigCorridors();
+    }
+
     private void FullFillWithWalls()
     {
-        var cells = new Array<Vector2I>();
+        var allCells = new Array<Vector2I>();
 
         for (int y = 0; y < _dungeonData.MapSize.Y; y++)
         {
             for (int x = 0; x < _dungeonData.MapSize.X; x++)
             {
-                cells.Add(new Vector2I(x, y));
+                allCells.Add(new Vector2I(x, y));
             }
         }
 
         _tileMap.SetCellsTerrainConnect(
             (int)TileMapLayer.Default,
-            cells,
+            allCells,
             (int)TerrainSet.Default,
             (int)DungeonTerrain.Wall
         );
@@ -154,7 +190,7 @@ public partial class DungeonGenerator : Node, IMapGenerator
                 }
             }
 
-            _dungeonData.Rooms.Add(room);
+            _rooms.Add(room);
         }
 
         if (GD.RandRange(0, 1) == 0)
@@ -187,10 +223,11 @@ public partial class DungeonGenerator : Node, IMapGenerator
 
     private bool IsRoomIntersectOthers(Rect2I room)
     {
-        for (int i = 0; i < _dungeonData.Rooms.Count; i++)
+        for (int i = 0; i < _rooms.Count; i++)
         {
-            var anotherRoom = _dungeonData.Rooms[i];
-            if (((Rect2)room).Intersects(anotherRoom, true))
+            var room1 = (Rect2)room;
+            var room2 = (Rect2)_rooms[i];
+            if (room1.Intersects(room2, true))
             {
                 return true;
             }
@@ -201,7 +238,7 @@ public partial class DungeonGenerator : Node, IMapGenerator
 
     private void SortRoomsFromLeftToRight()
     {
-        _dungeonData.Rooms.Sort((room1, room2) =>
+        _rooms.Sort((room1, room2) =>
         {
             return room1.Position.X.CompareTo(room2.Position.X);
         });
@@ -209,7 +246,7 @@ public partial class DungeonGenerator : Node, IMapGenerator
 
     private void SortRoomsFromTopToBottom()
     {
-        _dungeonData.Rooms.Sort((room1, room2) =>
+        _rooms.Sort((room1, room2) =>
         {
             return room1.Position.Y.CompareTo(room2.Position.Y);
         });
@@ -217,10 +254,12 @@ public partial class DungeonGenerator : Node, IMapGenerator
 
     private void RandomDigCorridors()
     {
-        for (int i = 0; i < _dungeonData.Rooms.Count - 1; i++)
+        var allCorridorCells = new Array<Vector2I>();
+
+        for (int i = 0; i < _rooms.Count - 1; i++)
         {
-            var room1 = _dungeonData.Rooms[i];
-            var room2 = _dungeonData.Rooms[i + 1];
+            var room1 = _rooms[i];
+            var room2 = _rooms[i + 1];
 
             var x1 = room1.GetCenter().X;
             var y1 = room1.GetCenter().Y;
@@ -231,21 +270,21 @@ public partial class DungeonGenerator : Node, IMapGenerator
             {
                 var horizontalCells = GetHorizontalCorridorCells(x1, x2, y1);
                 var verticalCells = GetVerticalCorridorCells(x2, y1, y2);
-                _dungeonData.CorridorCells.AddRange(horizontalCells);
-                _dungeonData.CorridorCells.AddRange(verticalCells);
+                allCorridorCells.AddRange(horizontalCells);
+                allCorridorCells.AddRange(verticalCells);
             }
             else
             {
                 var verticalCells = GetVerticalCorridorCells(x1, y1, y2);
                 var horizontalCells = GetHorizontalCorridorCells(x1, x2, y2);
-                _dungeonData.CorridorCells.AddRange(verticalCells);
-                _dungeonData.CorridorCells.AddRange(horizontalCells);
+                allCorridorCells.AddRange(verticalCells);
+                allCorridorCells.AddRange(horizontalCells);
             }
         }
 
         _tileMap.SetCellsTerrainConnect(
             (int)TileMapLayer.Default,
-            _dungeonData.CorridorCells,
+            allCorridorCells,
             (int)TerrainSet.Default,
             (int)DungeonTerrain.Floor
         );

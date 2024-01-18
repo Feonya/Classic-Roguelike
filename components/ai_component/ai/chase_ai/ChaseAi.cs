@@ -9,8 +9,8 @@ public partial class ChaseAi : Node, IAi
 
     private AStarGridManager _aStarGridManager;
 
-    private Enemy _enemy;
     private Player _player;
+    private Enemy _enemy;
 
     public void Initialize()
     {
@@ -18,8 +18,8 @@ public partial class ChaseAi : Node, IAi
 
         _aStarGridManager = GetTree().CurrentScene.GetNode<AStarGridManager>("%AStarGridManager");
 
-        _enemy = GetParent().GetParent<Enemy>();
         _player = GetTree().CurrentScene.GetNode<Player>("%Player");
+        _enemy = GetParent().GetParent<Enemy>();
     }
 
     public bool Execute()
@@ -38,7 +38,11 @@ public partial class ChaseAi : Node, IAi
         var playerCell = (Vector2I)
             (_player.GlobalPosition - _mapData.CellSize / 2) / _mapData.CellSize;
 
-        _aStarGridManager.AStarGrid.SetPointSolid(enemyCell, false);
+        _aStarGridManager.AStarGrid.SetPointSolid(
+            (Vector2I)(_enemy.GlobalPosition - _mapData.CellSize / 2) / _mapData.CellSize,
+            false
+        );
+
         var pathCells = _aStarGridManager.AStarGrid.GetIdPath(enemyCell, playerCell);
 
         if (pathCells.Count < 2) { return false; }

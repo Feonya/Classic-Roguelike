@@ -1,35 +1,24 @@
 using Godot;
 
-public partial class Mace : Equipment,
-    IEquipableEquipment, IRightHandHoldEquipment, IUniquePickableObject
+public partial class Mace : Equipment, IRightHandHoldEqiupment
 {
     [Export]
-    private float _minAttackIncrement;
-    [Export]
-    private float _maxAttackIncrement;
-
-    private float _actualAttackIncrement;
-
-    private static bool _isAppead;
-
-    public bool IsAppeared { get => _isAppead; set => _isAppead = value; }
+    private float _actualAttackIncrement = 18f;
 
     public override void Initialize()
     {
         base.Initialize();
 
-        _actualAttackIncrement = (float)GD.RandRange(_minAttackIncrement, _maxAttackIncrement);
-
         _description = "装备后增加" + _actualAttackIncrement.ToString("0.0") + "攻击。";
     }
 
-    public void Equip()
+    public override void Equip()
     {
         var playerData = _player.CharacterData as PlayerData;
 
         if (playerData.RightHandHoldEquipment != null)
         {
-            (playerData.RightHandHoldEquipment as IEquipableEquipment).Unequip();
+            (playerData.RightHandHoldEquipment as Equipment).Unequip();
         }
 
         playerData.Attack += _actualAttackIncrement;
@@ -37,19 +26,19 @@ public partial class Mace : Equipment,
         playerData.RightHandHoldEquipment = this;
     }
 
-    public void EquipWithoutEffects()
+    public override void EquipWithoutEffect()
     {
         var playerData = _player.CharacterData as PlayerData;
 
         if (playerData.RightHandHoldEquipment != null)
         {
-            (playerData.RightHandHoldEquipment as IEquipableEquipment).Unequip();
+            (playerData.RightHandHoldEquipment as Equipment).Unequip();
         }
 
         playerData.RightHandHoldEquipment = this;
     }
 
-    public void Unequip()
+    public override void Unequip()
     {
         var playerData = _player.CharacterData as PlayerData;
 

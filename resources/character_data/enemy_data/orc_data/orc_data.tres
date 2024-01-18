@@ -1,24 +1,24 @@
-[gd_resource type="Resource" load_steps=5 format=3 uid="uid://3qmoq43fcngt"]
+[gd_resource type="Resource" load_steps=5 format=3 uid="uid://cp6m8qadem85p"]
 
-[ext_resource type="Script" path="res://resources/character_data/enemy_data/EnemyData.cs" id="1_1uphm"]
-[ext_resource type="PackedScene" uid="uid://cch2rwoahwlir" path="res://entities/pickable_objects/items/revive_cross/revive_cross.tscn" id="1_pxum3"]
-[ext_resource type="PackedScene" uid="uid://ca3r7t0p85oxd" path="res://entities/pickable_objects/equipments/mace/mace.tscn" id="2_hyyoo"]
-[ext_resource type="PackedScene" uid="uid://cfo6xngk5lamt" path="res://entities/pickable_objects/equipments/shield/shield.tscn" id="3_7hm5d"]
+[ext_resource type="PackedScene" uid="uid://dp8lhdstb8e1" path="res://entities/pickable_objects/equipments/armour/armour.tscn" id="1_45e32"]
+[ext_resource type="Script" path="res://resources/character_data/enemy_data/EnemyData.cs" id="1_a6r7l"]
+[ext_resource type="PackedScene" uid="uid://1x8pnmeq7tuk" path="res://entities/pickable_objects/equipments/mace/mace.tscn" id="2_vakmv"]
+[ext_resource type="PackedScene" uid="uid://c5cvd0moiekfu" path="res://entities/pickable_objects/equipments/shield/shield.tscn" id="3_8pesq"]
 
 [resource]
 resource_local_to_scene = true
-script = ExtResource("1_1uphm")
-DeathDropExperience = 5.0
+script = ExtResource("1_a6r7l")
+DeathDropExperience = 4.0
 DeathDropPickableObjects = {
-ExtResource("1_pxum3"): 0.5,
-ExtResource("2_hyyoo"): 0.5,
-ExtResource("3_7hm5d"): 0.5
+ExtResource("1_45e32"): 0.5,
+ExtResource("2_vakmv"): 0.5,
+ExtResource("3_8pesq"): 0.5
 }
 Name = "兽人"
 _sight = 3
-_strength = 5
-_constitution = 5
-_agility = 5
+_strength = 6
+_constitution = 6
+_agility = 6
 StrengthIncrementEffects = {
 "attack": 2.0,
 "defend": 1.0

@@ -1,7 +1,7 @@
 using Godot;
 using Godot.Collections;
 
-public partial class FogPainter : Node, IManager, IPersistence
+public partial class FogPainter : Node, IManager, ILoadable
 {
     private MapData _mapData;
 
@@ -27,53 +27,67 @@ public partial class FogPainter : Node, IManager, IPersistence
 
         _enemyContainer = GetTree().CurrentScene.GetNode<Node>("%EnemyContainer");
 
-        FullFillWithUnexploredFog();
+        if (!InitializeByLoadedData())
+        {
+            FullFillWithUnexploredFog();
+        }
+
         await ToSignal(GetTree(), "process_frame");
-        RefreshFogOnInitialize();
+        RefreshFog();
     }
 
-    public void Update(double delta)
+    public void Update()
     {
         RefreshFog();
     }
 
-    public Dictionary<string, Variant> GetPersistentData()
+    public bool InitializeByLoadedData()
     {
-        var unexploredFogCells = new Array<Vector2I>();
-        var outOfSightFogCells = new Array<Vector2I>();
-        var inSightFogCells = new Array<Vector2I>();
-
-        for (int y = 0; y < _mapData.MapSize.Y; y++)
+        if (_saveLoadManager.LoadedData == null ||
+            _saveLoadManager.LoadedData.Count == 0 ||
+            !_saveLoadManager.LoadedData.ContainsKey("maps"))
         {
-            for (int x = 0; x < _mapData.MapSize.X; x++)
-            {
-                var cell = new Vector2I(x, y);
-                var tileData = _tileMap.GetCellTileData((int)TileMapLayer.Fog, cell);
+            return false;
+        }
 
-                if (tileData.TerrainSet == (int)TerrainSet.Fog)
-                {
-                    if (tileData.Terrain == (int)FogTerrain.Unexplored)
-                    {
-                        unexploredFogCells.Add(cell);
-                    }
-                    else if (tileData.Terrain == (int)FogTerrain.OutOfSight)
-                    {
-                        outOfSightFogCells.Add(cell);
-                    }
-                    else if (tileData.Terrain == (int)FogTerrain.InSight)
-                    {
-                        inSightFogCells.Add(cell);
-                    }
-                }
+        var maps = _saveLoadManager
+            .LoadedData["maps"].AsGodotArray<Dictionary<string, Variant>>();
+        for (int i = 0; i < maps.Count; i++)
+        {
+            var map = maps[i];
+            if (map["scene_name"].AsString() == GetTree().CurrentScene.Name)
+            {
+                var unexploredFogCells = map["unexplored_fog_cells"].AsGodotArray<Vector2I>();
+                var outOfSightFogCells = map["out_of_sight_fog_cells"].AsGodotArray<Vector2I>();
+                var inSightFogCells = map["in_sight_fog_cells"].AsGodotArray<Vector2I>();
+
+                _tileMap.SetCellsTerrainConnect(
+                    (int)TileMapLayer.Fog,
+                    unexploredFogCells,
+                    (int)TerrainSet.Fog,
+                    (int)FogTerrain.Unexplored,
+                    false
+                );
+                _tileMap.SetCellsTerrainConnect(
+                    (int)TileMapLayer.Fog,
+                    outOfSightFogCells,
+                    (int)TerrainSet.Fog,
+                    (int)FogTerrain.OutOfSight,
+                    false
+                );
+                _tileMap.SetCellsTerrainConnect(
+                    (int)TileMapLayer.Fog,
+                    inSightFogCells,
+                    (int)TerrainSet.Fog,
+                    (int)FogTerrain.InSight,
+                    false
+                );
+
+                return true;
             }
         }
 
-        return new Dictionary<string, Variant>
-        {
-            { "unexplored_fog_cells", unexploredFogCells },
-            { "out_of_sight_fog_cells", outOfSightFogCells },
-            { "in_sight_fog_cells", inSightFogCells }
-        };
+        return false;
     }
 
     private void FullFillWithUnexploredFog()
@@ -96,68 +110,12 @@ public partial class FogPainter : Node, IManager, IPersistence
         );
     }
 
-    private void RefreshFogOnInitialize()
-    {
-        if (TryRefreshFogOnInitializeByPersistentData()) { return; }
-
-        RefreshFog();
-    }
-
-    private bool TryRefreshFogOnInitializeByPersistentData()
-    {
-        if (_saveLoadManager.PersistentData == null ||
-            _saveLoadManager.PersistentData.Count == 0 ||
-            !_saveLoadManager.PersistentData.ContainsKey("maps"))
-        {
-            return false;
-        }
-
-        var mapsPersistentData = _saveLoadManager
-            .PersistentData["maps"].AsGodotArray<Dictionary<string, Variant>>();
-        for (int i = 0; i < mapsPersistentData.Count; i++)
-        {
-            var mapPersistentData = mapsPersistentData[i];
-            if (mapPersistentData["scene_name"].AsString() == GetTree().CurrentScene.Name)
-            {
-                var unexploredFogCells = mapPersistentData["unexplored_fog_cells"].AsGodotArray<Vector2I>();
-                var outOfSightFogCells = mapPersistentData["out_of_sight_fog_cells"].AsGodotArray<Vector2I>();
-                var inSightFogCells = mapPersistentData["in_sight_fog_cells"].AsGodotArray<Vector2I>();
-
-                _tileMap.SetCellsTerrainConnect(
-                    (int)TileMapLayer.Fog,
-                    unexploredFogCells,
-                    (int)TerrainSet.Fog,
-                    (int)FogTerrain.Unexplored,
-                    false
-                );
-
-                _tileMap.SetCellsTerrainConnect(
-                    (int)TileMapLayer.Fog,
-                    outOfSightFogCells,
-                    (int)TerrainSet.Fog,
-                    (int)FogTerrain.OutOfSight,
-                    false
-                );
-
-                _tileMap.SetCellsTerrainConnect(
-                    (int)TileMapLayer.Fog,
-                    inSightFogCells,
-                    (int)TerrainSet.Fog,
-                    (int)FogTerrain.InSight,
-                    false
-                );
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     private void RefreshFog()
     {
+        // 1. 获取当前状态循环中应被设为InSight图块的所有单元格，存入第一个容器。
         var currentInSightCells = GetCurrentInSightCells();
 
+        // 2. 从第二个容器中，剔除与第一个容器中皆应被设为InSight图块的相同单元格。
         foreach (var currentInSightCell in currentInSightCells)
         {
             if (_previousInSightCells.Contains(currentInSightCell))
@@ -166,20 +124,28 @@ public partial class FogPainter : Node, IManager, IPersistence
             }
         }
 
-        var fixableInSightWallCells = GetFixableInSightWallCells(currentInSightCells);
-
-        foreach (var fixableInSightWallCell in fixableInSightWallCells)
+        var fixableInSightCells = GetFixableInSightCells(currentInSightCells);
+        foreach (var fixableInSightCell in fixableInSightCells)
         {
-            if (!currentInSightCells.Contains(fixableInSightWallCell))
+            if (!currentInSightCells.Contains(fixableInSightCell))
             {
-                currentInSightCells.Add(fixableInSightWallCell);
+                currentInSightCells.Add(fixableInSightCell);
             }
 
-            if (_previousInSightCells.Contains(fixableInSightWallCell))
+            if (_previousInSightCells.Contains(fixableInSightCell))
             {
-                _previousInSightCells.Remove(fixableInSightWallCell);
+                _previousInSightCells.Remove(fixableInSightCell);
             }
         }
+
+        // 3. 将第一个与第二个容器中的单元格，分别设为InSight和OutOfSight图块。
+        _tileMap.SetCellsTerrainConnect(
+            (int)TileMapLayer.Fog,
+            currentInSightCells,
+            (int)TerrainSet.Fog,
+            (int)FogTerrain.InSight,
+            false
+        );
 
         _tileMap.SetCellsTerrainConnect(
             (int)TileMapLayer.Fog,
@@ -189,14 +155,7 @@ public partial class FogPainter : Node, IManager, IPersistence
             false
         );
 
-        _tileMap.SetCellsTerrainConnect(
-            (int)TileMapLayer.Fog,
-            currentInSightCells,
-            (int)TerrainSet.Fog,
-            (int)FogTerrain.InSight,
-            false
-        );
-
+        // 4. 将第一个容器的引用赋予第二个容器。
         _previousInSightCells = currentInSightCells;
 
         RefreshEnemiesVisibility();
@@ -210,23 +169,15 @@ public partial class FogPainter : Node, IManager, IPersistence
             var enemyCell = (Vector2I)
                 (enemy.GlobalPosition - _mapData.CellSize / 2) / _mapData.CellSize;
 
-            var enemyTileData = _tileMap.GetCellTileData(
-                (int)TileMapLayer.Fog, enemyCell
-            );
+            var enemyTileData = _tileMap.GetCellTileData((int)TileMapLayer.Fog, enemyCell);
             if (enemyTileData.TerrainSet == (int)TerrainSet.Fog &&
                 enemyTileData.Terrain == (int)FogTerrain.InSight)
             {
-                if (enemy.Visible != true)
-                {
-                    enemy.Visible = true;
-                }
+                enemy.Visible = true;
             }
             else
             {
-                if (enemy.Visible != false)
-                {
-                    enemy.Visible = false;
-                }
+                enemy.Visible = false;
             }
         }
     }
@@ -265,9 +216,9 @@ public partial class FogPainter : Node, IManager, IPersistence
         return inSightCells;
     }
 
-    private Array<Vector2I> GetFixableInSightWallCells(Array<Vector2I> currentInSightCells)
+    private Array<Vector2I> GetFixableInSightCells(Array<Vector2I> currentInSightCells)
     {
-        var fixableInSightWallCells = new Array<Vector2I>();
+        var fixableInSightCells = new Array<Vector2I>();
 
         var rightUpInSightCells = new Array<Vector2I>();
         var upLeftInSightCells = new Array<Vector2I>();
@@ -302,84 +253,81 @@ public partial class FogPainter : Node, IManager, IPersistence
             }
         }
 
-        fixableInSightWallCells.AddRange(GetRightUpFixableInSightWallCells(rightUpInSightCells));
-        fixableInSightWallCells.AddRange(GetUpLeftFixableInSightWallCells(upLeftInSightCells));
-        fixableInSightWallCells.AddRange(GetLeftDownFixableInSightWallCells(leftDownInSightCells));
-        fixableInSightWallCells.AddRange(GetDownRightFixableInSightWallCells(downRightInSightCells));
+        // 获取真正需要修正的所有单元格。
+        fixableInSightCells.AddRange(GetRightUpFixableInSightCells(rightUpInSightCells));
+        fixableInSightCells.AddRange(GetUpLeftFixableInSightCells(upLeftInSightCells));
+        fixableInSightCells.AddRange(GetLeftDownFixableInSightCells(leftDownInSightCells));
+        fixableInSightCells.AddRange(GetDownRightFixableInSightCells(downRightInSightCells));
 
-        return fixableInSightWallCells;
+        return fixableInSightCells;
     }
 
-    private Array<Vector2I> GetRightUpFixableInSightWallCells(
-        Array<Vector2I> rightUpInSightCells)
+    private Array<Vector2I> GetRightUpFixableInSightCells(Array<Vector2I> rightUpInSightCells)
     {
-        var fixableInSightWallCells = new Array<Vector2I>();
+        var fixableInSIghtCells = new Array<Vector2I>();
 
         foreach (var cell in rightUpInSightCells)
         {
             if (!IsCellBlockSight(cell))
             {
-                fixableInSightWallCells.Add(new Vector2I(cell.X + 1, cell.Y - 1));
-                fixableInSightWallCells.Add(new Vector2I(cell.X, cell.Y - 1));
-                fixableInSightWallCells.Add(new Vector2I(cell.X + 1, cell.Y));
+                fixableInSIghtCells.Add(new Vector2I(cell.X + 1, cell.Y));
+                fixableInSIghtCells.Add(new Vector2I(cell.X, cell.Y - 1));
+                fixableInSIghtCells.Add(new Vector2I(cell.X + 1, cell.Y - 1));
             }
         }
 
-        return fixableInSightWallCells;
+        return fixableInSIghtCells;
     }
 
-    private Array<Vector2I> GetUpLeftFixableInSightWallCells(
-        Array<Vector2I> upLeftInSightCells)
+    private Array<Vector2I> GetUpLeftFixableInSightCells(Array<Vector2I> upLeftInSightCells)
     {
-        var fixableInSightWallCells = new Array<Vector2I>();
+        var fixableInSIghtCells = new Array<Vector2I>();
 
         foreach (var cell in upLeftInSightCells)
         {
             if (!IsCellBlockSight(cell))
             {
-                fixableInSightWallCells.Add(new Vector2I(cell.X - 1, cell.Y - 1));
-                fixableInSightWallCells.Add(new Vector2I(cell.X, cell.Y - 1));
-                fixableInSightWallCells.Add(new Vector2I(cell.X - 1, cell.Y));
+                fixableInSIghtCells.Add(new Vector2I(cell.X - 1, cell.Y));
+                fixableInSIghtCells.Add(new Vector2I(cell.X, cell.Y - 1));
+                fixableInSIghtCells.Add(new Vector2I(cell.X - 1, cell.Y - 1));
             }
         }
 
-        return fixableInSightWallCells;
+        return fixableInSIghtCells;
     }
 
-    private Array<Vector2I> GetLeftDownFixableInSightWallCells(
-        Array<Vector2I> leftDownInSightCells)
+    private Array<Vector2I> GetLeftDownFixableInSightCells(Array<Vector2I> leftDownInSightCells)
     {
-        var fixableInSightWallCells = new Array<Vector2I>();
+        var fixableInSIghtCells = new Array<Vector2I>();
 
         foreach (var cell in leftDownInSightCells)
         {
             if (!IsCellBlockSight(cell))
             {
-                fixableInSightWallCells.Add(new Vector2I(cell.X - 1, cell.Y + 1));
-                fixableInSightWallCells.Add(new Vector2I(cell.X, cell.Y + 1));
-                fixableInSightWallCells.Add(new Vector2I(cell.X - 1, cell.Y));
+                fixableInSIghtCells.Add(new Vector2I(cell.X - 1, cell.Y));
+                fixableInSIghtCells.Add(new Vector2I(cell.X, cell.Y + 1));
+                fixableInSIghtCells.Add(new Vector2I(cell.X - 1, cell.Y + 1));
             }
         }
 
-        return fixableInSightWallCells;
+        return fixableInSIghtCells;
     }
 
-    private Array<Vector2I> GetDownRightFixableInSightWallCells(
-        Array<Vector2I> downRightInSightCells)
+    private Array<Vector2I> GetDownRightFixableInSightCells(Array<Vector2I> downRightInSightCells)
     {
-        var fixableInSightWallCells = new Array<Vector2I>();
+        var fixableInSIghtCells = new Array<Vector2I>();
 
         foreach (var cell in downRightInSightCells)
         {
             if (!IsCellBlockSight(cell))
             {
-                fixableInSightWallCells.Add(new Vector2I(cell.X + 1, cell.Y + 1));
-                fixableInSightWallCells.Add(new Vector2I(cell.X, cell.Y + 1));
-                fixableInSightWallCells.Add(new Vector2I(cell.X + 1, cell.Y));
+                fixableInSIghtCells.Add(new Vector2I(cell.X + 1, cell.Y));
+                fixableInSIghtCells.Add(new Vector2I(cell.X, cell.Y + 1));
+                fixableInSIghtCells.Add(new Vector2I(cell.X + 1, cell.Y + 1));
             }
         }
 
-        return fixableInSightWallCells;
+        return fixableInSIghtCells;
     }
 
     private bool IsCellBlockSight(Vector2I cell)

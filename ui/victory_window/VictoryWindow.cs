@@ -8,14 +8,14 @@ public partial class VictoryWindow : CanvasLayer, IUi
         foreach (var child in enemyContainer.GetChildren())
         {
             var enemy = child as Enemy;
-            if (enemy.Name == "SkeletonKing")
+            if (enemy.CharacterData.Name == "骷髅王")
             {
-                enemy.Winning += () => Visible = true;
+                enemy.SkeletonKingDied += () => Visible = true;
             }
         }
     }
 
-    public void Update(double delta)
+    public void Update()
     {
     }
 }

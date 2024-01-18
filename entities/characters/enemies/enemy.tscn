@@ -1,19 +1,13 @@
-[gd_scene load_steps=7 format=3 uid="uid://caqc2shvidiaf"]
+[gd_scene load_steps=5 format=3 uid="uid://cbhkdg8w4doso"]
 
-[ext_resource type="PackedScene" uid="uid://bmolco0ib744m" path="res://entities/characters/character.tscn" id="1_anu7b"]
-[ext_resource type="Script" path="res://entities/characters/enemies/Enemy.cs" id="2_lou53"]
-[ext_resource type="PackedScene" uid="uid://00c02xgx521g" path="res://components/ai_component/ai_component.tscn" id="3_ohoje"]
-[ext_resource type="PackedScene" uid="uid://dfb3mx38aaso2" path="res://components/ai_component/ai/walk_around_ai/walk_around_ai.tscn" id="4_eufen"]
-[ext_resource type="PackedScene" uid="uid://jvxybuyfsrw2" path="res://components/ai_component/ai/chase_ai/chase_ai.tscn" id="4_v7nlw"]
-[ext_resource type="PackedScene" uid="uid://bubjdgag81bft" path="res://components/drop_down_component/drop_down_component.tscn" id="6_u5pmj"]
+[ext_resource type="PackedScene" uid="uid://dgvojmdldh3yy" path="res://entities/characters/character.tscn" id="1_5h1nx"]
+[ext_resource type="Script" path="res://entities/characters/enemies/Enemy.cs" id="2_255ka"]
+[ext_resource type="PackedScene" uid="uid://bfbk4jg15pljl" path="res://components/ai_component/ai_component.tscn" id="3_cbmxu"]
+[ext_resource type="PackedScene" uid="uid://cilxgtoulwsw" path="res://components/drop_down_component/drop_down_component.tscn" id="4_oux1s"]
 
-[node name="Enemy" instance=ExtResource("1_anu7b")]
-script = ExtResource("2_lou53")
+[node name="Enemy" instance=ExtResource("1_5h1nx")]
+script = ExtResource("2_255ka")
 
-[node name="AiComponent" parent="." index="2" instance=ExtResource("3_ohoje")]
+[node name="AiComponent" parent="." index="2" instance=ExtResource("3_cbmxu")]
 
-[node name="ChaseAi" parent="AiComponent" index="0" instance=ExtResource("4_v7nlw")]
-
-[node name="WalkAroundAi" parent="AiComponent" index="1" instance=ExtResource("4_eufen")]
-
-[node name="DropDownComponent" parent="." index="4" instance=ExtResource("6_u5pmj")]
+[node name="DropDownComponent" parent="." index="4" instance=ExtResource("4_oux1s")]

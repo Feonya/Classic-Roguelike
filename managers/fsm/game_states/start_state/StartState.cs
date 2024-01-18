@@ -1,6 +1,9 @@
 using System;
 using Godot;
 
+/// <summary>
+/// 状态循环启动时首先进入本状态，并在本状态中初始化除状态机及状态模块外的所有其他Entity和Mananger，在切换到其他主场景前不会再次进入本状态。
+/// </summary>
 public partial class StartState : Node, IGameState
 {
     public event Action Updated;
@@ -8,11 +11,10 @@ public partial class StartState : Node, IGameState
     private SaveLoadManager _saveLoadManager;
     private InputHandler _inputHandler;
     private MapManager _mapManager;
+    private AStarGridManager _aStarGridManager;
+    private FogPainter _fogPainter;
     private EnemySpawner _enemySpawner;
     private PickableObjectSpawner _pickableObjectSpawner;
-    private AStarGridManager _aStarGridManager;
-    private CombatManager _combatManager;
-    private FogPainter _fogPainter;
     private StairManager _stairManager;
     private Player _player;
     private InventoryWindow _inventoryWindow;
@@ -22,16 +24,15 @@ public partial class StartState : Node, IGameState
 
     public async void Initialize()
     {
-        // GD.Print("在这里初始化其他Manager或Entity");
+        // GD.Print("初始化Entiy和Manager");
 
         _saveLoadManager = GetTree().CurrentScene.GetNode<SaveLoadManager>("%SaveLoadManager");
         _inputHandler = GetTree().CurrentScene.GetNode<InputHandler>("%InputHandler");
         _mapManager = GetTree().CurrentScene.GetNode<MapManager>("%MapManager");
+        _aStarGridManager = GetTree().CurrentScene.GetNode<AStarGridManager>("%AStarGridManager");
+        _fogPainter = GetTree().CurrentScene.GetNode<FogPainter>("%FogPainter");
         _enemySpawner = GetTree().CurrentScene.GetNode<EnemySpawner>("%EnemySpawner");
         _pickableObjectSpawner = GetTree().CurrentScene.GetNode<PickableObjectSpawner>("%PickableObjectSpawner");
-        _aStarGridManager = GetTree().CurrentScene.GetNode<AStarGridManager>("%AStarGridManager");
-        _combatManager = GetTree().CurrentScene.GetNode<CombatManager>("%CombatManager");
-        _fogPainter = GetTree().CurrentScene.GetNode<FogPainter>("%FogPainter");
         _stairManager = GetTree().CurrentScene.GetNode<StairManager>("%StairManager");
         _player = GetTree().CurrentScene.GetNode<Player>("%Player");
         _inventoryWindow = GetTree().CurrentScene.GetNode<InventoryWindow>("%InventoryWindow");
@@ -44,9 +45,7 @@ public partial class StartState : Node, IGameState
         _player.Initialize();
         _enemySpawner.Initialize();
         _pickableObjectSpawner.Initialize();
-        _combatManager.Initialize();
         _mapManager.Initialize();
-        _fogPainter.Initialize();
         _inventoryWindow.Initialize();
         _victoryWindow.Initialize();
         _defeatWindow.Initialize();
@@ -54,9 +53,10 @@ public partial class StartState : Node, IGameState
         await ToSignal(GetTree(), "process_frame");
         _aStarGridManager.Initialize();
         _stairManager.Initialize();
+        _fogPainter.Initialize();
     }
 
-    public void Update(double delta)
+    public void Update()
     {
         Updated.Invoke();
     }

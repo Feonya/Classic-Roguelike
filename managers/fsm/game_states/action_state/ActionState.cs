@@ -1,6 +1,9 @@
 using System;
 using Godot;
 
+/// <summary>
+/// 处理玩家、各类敌人等对象的相关行为逻辑。
+/// </summary>
 public partial class ActionState : Node, IGameState
 {
     public event Action Updated;
@@ -20,18 +23,18 @@ public partial class ActionState : Node, IGameState
         _enemyContainer = GetTree().CurrentScene.GetNode<Node>("%EnemyContainer");
     }
 
-    public void Update(double delta)
+    public void Update()
     {
-        _player.Update(delta);
+        _player.Update();
 
         for (int i = 0; i < _enemyContainer.GetChildCount(); i++)
         {
             var enemy = _enemyContainer.GetChild<Enemy>(i);
 
-            enemy.Update(delta);
+            enemy.Update();
         }
 
-        _fogPainter.Update(delta);
+        _fogPainter.Update();
 
         Updated.Invoke();
     }

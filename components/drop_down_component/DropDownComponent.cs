@@ -1,6 +1,6 @@
 using Godot;
 
-public partial class DropDownComponent : Node, IComponent
+public partial class DropDownComponent : Node, IComponent, ILateUpdateComponent
 {
     private Node _pickableObjectContainer;
 
@@ -9,22 +9,33 @@ public partial class DropDownComponent : Node, IComponent
         _pickableObjectContainer = GetTree().CurrentScene.GetNode<Node>("%PickableObjectContainer");
     }
 
-    public void Update(double delta)
+    public void Update()
     {
     }
 
-    public void DropExperience()
+    public void LateUpdate()
     {
-        var owner = GetParent<Character>();
+        TryDropPickableObject();
+        DropExperience();
+    }
+
+    private void DropExperience()
+    {
+        var owner = GetOwner<Character>();
+
+        if (owner is not Enemy || !owner.IsDead) { return; }
+
         var droppedExperience = (owner.CharacterData as EnemyData).DeathDropExperience;
 
         var player = GetTree().CurrentScene.GetNode<Player>("%Player");
         (player.CharacterData as PlayerData).Experience += droppedExperience;
     }
 
-    public void TryDropPickableObject()
+    private void TryDropPickableObject()
     {
-        var owner = GetParent<Character>();
+        var owner = GetOwner<Character>();
+
+        if (owner is not Enemy || !owner.IsDead) { return; }
 
         foreach (var element in (owner.CharacterData as EnemyData).DeathDropPickableObjects)
         {
@@ -33,20 +44,6 @@ public partial class DropDownComponent : Node, IComponent
             if (GD.RandRange(0f, 1f) > dropProbability) { continue; }
 
             var pickableObject = element.Key.Instantiate<PickableObject>();
-
-            if (pickableObject is IUniquePickableObject)
-            {
-                var uniquePickableObject = pickableObject as IUniquePickableObject;
-                if (uniquePickableObject.IsAppeared)
-                {
-                    pickableObject.QueueFree();
-                    return;
-                }
-                else
-                {
-                    uniquePickableObject.IsAppeared = true;
-                }
-            }
 
             _pickableObjectContainer.AddChild(pickableObject);
             pickableObject.GlobalPosition = owner.GlobalPosition;

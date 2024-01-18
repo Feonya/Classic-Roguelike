@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://7kr61w1ddyp2"]
+[gd_scene load_steps=2 format=3 uid="uid://mu61s25vm5ts"]
 
-[ext_resource type="Script" path="res://managers/pickable_object_spawner/PickableObjectSpawner.cs" id="1_jv1mt"]
+[ext_resource type="Script" path="res://managers/pickable_object_spawner/PickableObjectSpawner.cs" id="1_ubxfh"]
 
 [node name="PickableObjectSpawner" type="Node"]
-script = ExtResource("1_jv1mt")
+script = ExtResource("1_ubxfh")

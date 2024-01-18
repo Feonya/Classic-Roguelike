@@ -1,1 +1,1 @@
-public interface IRightHandHoldEquipment { }
+public interface IRightHandHoldEqiupment { }

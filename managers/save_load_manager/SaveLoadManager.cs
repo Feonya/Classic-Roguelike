@@ -7,17 +7,17 @@ public partial class SaveLoadManager : Node, IManager
 
     private Player _player;
 
-    private string _persistentFilePath = "user://classic_roguelike.sav";
+    private string _savedFilePath = "user://classic_roguelike.sav";
 
-    private Dictionary<string, Variant> _persistentData;
+    private Dictionary<string, Variant> _loadedData;
 
-    public Dictionary<string, Variant> PersistentData { get => _persistentData; }
+    public Dictionary<string, Variant> LoadedData { get => _loadedData; }
 
     public override void _Notification(int what)
     {
         if (what == NotificationWMCloseRequest)
         {
-            TryDeletePersistentFile();
+            TryDeleteSavedFile();
         }
     }
 
@@ -27,19 +27,22 @@ public partial class SaveLoadManager : Node, IManager
 
         _player = GetTree().CurrentScene.GetNode<Player>("%Player");
 
-        _persistentData = Load();
+        _loadedData = Load();
     }
 
-    public void Update(double delta)
+    public void Update()
     {
     }
 
-    public void TryDeletePersistentFile()
+    public void TryDeleteSavedFile()
     {
-        if (!FileAccess.FileExists(_persistentFilePath)) { return; }
+        if (!FileAccess.FileExists(_savedFilePath)) { return; }
 
-        var persistentFile = FileAccess.Open(_persistentFilePath, FileAccess.ModeFlags.Write);
-        var absoluteFilePath = persistentFile.GetPathAbsolute();
+        var savedFile = FileAccess.Open(_savedFilePath, FileAccess.ModeFlags.Read);
+
+        var absoluteFilePath = savedFile.GetPathAbsolute();
+
+        savedFile.Dispose();
 
         GD.Print("删除存档文件：" + absoluteFilePath);
         System.IO.File.Delete(absoluteFilePath);
@@ -47,75 +50,74 @@ public partial class SaveLoadManager : Node, IManager
 
     public void Save()
     {
-        var persistentData = new Dictionary<string, Variant>();
+        var dataForSave = new Dictionary<string, Variant>();
         // {
-        //      { "maps", [Array<Dictionary>] },
-        //      { "player", [Dictionary] },
+        //     { "player", [Dictionary] },
+        //     { "maps", [Array<Dictionary>]}
         // }
 
-        if (FileAccess.FileExists(_persistentFilePath))
+        CheckDataBeforeSave(ref dataForSave);
+
+        var savedFileForWrite = FileAccess.Open(_savedFilePath, FileAccess.ModeFlags.Write);
+
+        var mapDataForSave = _mapManager.GetDataForSave();
+        var playerDataForSave = _player.GetDataForSave();
+
+        if (!dataForSave.ContainsKey("maps"))
         {
-            var persistentFileForRead = FileAccess.Open(_persistentFilePath, FileAccess.ModeFlags.Read);
+            dataForSave.Add("maps", new Array<Dictionary<string, Variant>>());
+        }
 
-            if (persistentFileForRead.GetLength() > 0)
+        dataForSave["maps"].AsGodotArray<Dictionary<string, Variant>>().Add(mapDataForSave);
+        dataForSave["player"] = playerDataForSave;
+
+        savedFileForWrite.StoreVar(dataForSave, true);
+
+        savedFileForWrite.Dispose();
+    }
+
+    private void CheckDataBeforeSave(ref Dictionary<string, Variant> dataForSave)
+    {
+        if (FileAccess.FileExists(_savedFilePath))
+        {
+            var savedFileForRead = FileAccess.Open(_savedFilePath, FileAccess.ModeFlags.Read);
+            if (savedFileForRead.GetLength() > 0)
             {
-                persistentData = persistentFileForRead.GetVar().AsGodotDictionary<string, Variant>();
-
-                if (persistentData.ContainsKey("maps"))
+                dataForSave = savedFileForRead.GetVar(true).AsGodotDictionary<string, Variant>();
+                if (dataForSave.ContainsKey("maps"))
                 {
-                    var scenes = persistentData["maps"].AsGodotArray<Dictionary<string, Variant>>();
-                    for (int i = 0; i < scenes.Count; i++)
+                    var maps = dataForSave["maps"].AsGodotArray<Dictionary<string, Variant>>();
+                    for (int i = 0; i < maps.Count; i++)
                     {
-                        var sceneName = scenes[i]["scene_name"].AsString();
+                        var sceneName = maps[i]["scene_name"].AsString();
                         if (sceneName == GetTree().CurrentScene.Name)
                         {
-                            persistentData["maps"].AsGodotArray().RemoveAt(i);
+                            dataForSave["maps"].AsGodotArray().RemoveAt(i);
                             break;
                         }
                     }
                 }
-
-                if (persistentData.ContainsKey("player"))
-                {
-                    persistentData.Remove("player");
-                }
             }
 
-            persistentFileForRead.Dispose();
+            savedFileForRead.Dispose();
         }
-
-        var persistentFileForWrite = FileAccess.Open(_persistentFilePath, FileAccess.ModeFlags.Write);
-
-        var mapPersistentData = _mapManager.GetPersistentData();
-        var playerPersistentData = _player.GetPersistentData();
-
-        if (persistentData.ContainsKey("maps"))
-        {
-            persistentData["maps"].AsGodotArray<Dictionary<string, Variant>>().Add(mapPersistentData);
-        }
-        else
-        {
-            persistentData["maps"] = new Array<Dictionary<string, Variant>> { mapPersistentData };
-        }
-        persistentData["player"] = playerPersistentData;
-
-        persistentFileForWrite.StoreVar(persistentData, true);
-
-        persistentFileForWrite.Dispose();
     }
 
-    public Dictionary<string, Variant> Load()
+    private Dictionary<string, Variant> Load()
     {
-        if (!FileAccess.FileExists(_persistentFilePath)) { return null; }
+        if (!FileAccess.FileExists(_savedFilePath)) { return null; }
 
-        var persistentFile = FileAccess.Open(_persistentFilePath, FileAccess.ModeFlags.Read);
+        var savedFile = FileAccess.Open(_savedFilePath, FileAccess.ModeFlags.Read);
+        if (savedFile.GetLength() == 0)
+        {
+            savedFile.Dispose();
+            return null;
+        }
 
-        if (persistentFile.GetLength() == 0) { return null; }
+        var loadedData = savedFile.GetVar(true).AsGodotDictionary<string, Variant>();
 
-        var persistentData = persistentFile.GetVar(true).AsGodotDictionary<string, Variant>();
+        savedFile.Dispose();
 
-        persistentFile.Dispose();
-
-        return persistentData;
+        return loadedData;
     }
 }

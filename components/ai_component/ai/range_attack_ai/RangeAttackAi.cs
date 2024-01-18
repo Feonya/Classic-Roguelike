@@ -6,8 +6,8 @@ public partial class RangeAttackAi : Node, IAi
 
     private CombatManager _combatManager;
 
-    private Enemy _enemy;
     private Player _player;
+    private Enemy _enemy;
 
     private Line2D _line;
 
@@ -17,8 +17,8 @@ public partial class RangeAttackAi : Node, IAi
 
         _combatManager = GetTree().CurrentScene.GetNode<CombatManager>("%CombatManager");
 
-        _enemy = GetParent().GetParent<Enemy>();
         _player = GetTree().CurrentScene.GetNode<Player>("%Player");
+        _enemy = GetParent().GetParent<Enemy>();
 
         _line = GetNode<Line2D>("Line2D");
     }
@@ -32,10 +32,9 @@ public partial class RangeAttackAi : Node, IAi
         if (distanceToPlayer > _enemy.CharacterData.Sight) { return false; }
 
         _combatManager.AddToCombatList(_enemy, _player);
+        GD.Print(_enemy.CharacterData.Name + "远程攻击玩家！");
 
         ShowRangeAttackLine(_enemy.GlobalPosition, _player.GlobalPosition);
-
-        GD.Print(_enemy.CharacterData.Name + "远程攻击玩家！");
 
         return true;
     }

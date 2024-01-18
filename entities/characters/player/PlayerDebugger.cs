@@ -2,40 +2,35 @@ using Godot;
 
 public partial class PlayerDebugger : Node
 {
-    private Player _player;
-
-    public override void _Ready()
-    {
-        _player = GetOwner<Player>();
-    }
-
     public override void _Process(double delta)
     {
+        var player = GetTree().CurrentScene.GetNode<Player>("%Player");
+
         if (Input.IsActionJustPressed("show_player_attributes_debug_info"))
         {
-            GD.Print("---------------------------------");
-            GD.Print("玩家属性：");
-            GD.Print("Strength     - " + _player.CharacterData.Strength);
-            GD.Print("Constitution - " + _player.CharacterData.Constitution);
-            GD.Print("Agility      - " + _player.CharacterData.Agility);
-            GD.Print("Health    - " + _player.CharacterData.Health);
-            GD.Print("MaxHealth - " + _player.CharacterData.MaxHealth);
-            GD.Print("Attack    - " + _player.CharacterData.Attack);
-            GD.Print("Defend    - " + _player.CharacterData.Defend);
-            GD.Print("Dodge     - " + _player.CharacterData.Dodge);
-            GD.Print("Crit      - " + _player.CharacterData.Crit);
-            GD.Print("---------------------------------");
+            GD.Print("----------------");
+            GD.Print("姓名：" + player.CharacterData.Name);
+            GD.Print("力量：" + player.CharacterData.Strength);
+            GD.Print("体质：" + player.CharacterData.Constitution);
+            GD.Print("敏捷：" + player.CharacterData.Agility);
+            GD.Print("血量：" + player.CharacterData.Health);
+            GD.Print("最大血量：" + player.CharacterData.MaxHealth);
+            GD.Print("攻击：" + player.CharacterData.Attack);
+            GD.Print("防御：" + player.CharacterData.Defend);
+            GD.Print("闪避：" + player.CharacterData.Dodge);
+            GD.Print("暴击：" + player.CharacterData.Crit);
+            GD.Print("----------------");
         }
 
         if (Input.IsActionJustPressed("show_player_inventory_debug_info"))
         {
-            GD.Print("---------------------------------");
-            GD.Print("玩家背包：");
-            foreach (var item in (_player.CharacterData as PlayerData).Inventory)
+            GD.Print("----------------");
+            GD.Print("背包：");
+            foreach (var item in (player.CharacterData as PlayerData).Inventory)
             {
                 GD.Print("* " + item.Name_);
             }
-            GD.Print("---------------------------------");
+            GD.Print("----------------");
         }
     }
 }

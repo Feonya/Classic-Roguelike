@@ -4,7 +4,7 @@ public partial class InventoryWindow : CanvasLayer, IUi
 {
     private PackedScene _inventoryObjectScene;
 
-    private VBoxContainer _inventoryObjectContainer;
+    private VBoxContainer _inventoryContainer;
     private Label _descriptionLabel;
 
     private Player _player;
@@ -17,13 +17,13 @@ public partial class InventoryWindow : CanvasLayer, IUi
             "res://ui/inventory_window/inventory_object/inventory_object.tscn"
         );
 
-        _inventoryObjectContainer = GetNode<VBoxContainer>("%InventoryObjectContainer");
+        _inventoryContainer = GetNode<VBoxContainer>("%InventoryContainer");
         _descriptionLabel = GetNode<Label>("%DescriptionLabel");
 
         _player = GetTree().CurrentScene.GetNode<Player>("%Player");
     }
 
-    public void Update(double delta)
+    public void Update()
     {
     }
 
@@ -41,48 +41,6 @@ public partial class InventoryWindow : CanvasLayer, IUi
         }
     }
 
-    public void GenerateInventoryObjects()
-    {
-        var playerData = _player.CharacterData as PlayerData;
-
-        if (playerData.Inventory.Count == 0) { return; }
-
-        for (int i = 0; i < playerData.Inventory.Count; i++)
-        {
-            var inventoryObject = _inventoryObjectScene.Instantiate<InventoryObject>();
-            inventoryObject.Text =
-                (i + 1).ToString() + ". " + playerData.Inventory[i].Name_;
-
-            // if (playerData.LeftHandHoldEquipment == playerData.Inventory[i] ||
-            //     playerData.RightHandHoldEquipment == playerData.Inventory[i] ||
-            //     playerData.BodyWearEquipment == playerData.Inventory[i] ||
-            //     playerData.FingerWearEquipment == playerData.Inventory[i] ||
-            //     playerData.NeckWearEquipment == playerData.Inventory[i])
-            if (playerData.Inventory[i] is Equipment &&
-                (playerData.Inventory[i] as Equipment).IsEquipped)
-            {
-                inventoryObject.Text += " [已装备]";
-            }
-
-            _inventoryObjectContainer.AddChild(inventoryObject);
-
-            inventoryObject.Initialize();
-            inventoryObject.Selected += On_InventoryObject_Selected;
-        }
-
-        _inventoryObjectContainer.GetChild<Button>(0).GrabFocus();
-    }
-
-    public void ClearInventoryObjects()
-    {
-        for (int i = 0; i < _inventoryObjectContainer.GetChildCount(); i++)
-        {
-            _inventoryObjectContainer.GetChild(i).QueueFree();
-        }
-
-        _descriptionLabel.Text = "";
-    }
-
     public void UseInventoryObject()
     {
         var playerData = _player.CharacterData as PlayerData;
@@ -91,8 +49,7 @@ public partial class InventoryWindow : CanvasLayer, IUi
 
         var pickableObject = playerData.Inventory[_selectedInventoryObjectIndex];
 
-        if (pickableObject is not IConsumableItem &&
-            pickableObject is not IEquipableEquipment)
+        if (pickableObject is not IConsumableItem && pickableObject is not Equipment)
         {
             return;
         }
@@ -100,12 +57,10 @@ public partial class InventoryWindow : CanvasLayer, IUi
         if (pickableObject is IConsumableItem)
         {
             (pickableObject as IConsumableItem).Consume();
-
-            playerData.Inventory.Remove(pickableObject);
         }
-        else if (pickableObject is IEquipableEquipment)
+        else if (pickableObject is Equipment)
         {
-            (pickableObject as IEquipableEquipment).Equip();
+            (pickableObject as Equipment).Equip();
         }
 
         Toggle();
@@ -117,21 +72,56 @@ public partial class InventoryWindow : CanvasLayer, IUi
 
         if (playerData.Inventory.Count == 0) { return; }
 
-        var selectedPickableObject = playerData.Inventory[_selectedInventoryObjectIndex];
+        var pickableObject = playerData.Inventory[_selectedInventoryObjectIndex];
 
-        if (selectedPickableObject is IEquipableEquipment)
+        if (pickableObject is IImmediateEffectItem)
         {
-            (selectedPickableObject as IEquipableEquipment).Unequip();
+            (pickableObject as IImmediateEffectItem).UndoImmediateEffect();
+        }
+        else if (pickableObject is Equipment)
+        {
+            (pickableObject as Equipment).Unequip();
         }
 
-        if (selectedPickableObject is IImmediateEffectItem)
-        {
-            (selectedPickableObject as IImmediateEffectItem).UndoImmediateEffect();
-        }
-
-        playerData.Inventory.Remove(selectedPickableObject);
+        playerData.Inventory.Remove(pickableObject);
 
         Toggle();
+    }
+
+    private void GenerateInventoryObjects()
+    {
+        var playerData = _player.CharacterData as PlayerData;
+
+        if (playerData.Inventory.Count == 0) { return; }
+
+        for (int i = 0; i < playerData.Inventory.Count; i++)
+        {
+            var inventoryObject = _inventoryObjectScene.Instantiate<InventoryObject>();
+            inventoryObject.Text = (i + 1).ToString() + ". " + playerData.Inventory[i].Name_;
+
+            if (playerData.Inventory[i] is Equipment &&
+                (playerData.Inventory[i] as Equipment).IsEquipped)
+            {
+                inventoryObject.Text += " [已装备]";
+            }
+
+            _inventoryContainer.AddChild(inventoryObject);
+            inventoryObject.Initialize();
+
+            inventoryObject.Selected += On_InventoryObject_Selected;
+        }
+
+        _inventoryContainer.GetChild<Button>(0).GrabFocus();
+    }
+
+    private void ClearInventoryObjects()
+    {
+        for (int i = 0; i < _inventoryContainer.GetChildCount(); i++)
+        {
+            _inventoryContainer.GetChild(i).QueueFree();
+        }
+
+        _descriptionLabel.Text = "";
     }
 
     private void On_InventoryObject_Selected(InventoryObject focusedInventoryObject)
@@ -144,16 +134,6 @@ public partial class InventoryWindow : CanvasLayer, IUi
 
         var pickableObject = playerData.Inventory[_selectedInventoryObjectIndex];
 
-        var postFix = "\n\n";
-        if (pickableObject is IConsumableItem)
-        {
-            postFix += "(回车键使用物品)";
-        }
-        else if (pickableObject is IEquipableEquipment)
-        {
-            postFix += "(回车键替换装备)";
-        }
-
-        _descriptionLabel.Text = pickableObject.Description + postFix;
+        _descriptionLabel.Text = pickableObject.Description;
     }
 }

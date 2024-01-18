@@ -1,0 +1,19 @@
+[gd_scene load_steps=6 format=3 uid="uid://d2g4wvaia8fi"]
+
+[ext_resource type="PackedScene" uid="uid://cbhkdg8w4doso" path="res://entities/characters/enemies/enemy.tscn" id="1_40ssp"]
+[ext_resource type="Resource" uid="uid://su5t8vm4vlpd" path="res://resources/character_data/enemy_data/goblin_data/goblin_data.tres" id="2_nm12p"]
+[ext_resource type="PackedScene" uid="uid://bh6ktp33grlne" path="res://components/ai_component/ai/walk_around_ai/walk_around_ai.tscn" id="3_1y6up"]
+[ext_resource type="PackedScene" uid="uid://ikp1afuqovm3" path="res://components/ai_component/ai/melee_ai/melee_ai.tscn" id="3_40grg"]
+[ext_resource type="PackedScene" uid="uid://nk18cj2yiyb" path="res://components/ai_component/ai/chase_ai/chase_ai.tscn" id="3_re064"]
+
+[node name="Goblin" instance=ExtResource("1_40ssp")]
+_characterData = ExtResource("2_nm12p")
+
+[node name="Sprite2D" parent="." index="0"]
+region_rect = Rect2(96, 80, 16, 16)
+
+[node name="MeleeAi" parent="AiComponent" index="0" instance=ExtResource("3_40grg")]
+
+[node name="ChaseAi" parent="AiComponent" index="1" instance=ExtResource("3_re064")]
+
+[node name="WalkAroundAi" parent="AiComponent" index="2" instance=ExtResource("3_1y6up")]

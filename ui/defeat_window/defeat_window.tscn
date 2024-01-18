@@ -1,10 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://dyvelmjohlagw"]
+[gd_scene load_steps=3 format=3 uid="uid://db2m8d8xn2vtl"]
 
-[ext_resource type="Script" path="res://ui/defeat_window/DefeatWindow.cs" id="1_radqo"]
-[ext_resource type="FontFile" uid="uid://dw4wbg13ngmmw" path="res://assets/fonts/vonwaon_bitmap_16px.ttf" id="1_y71vk"]
+[ext_resource type="FontFile" uid="uid://yk2aayj88yxd" path="res://assets/fonts/vonwaon_bitmap_16px.ttf" id="1_hpvxk"]
+[ext_resource type="Script" path="res://ui/defeat_window/DefeatWindow.cs" id="1_k3qwn"]
 
 [node name="DefeatWindow" type="CanvasLayer"]
-script = ExtResource("1_radqo")
+script = ExtResource("1_k3qwn")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 anchors_preset = 15
@@ -15,7 +15,7 @@ grow_vertical = 2
 
 [node name="ColorRect" type="ColorRect" parent="MarginContainer"]
 layout_mode = 2
-color = Color(0, 0, 0, 0.482353)
+color = Color(0, 0, 0, 0.521569)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
@@ -27,14 +27,14 @@ layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 16
-theme_override_fonts/font = ExtResource("1_y71vk")
+theme_override_fonts/font = ExtResource("1_hpvxk")
 text = "很遗憾，你挂了！"
 
 [node name="HintLabel" type="Label" parent="MarginContainer/VBoxContainer"]
-modulate = Color(1, 1, 1, 0.482353)
+modulate = Color(1, 1, 1, 0.505882)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 16
-theme_override_fonts/font = ExtResource("1_y71vk")
-text = "（R键重新开始游戏）"
+theme_override_fonts/font = ExtResource("1_hpvxk")
+text = "（按下R键重新开始游戏）"

@@ -1,11 +1,11 @@
 using Godot;
 
-public partial class Shield : Equipment, IEquipableEquipment, ILeftHandHoldEquipment
+public partial class Shield : Equipment, ILeftHandHoldEquipment
 {
     [Export]
-    private float _minDefendIncrement;
+    private float _minDefendIncrement = 5f;
     [Export]
-    private float _maxDefendIncrement;
+    private float _maxDefendIncrement = 8f;
 
     private float _actualDefendIncrement;
 
@@ -18,13 +18,13 @@ public partial class Shield : Equipment, IEquipableEquipment, ILeftHandHoldEquip
         _description = "装备后增加" + _actualDefendIncrement.ToString("0.0") + "防御。";
     }
 
-    public void Equip()
+    public override void Equip()
     {
         var playerData = _player.CharacterData as PlayerData;
 
         if (playerData.LeftHandHoldEquipment != null)
         {
-            (playerData.LeftHandHoldEquipment as IEquipableEquipment).Unequip();
+            (playerData.LeftHandHoldEquipment as Equipment).Unequip();
         }
 
         playerData.Defend += _actualDefendIncrement;
@@ -32,19 +32,19 @@ public partial class Shield : Equipment, IEquipableEquipment, ILeftHandHoldEquip
         playerData.LeftHandHoldEquipment = this;
     }
 
-    public void EquipWithoutEffects()
+    public override void EquipWithoutEffect()
     {
         var playerData = _player.CharacterData as PlayerData;
 
         if (playerData.LeftHandHoldEquipment != null)
         {
-            (playerData.LeftHandHoldEquipment as IEquipableEquipment).Unequip();
+            (playerData.LeftHandHoldEquipment as Equipment).Unequip();
         }
 
         playerData.LeftHandHoldEquipment = this;
     }
 
-    public void Unequip()
+    public override void Unequip()
     {
         var playerData = _player.CharacterData as PlayerData;
 

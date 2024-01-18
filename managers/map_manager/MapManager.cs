@@ -2,15 +2,14 @@ using System;
 using Godot;
 using Godot.Collections;
 
-public partial class MapManager : Node, IManager, IPersistence
+public partial class MapManager : Node, IManager, ISavable
 {
-    public event Action<
-        Vector2I/*PlayerStartCell*/,
-        Callable/*GetEnemySpawnCell()*/
-    > Initialized;
+    public event Action<Vector2I, Callable/*GetEnemySpawnCell*/> Initialized;
 
     [Export]
     private MapData _mapData;
+
+    private SaveLoadManager _saveLoadManager;
 
     private IMapGenerator _mapGenerator;
 
@@ -20,7 +19,7 @@ public partial class MapManager : Node, IManager, IPersistence
 
     public void Initialize()
     {
-        _characterCellsAtSpawn.Clear();
+        _saveLoadManager = GetTree().CurrentScene.GetNode<SaveLoadManager>("%SaveLoadManager");
 
         if (GetChildCount() != 1 || GetChild(0) is not IMapGenerator)
         {
@@ -44,32 +43,23 @@ public partial class MapManager : Node, IManager, IPersistence
         }
     }
 
-    public void Update(double delta)
+    public void Update()
     {
     }
 
     public bool TryAddCharacterCellAtSpawn(Vector2I cell)
     {
-        if (_characterCellsAtSpawn.Contains(cell))
-        {
-            return false;
-        }
+        if (_characterCellsAtSpawn.Contains(cell)) { return false; }
 
         _characterCellsAtSpawn.Add(cell);
 
         return true;
     }
 
-    public Dictionary<string, Variant> GetPersistentData()
+    public Dictionary<string, Variant> GetDataForSave()
     {
-        var groundCells = new Array<Vector2I>();
-        var grassCells = new Array<Vector2I>();
-        var treeCells = new Array<Vector2I>();
-        var deadTreeCells = new Array<Vector2I>();
-        var floorCells = new Array<Vector2I>();
-        var wallCells = new Array<Vector2I>();
-        var downStairCell = Vector2I.Zero;
         var upStairCell = Vector2I.Zero;
+        var downStairCell = Vector2I.Zero;
         var unexploredFogCells = new Array<Vector2I>();
         var outOfSightFogCells = new Array<Vector2I>();
         var inSightFogCells = new Array<Vector2I>();
@@ -83,53 +73,15 @@ public partial class MapManager : Node, IManager, IPersistence
                 var cell = new Vector2I(x, y);
 
                 var tileData = tileMap.GetCellTileData((int)TileMapLayer.Default, cell);
-                if (tileData.TerrainSet == (int)TerrainSet.Default)
+                if (tileData.TerrainSet == (int)TerrainSet.Stair)
                 {
-                    if (tileMap.TileSet.ResourcePath == "res://resources/tile_sets/forest_tile_set.tres")
+                    if (tileData.Terrain == (int)StairTerrain.UpStair)
                     {
-                        if (tileData.Terrain == (int)ForestTerrain.Ground)
-                        {
-                            groundCells.Add(cell);
-                        }
-                        else if (tileData.Terrain == (int)ForestTerrain.Grass)
-                        {
-                            grassCells.Add(cell);
-                        }
-                        else if (tileData.Terrain == (int)ForestTerrain.Tree)
-                        {
-                            treeCells.Add(cell);
-                        }
-                        else if (tileData.Terrain == (int)ForestTerrain.DeadTree)
-                        {
-                            deadTreeCells.Add(cell);
-                        }
-                        else if (tileData.Terrain == (int)ForestTerrain.DownStair)
-                        {
-                            downStairCell = cell;
-                        }
-                        else if (tileData.Terrain == (int)ForestTerrain.UpStair)
-                        {
-                            upStairCell = cell;
-                        }
+                        upStairCell = cell;
                     }
-                    else if (tileMap.TileSet.ResourcePath == "res://resources/tile_sets/dungeon_tile_set.tres")
+                    else if (tileData.Terrain == (int)StairTerrain.DownStair)
                     {
-                        if (tileData.Terrain == (int)DungeonTerrain.Floor)
-                        {
-                            floorCells.Add(cell);
-                        }
-                        else if (tileData.Terrain == (int)DungeonTerrain.Wall)
-                        {
-                            wallCells.Add(cell);
-                        }
-                        else if (tileData.Terrain == (int)DungeonTerrain.DownStair)
-                        {
-                            downStairCell = cell;
-                        }
-                        else if (tileData.Terrain == (int)DungeonTerrain.UpStair)
-                        {
-                            upStairCell = cell;
-                        }
+                        downStairCell = cell;
                     }
                 }
 
@@ -149,7 +101,6 @@ public partial class MapManager : Node, IManager, IPersistence
                         inSightFogCells.Add(cell);
                     }
                 }
-
             }
         }
 
@@ -157,60 +108,51 @@ public partial class MapManager : Node, IManager, IPersistence
         var enemies = new Array<Dictionary<string, Variant>>();
         for (int i = 0; i < enemyContainer.GetChildCount(); i++)
         {
-            enemies.Add(
-                enemyContainer.GetChild<Enemy>(i).GetPersistentData()
-            );
+            enemies.Add(enemyContainer.GetChild<Enemy>(i).GetDataForSave());
         }
 
         var pickableObjectContainer = GetTree().CurrentScene.GetNode<Node>("%PickableObjectContainer");
         var pickableObjects = new Array<Dictionary<string, Variant>>();
         for (int i = 0; i < pickableObjectContainer.GetChildCount(); i++)
         {
-            pickableObjects.Add(
-                pickableObjectContainer.GetChild<PickableObject>(i).GetPersistentData()
-            );
+            pickableObjects.Add(pickableObjectContainer.GetChild<PickableObject>(i).GetDataForSave());
         }
 
         var player = GetTree().CurrentScene.GetNode<Player>("%Player");
 
-        return new Dictionary<string, Variant>
+        var mapDataForSave = new Dictionary<string, Variant>
         {
             { "scene_name", GetTree().CurrentScene.Name },
-            { "ground_cells", groundCells },
-            { "grass_cells", grassCells },
-            { "tree_cells", treeCells },
-            { "dead_tree_cells", deadTreeCells },
-            { "floor_cells", floorCells },
-            { "wall_cells", wallCells },
-            { "down_stair_cell", downStairCell },
             { "up_stair_cell", upStairCell },
-            { "enemies", enemies},
+            { "down_stair_cell", downStairCell },
+            { "enemies", enemies },
             { "pickable_objects", pickableObjects },
             { "unexplored_fog_cells", unexploredFogCells },
             { "out_of_sight_fog_cells", outOfSightFogCells },
             { "in_sight_fog_cells", inSightFogCells },
-            { "player_last_position", player.GlobalPosition },
+            { "player_last_position", player.GlobalPosition }
         };
+
+        mapDataForSave.Merge((_mapGenerator as ISavable).GetDataForSave());
+
+        return mapDataForSave;
     }
 
     private bool IsMapGenerated()
     {
-        var saveLoadManager = GetTree().CurrentScene.GetNode<SaveLoadManager>("%SaveLoadManager");
-
-        if (saveLoadManager.PersistentData == null ||
-            saveLoadManager.PersistentData.Count == 0 ||
-            !saveLoadManager.PersistentData.ContainsKey("maps"))
+        if (_saveLoadManager.LoadedData == null ||
+            _saveLoadManager.LoadedData.Count == 0 ||
+            !_saveLoadManager.LoadedData.ContainsKey("maps"))
         {
             return false;
         }
 
-
-        var mapsPersistentData = saveLoadManager
-            .PersistentData["maps"].AsGodotArray<Dictionary<string, Variant>>();
-        for (int i = 0; i < mapsPersistentData.Count; i++)
+        var maps = _saveLoadManager
+            .LoadedData["maps"].AsGodotArray<Dictionary<string, Variant>>();
+        for (int i = 0; i < maps.Count; i++)
         {
-            var mapPersistentData = mapsPersistentData[i];
-            if (mapPersistentData["scene_name"].AsString() == GetTree().CurrentScene.Name)
+            var map = maps[i];
+            if (map["scene_name"].AsString() == GetTree().CurrentScene.Name)
             {
                 return true;
             }

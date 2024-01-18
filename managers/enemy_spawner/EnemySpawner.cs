@@ -1,12 +1,12 @@
 using Godot;
 using Godot.Collections;
 
-public partial class EnemySpawner : Node, IManager
+public partial class EnemySpawner : Node, IManager, ILoadable
 {
     [Export]
     private int _maxEnemies = 30;
     [Export]
-    private Dictionary<PackedScene, float/*生成权重*/> _enemyScenes = new();
+    private Dictionary<PackedScene, float> _enemyScenes = new();
     [Export]
     private Array<PackedScene> _bossScenes = new();
 
@@ -20,55 +20,47 @@ public partial class EnemySpawner : Node, IManager
 
         _enemyContainer = GetTree().CurrentScene.GetNode<Node>("%EnemyContainer");
 
-        SpawnEnemiesAndBosses();
-    }
-
-    public void Update(double delta)
-    {
-    }
-
-    private void SpawnEnemiesAndBosses()
-    {
-        if (TrySpawnEnemiesAndBossesByPersistentData())
+        if (!InitializeByLoadedData())
         {
-            return;
+            SpawnEnemies();
+            SpawnBosses();
         }
-
-        SpawnEnemies();
-        SpawnBosses();
     }
 
-    private bool TrySpawnEnemiesAndBossesByPersistentData()
+    public void Update()
     {
-        if (_saveLoadManager.PersistentData == null ||
-            _saveLoadManager.PersistentData.Count == 0 ||
-            !_saveLoadManager.PersistentData.ContainsKey("maps"))
+    }
+
+    public bool InitializeByLoadedData()
+    {
+        if (_saveLoadManager.LoadedData == null ||
+            _saveLoadManager.LoadedData.Count == 0 ||
+            !_saveLoadManager.LoadedData.ContainsKey("maps"))
         {
             return false;
         }
 
-        var mapsPersistentData = _saveLoadManager
-            .PersistentData["maps"].AsGodotArray<Dictionary<string, Variant>>();
-        for (int i = 0; i < mapsPersistentData.Count; i++)
+        var maps = _saveLoadManager.LoadedData["maps"].AsGodotArray<Dictionary<string, Variant>>();
+        for (int i = 0; i < maps.Count; i++)
         {
-            var mapPersistentData = mapsPersistentData[i];
-            if (mapPersistentData["scene_name"].AsString() == GetTree().CurrentScene.Name)
+            var map = maps[i];
+            if (map["scene_name"].AsString() == GetTree().CurrentScene.Name)
             {
-                var enemiesPersistentData =
-                    mapPersistentData["enemies"].AsGodotArray<Dictionary<string, Variant>>();
-                for (int j = 0; j < enemiesPersistentData.Count; j++)
+                var enemies = map["enemies"].AsGodotArray<Dictionary<string, Variant>>();
+                for (int j = 0; j < enemies.Count; j++)
                 {
-                    var enemyPersistentData = enemiesPersistentData[j];
+                    var enemy = enemies[j];
 
-                    var enemyScenePath = enemyPersistentData["scene_path"].AsString();
-                    var enemyInstance = GD.Load<PackedScene>(enemyScenePath).Instantiate<Enemy>();
+                    var enemyInstance = GD.Load<PackedScene>(
+                        enemy["scene_path"].AsString()
+                    ).Instantiate<Enemy>();
                     _enemyContainer.AddChild(enemyInstance);
 
-                    var enemyIndex = enemyPersistentData["index"].AsInt32();
+                    var enemyIndex = enemy["index"].AsInt32();
                     _enemyContainer.MoveChild(enemyInstance, enemyIndex);
 
-                    enemyInstance.Visible = enemyPersistentData["visible"].AsBool();
-                    enemyInstance.GlobalPosition = enemyPersistentData["position"].AsVector2();
+                    enemyInstance.Visible = enemy["visible"].AsBool();
+                    enemyInstance.GlobalPosition = enemy["position"].AsVector2();
 
                     enemyInstance.Initialize();
                 }
@@ -86,10 +78,10 @@ public partial class EnemySpawner : Node, IManager
         for (int i = 0; i < spawnList.Count; i++)
         {
             var randomNumber = GD.RandRange(0, spawnList.Count - 1);
-            var enmeyInstance = spawnList[randomNumber].Instantiate<Enemy>();
-            _enemyContainer.AddChild(enmeyInstance);
+            var enemyInstance = spawnList[randomNumber].Instantiate<Enemy>();
+            _enemyContainer.AddChild(enemyInstance);
 
-            enmeyInstance.Initialize();
+            enemyInstance.Initialize();
         }
     }
 
@@ -109,12 +101,12 @@ public partial class EnemySpawner : Node, IManager
         var spawnList = new System.Collections.Generic.List<PackedScene>();
         var weightSum = GetSpawnWeightSum();
 
-        foreach (var item in _enemyScenes)
+        foreach (var element in _enemyScenes)
         {
-            var number = item.Value / weightSum * _maxEnemies;
+            var number = element.Value / weightSum * _maxEnemies;
             for (int i = 0; i < number; i++)
             {
-                spawnList.Add(item.Key);
+                spawnList.Add(element.Key);
             }
         }
 
@@ -125,9 +117,9 @@ public partial class EnemySpawner : Node, IManager
     {
         var weightSum = 0f;
 
-        foreach (var item in _enemyScenes)
+        foreach (var element in _enemyScenes)
         {
-            weightSum += item.Value;
+            weightSum += element.Value;
         }
 
         return weightSum;

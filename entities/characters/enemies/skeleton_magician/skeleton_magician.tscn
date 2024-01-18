@@ -1,13 +1,19 @@
-[gd_scene load_steps=4 format=3 uid="uid://eisgevile1lp"]
+[gd_scene load_steps=6 format=3 uid="uid://b18ix0wixf7n4"]
 
-[ext_resource type="PackedScene" uid="uid://caqc2shvidiaf" path="res://entities/characters/enemies/enemy.tscn" id="1_68cnd"]
-[ext_resource type="Resource" uid="uid://b13byxp833kdm" path="res://resources/character_data/enemy_data/skeleton_magician_data/skeleton_magician_data.tres" id="2_6ibyi"]
-[ext_resource type="PackedScene" uid="uid://bbqgsgfmr2vhw" path="res://components/ai_component/ai/range_attack_ai/range_attack_ai.tscn" id="3_30n1p"]
+[ext_resource type="PackedScene" uid="uid://cbhkdg8w4doso" path="res://entities/characters/enemies/enemy.tscn" id="1_3nik1"]
+[ext_resource type="Resource" uid="uid://dxu40x3ai0sv2" path="res://resources/character_data/enemy_data/skeleton_magician_data/skeleton_magician_data.tres" id="2_c83pc"]
+[ext_resource type="PackedScene" uid="uid://bh6ktp33grlne" path="res://components/ai_component/ai/walk_around_ai/walk_around_ai.tscn" id="3_676mn"]
+[ext_resource type="PackedScene" uid="uid://b62chayl802aw" path="res://components/ai_component/ai/range_attack_ai/range_attack_ai.tscn" id="3_c76q3"]
+[ext_resource type="PackedScene" uid="uid://nk18cj2yiyb" path="res://components/ai_component/ai/chase_ai/chase_ai.tscn" id="3_ewdrm"]
 
-[node name="SkeletonMagician" instance=ExtResource("1_68cnd")]
-_characterData = ExtResource("2_6ibyi")
+[node name="SkeletonMagician" instance=ExtResource("1_3nik1")]
+_characterData = ExtResource("2_c83pc")
 
 [node name="Sprite2D" parent="." index="0"]
 region_rect = Rect2(144, 80, 16, 16)
 
-[node name="RangeAttackAi" parent="AiComponent" index="0" instance=ExtResource("3_30n1p")]
+[node name="RangeAttackAi" parent="AiComponent" index="0" instance=ExtResource("3_c76q3")]
+
+[node name="ChaseAi" parent="AiComponent" index="1" instance=ExtResource("3_ewdrm")]
+
+[node name="WalkAroundAi" parent="AiComponent" index="2" instance=ExtResource("3_676mn")]

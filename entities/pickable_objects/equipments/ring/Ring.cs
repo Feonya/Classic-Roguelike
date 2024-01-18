@@ -1,11 +1,11 @@
 using Godot;
 
-public partial class Ring : Equipment, IEquipableEquipment, IFingerWearEquipment
+public partial class Ring : Equipment, IFingerWearEquipment
 {
     [Export]
-    private float _minCritIncrement;
+    private float _minCritIncrement = 0.05f;
     [Export]
-    private float _maxCritIncrement;
+    private float _maxCritIncrement = 0.3f;
 
     private float _actualCritIncrement;
 
@@ -18,13 +18,13 @@ public partial class Ring : Equipment, IEquipableEquipment, IFingerWearEquipment
         _description = "装备后增加" + (_actualCritIncrement * 100f).ToString("0.00") + "%暴击。";
     }
 
-    public void Equip()
+    public override void Equip()
     {
         var playerData = _player.CharacterData as PlayerData;
 
         if (playerData.FingerWearEquipment != null)
         {
-            (playerData.FingerWearEquipment as IEquipableEquipment).Unequip();
+            (playerData.FingerWearEquipment as Equipment).Unequip();
         }
 
         playerData.Crit += _actualCritIncrement;
@@ -32,19 +32,19 @@ public partial class Ring : Equipment, IEquipableEquipment, IFingerWearEquipment
         playerData.FingerWearEquipment = this;
     }
 
-    public void EquipWithoutEffects()
+    public override void EquipWithoutEffect()
     {
         var playerData = _player.CharacterData as PlayerData;
 
         if (playerData.FingerWearEquipment != null)
         {
-            (playerData.FingerWearEquipment as IEquipableEquipment).Unequip();
+            (playerData.FingerWearEquipment as Equipment).Unequip();
         }
 
         playerData.FingerWearEquipment = this;
     }
 
-    public void Unequip()
+    public override void Unequip()
     {
         var playerData = _player.CharacterData as PlayerData;
 

@@ -1,13 +1,19 @@
-[gd_scene load_steps=4 format=3 uid="uid://dgy2kd5nv5384"]
+[gd_scene load_steps=6 format=3 uid="uid://c50rcifa5iuy2"]
 
-[ext_resource type="PackedScene" uid="uid://caqc2shvidiaf" path="res://entities/characters/enemies/enemy.tscn" id="1_805bm"]
-[ext_resource type="Resource" uid="uid://sk0pcj30s2om" path="res://resources/character_data/enemy_data/skeleton_data/skeleton_data.tres" id="2_cxpyq"]
-[ext_resource type="PackedScene" uid="uid://c1qaryyyfqaqt" path="res://components/ai_component/ai/melee_ai/melee_ai.tscn" id="3_5fcs6"]
+[ext_resource type="PackedScene" uid="uid://cbhkdg8w4doso" path="res://entities/characters/enemies/enemy.tscn" id="1_cqp2f"]
+[ext_resource type="Resource" uid="uid://dmpwnse65t2hm" path="res://resources/character_data/enemy_data/skeleton_data/skeleton_data.tres" id="2_5ap8g"]
+[ext_resource type="PackedScene" uid="uid://ikp1afuqovm3" path="res://components/ai_component/ai/melee_ai/melee_ai.tscn" id="3_1skuw"]
+[ext_resource type="PackedScene" uid="uid://bh6ktp33grlne" path="res://components/ai_component/ai/walk_around_ai/walk_around_ai.tscn" id="3_1xumt"]
+[ext_resource type="PackedScene" uid="uid://nk18cj2yiyb" path="res://components/ai_component/ai/chase_ai/chase_ai.tscn" id="3_n3sno"]
 
-[node name="Skeleton" instance=ExtResource("1_805bm")]
-_characterData = ExtResource("2_cxpyq")
+[node name="Skeleton" instance=ExtResource("1_cqp2f")]
+_characterData = ExtResource("2_5ap8g")
 
 [node name="Sprite2D" parent="." index="0"]
 region_rect = Rect2(128, 80, 16, 16)
 
-[node name="MeleeAi" parent="AiComponent" index="0" instance=ExtResource("3_5fcs6")]
+[node name="MeleeAi" parent="AiComponent" index="0" instance=ExtResource("3_1skuw")]
+
+[node name="ChaseAi" parent="AiComponent" index="1" instance=ExtResource("3_n3sno")]
+
+[node name="WalkAroundAi" parent="AiComponent" index="2" instance=ExtResource("3_1xumt")]

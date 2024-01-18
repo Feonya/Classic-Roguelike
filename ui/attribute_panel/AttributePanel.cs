@@ -38,11 +38,10 @@ public partial class AttributePanel : MarginContainer, IUi
         _critLabel = GetNode<Label>("%CritLabel");
 
         InitializePlayerDataEvents();
-
         InitializeAttributeLabels();
     }
 
-    public void Update(double delta)
+    public void Update()
     {
     }
 
@@ -56,7 +55,7 @@ public partial class AttributePanel : MarginContainer, IUi
         _playerData.ExperienceChanged += (float value) =>
         {
             _experienceLabel.Text =
-                "经验：" +
+                "等级：" +
                 value.ToString("0.0") +
                 "/" +
                 _playerData.CurrentLevelUpExperienceThreshold.ToString("0.0");

@@ -1,7 +1,7 @@
 using Godot;
 using Godot.Collections;
 
-public partial class ForestGenerator : Node, IMapGenerator
+public partial class ForestGenerator : Node, IMapGenerator, ISavable, ILoadable
 {
     private ForestData _forestData;
     private TileSet _tileSet;
@@ -9,23 +9,39 @@ public partial class ForestGenerator : Node, IMapGenerator
 
     private SaveLoadManager _saveLoadManager;
 
-    public MapData MapData { get => _forestData; }
-
     public void Initialize()
     {
         _forestData = GetParent<MapManager>().MapData as ForestData;
         _tileSet = GD.Load<TileSet>("res://resources/tile_sets/forest_tile_set.tres");
         _tileMap = GetTree().CurrentScene.GetNode<TileMap>("%TileMap");
 
-        _tileMap.TileSet = _tileSet;
-
         _saveLoadManager = GetTree().CurrentScene.GetNode<SaveLoadManager>("%SaveLoadManager");
 
-        GenerateMap();
+        _tileMap.TileSet = _tileSet;
+
+        if (!InitializeByLoadedData())
+        {
+            GenerateMap();
+        }
     }
 
-    public void Update(double delta)
+    public void Update()
     {
+    }
+
+    public Vector2I GetEnemySpawnCell()
+    {
+        while (true)
+        {
+            var randomX = GD.RandRange(1, _forestData.MapSize.X - 2);
+            var randomY = GD.RandRange(1, _forestData.MapSize.Y - 2);
+            var enemySpawnCell = new Vector2I(randomX, randomY);
+
+            var mapManager = GetParent<MapManager>();
+            if (!mapManager.TryAddCharacterCellAtSpawn(enemySpawnCell)) { continue; }
+
+            return enemySpawnCell;
+        }
     }
 
     public Vector2I GetPlayerStartCell()
@@ -55,65 +71,73 @@ public partial class ForestGenerator : Node, IMapGenerator
         }
     }
 
-    public Vector2I GetEnemySpawnCell()
+    public Dictionary<string, Variant> GetDataForSave()
     {
-        while (true)
+        var groundCells = new Array<Vector2I>();
+        var grassCells = new Array<Vector2I>();
+        var treeCells = new Array<Vector2I>();
+        var deadTreeCells = new Array<Vector2I>();
+
+        var forestData = GetParent<MapManager>().MapData as ForestData;
+
+        for (int y = 0; y < forestData.MapSize.Y; y++)
         {
-            var randomX = GD.RandRange(1, _forestData.MapSize.X - 2);
-            var randomY = GD.RandRange(1, _forestData.MapSize.Y - 2);
-            var enemySpawnCell = new Vector2I(randomX, randomY);
+            for (int x = 0; x < forestData.MapSize.X; x++)
+            {
+                var cell = new Vector2I(x, y);
 
-            var mapManager = GetParent<MapManager>();
-            if (!mapManager.TryAddCharacterCellAtSpawn(enemySpawnCell)) { continue; }
-
-            return enemySpawnCell;
+                var tileData = _tileMap.GetCellTileData((int)TileMapLayer.Default, cell);
+                if (tileData.TerrainSet == (int)TerrainSet.Default)
+                {
+                    if (tileData.Terrain == (int)ForestTerrain.Ground)
+                    {
+                        groundCells.Add(cell);
+                    }
+                    else if (tileData.Terrain == (int)ForestTerrain.Grass)
+                    {
+                        grassCells.Add(cell);
+                    }
+                    else if (tileData.Terrain == (int)ForestTerrain.Tree)
+                    {
+                        treeCells.Add(cell);
+                    }
+                    else if (tileData.Terrain == (int)ForestTerrain.DeadTree)
+                    {
+                        deadTreeCells.Add(cell);
+                    }
+                }
+            }
         }
+
+        return new Dictionary<string, Variant>
+        {
+            { "ground_cells", groundCells },
+            { "grass_cells", grassCells },
+            { "tree_cells", treeCells },
+            { "dead_tree_cells", deadTreeCells },
+        };
     }
 
-    private void GenerateMap()
+    public bool InitializeByLoadedData()
     {
-        if (!TryGenerateMapByPersistentData())
-        {
-            RandomFillTiles();
-        }
-    }
-
-    private bool TryGenerateMapByPersistentData()
-    {
-        if (_saveLoadManager.PersistentData == null ||
-            _saveLoadManager.PersistentData.Count == 0 ||
-            !_saveLoadManager.PersistentData.ContainsKey("maps"))
+        if (_saveLoadManager.LoadedData == null ||
+            _saveLoadManager.LoadedData.Count == 0 ||
+            !_saveLoadManager.LoadedData.ContainsKey("maps"))
         {
             return false;
         }
 
-        var mapsPersistentData = _saveLoadManager
-            .PersistentData["maps"].AsGodotArray<Dictionary<string, Variant>>();
-        for (int i = 0; i < mapsPersistentData.Count; i++)
+        var maps = _saveLoadManager
+            .LoadedData["maps"].AsGodotArray<Dictionary<string, Variant>>();
+        for (int i = 0; i < maps.Count; i++)
         {
-            var mapPersistentData = mapsPersistentData[i];
-            if (mapPersistentData["scene_name"].AsString() == GetTree().CurrentScene.Name)
+            var map = maps[i];
+            if (map["scene_name"].AsString() == GetTree().CurrentScene.Name)
             {
-                var groundCells = mapPersistentData["ground_cells"].AsGodotArray<Vector2I>();
-                var grassCells = mapPersistentData["grass_cells"].AsGodotArray<Vector2I>();
-                var treeCells = mapPersistentData["tree_cells"].AsGodotArray<Vector2I>();
-                var deadTreeCells = mapPersistentData["dead_tree_cells"].AsGodotArray<Vector2I>();
-
-                _tileMap.SetCellsTerrainConnect(
-                    (int)TileMapLayer.Default,
-                    treeCells,
-                    (int)TerrainSet.Default,
-                    (int)ForestTerrain.Tree,
-                    false
-                );
-
-                _tileMap.SetCellsTerrainConnect(
-                    (int)TileMapLayer.Default,
-                    deadTreeCells,
-                    (int)TerrainSet.Default,
-                    (int)ForestTerrain.DeadTree,
-                    false
-                );
+                var groundCells = map["ground_cells"].AsGodotArray<Vector2I>();
+                var grassCells = map["grass_cells"].AsGodotArray<Vector2I>();
+                var treeCells = map["tree_cells"].AsGodotArray<Vector2I>();
+                var deadTreeCells = map["dead_tree_cells"].AsGodotArray<Vector2I>();
 
                 _tileMap.SetCellsTerrainConnect(
                     (int)TileMapLayer.Default,
@@ -122,12 +146,25 @@ public partial class ForestGenerator : Node, IMapGenerator
                     (int)ForestTerrain.Ground,
                     false
                 );
-
                 _tileMap.SetCellsTerrainConnect(
                     (int)TileMapLayer.Default,
                     grassCells,
                     (int)TerrainSet.Default,
                     (int)ForestTerrain.Grass,
+                    false
+                );
+                _tileMap.SetCellsTerrainConnect(
+                    (int)TileMapLayer.Default,
+                    treeCells,
+                    (int)TerrainSet.Default,
+                    (int)ForestTerrain.Tree,
+                    false
+                );
+                _tileMap.SetCellsTerrainConnect(
+                    (int)TileMapLayer.Default,
+                    deadTreeCells,
+                    (int)TerrainSet.Default,
+                    (int)ForestTerrain.DeadTree,
                     false
                 );
 
@@ -136,6 +173,11 @@ public partial class ForestGenerator : Node, IMapGenerator
         }
 
         return false;
+    }
+
+    private void GenerateMap()
+    {
+        RandomFillTiles();
     }
 
     private void RandomFillTiles()
@@ -151,7 +193,10 @@ public partial class ForestGenerator : Node, IMapGenerator
             {
                 var cell = new Vector2I(x, y);
 
-                if (x == 0 || y == 0 || x == _forestData.MapSize.X - 1 || y == _forestData.MapSize.Y - 1)
+                if (x == 0 ||
+                    y == 0 ||
+                    x == _forestData.MapSize.X - 1 ||
+                    y == _forestData.MapSize.Y - 1)
                 {
                     if (GD.RandRange(0, 5) == 0)
                     {
@@ -166,6 +211,7 @@ public partial class ForestGenerator : Node, IMapGenerator
 
                 if (GD.RandRange(0, 100) <= 10)
                 {
+                    // 树木、枯树
                     if (GD.RandRange(0, 5) == 0)
                     {
                         deadTreeCells.Add(cell);
@@ -178,6 +224,7 @@ public partial class ForestGenerator : Node, IMapGenerator
                 }
                 else
                 {
+                    // 地面、草地
                     if (GD.RandRange(0, 5) == 0)
                     {
                         grassCells.Add(cell);

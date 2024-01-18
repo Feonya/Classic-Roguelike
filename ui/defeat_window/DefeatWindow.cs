@@ -4,10 +4,10 @@ public partial class DefeatWindow : CanvasLayer, IUi
 {
     public void Initialize()
     {
-        GetTree().CurrentScene.GetNode<Player>("%Player").Losing += () => Visible = true;
+        GetTree().CurrentScene.GetNode<Player>("%Player").DiedForSure += () => Visible = true;
     }
 
-    public void Update(double delta)
+    public void Update()
     {
     }
 }
